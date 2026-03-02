@@ -1,0 +1,13 @@
+## Interface: 120001
+## Title: DejaVu
+## Notes: Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
+## Author: liantian-cn
+## Version: 12.0.1.66198
+## SavedVariables: DejaVuSave
+## LoadSavedVariablesFirst: 1
+
+# LibStub
+Libs\LibStub\LibStub.lua
+Libs\LibRangeCheck-3.0\LibRangeCheck-3.0.lua
+
+main.lua

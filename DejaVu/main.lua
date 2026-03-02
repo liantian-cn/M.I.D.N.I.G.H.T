@@ -1,0 +1,2 @@
+-- DejaVu scaffold entrypoint.
+-- TODO: initialize matrix container and protocol draft markers.
