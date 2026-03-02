@@ -17,11 +17,11 @@
 
 ## 3. Draft 常量（可变）
 
-| 常量 | 当前值 | 状态 | 说明 |
-|---|---|---|---|
-| `CELL_SIZE` | `4x4` | Draft | 基础像素单元 |
-| `MEGA_CELL_SIZE` | `8x8` | Draft | 图标单元 |
-| `MATRIX_ANCHOR` | `TOP_RIGHT` | Draft | 矩阵锚点 |
+| 常量               | 当前值         | 状态    | 说明     |
+| ---------------- | ----------- | ----- | ------ |
+| `CELL_SIZE`      | `4x4`       | Draft | 基础像素单元 |
+| `MEGA_CELL_SIZE` | `8x8`       | Draft | 图标单元   |
+| `MATRIX_ANCHOR`  | `TOP_RIGHT` | Draft | 矩阵锚点   |
 
 > 以上常量在 `draft` 阶段不保证跨版本兼容。
 

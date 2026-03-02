@@ -17,10 +17,10 @@ Security concerns in scope include:
 
 ## Supported Versions
 
-| Version | Status |
-|---|---|
-| `v0.1.x-draft` | Supported on best-effort basis |
-| `< v0.1.0-draft` | Not supported |
+| Version          | Status                         |
+| ---------------- | ------------------------------ |
+| `v0.1.x-draft`   | Supported on best-effort basis |
+| `< v0.1.0-draft` | Not supported                  |
 
 ## Reporting a Vulnerability
 
