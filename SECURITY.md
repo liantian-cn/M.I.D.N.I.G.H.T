@@ -19,8 +19,8 @@ Security concerns in scope include:
 
 | Version          | Status                         |
 | ---------------- | ------------------------------ |
-| `v0.1.x-draft`   | Supported on best-effort basis |
-| `< v0.1.0-draft` | Not supported                  |
+| `12.0.1.66198`   | Supported on best-effort basis |
+| `< 12.0.1.66198` | Not supported                  |
 
 ## Reporting a Vulnerability
 

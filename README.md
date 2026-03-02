@@ -2,7 +2,7 @@
 
 Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 
-Current Status: `v0.1.0-draft`
+Current Status: `12.0.1.66198`
 
 ## 项目概述
 

@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is inspired by Keep a Changelog and adapted for draft protocol work.
 
-## [v0.1.0-draft] - 2026-03-02
+## [12.0.1.66198] - 2026-03-02
 
 ### Added
 
