@@ -7,7 +7,7 @@
 ## LoadSavedVariablesFirst: 1
 
 # LibStub
-Libs\LibStub\LibStub.lua
-Libs\LibRangeCheck-3.0\LibRangeCheck-3.0.lua
+LibStub.lua
+
 
 main.lua
