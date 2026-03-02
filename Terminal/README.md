@@ -1,4 +1,4 @@
-# Terminal
+# Terminal（外部解析端）
 
 `Terminal` 是 M.I.D.N.I.G.H.T 的外部解析端（Python）。
 

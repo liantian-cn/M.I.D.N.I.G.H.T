@@ -1,4 +1,4 @@
-# pixel_designer
+# pixel_designer（像素设计工具）
 
 像素设计工具目录（占位）。
 

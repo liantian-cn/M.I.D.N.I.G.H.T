@@ -1,4 +1,4 @@
-# protocol_validator
+# protocol_validator（协议验证工具）
 
 协议验证工具目录（占位）。
 

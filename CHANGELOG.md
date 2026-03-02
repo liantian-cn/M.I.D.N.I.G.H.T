@@ -1,21 +1,21 @@
-# Changelog
+# 变更日志
 
-All notable changes to this project will be documented in this file.
+本文档记录项目的重要变更。
 
-The format is inspired by Keep a Changelog and adapted for draft protocol work.
+格式参考 Keep a Changelog，并按当前协议草案阶段做简化。
 
 ## [12.0.1.66198] - 2026-03-02
 
-### Added
+### 新增
 
-- Initial repository documentation scaffold for M.I.D.N.I.G.H.T.
-- Draft contract documents for protocol, matrix layout, and cell structure.
-- DejaVu and Terminal directory skeletons without substantive business logic.
+- 初始化 M.I.D.N.I.G.H.T 仓库文档脚手架。
+- 新增协议、矩阵布局、Cell 结构等草案契约文档。
+- 新增 DejaVu 与 Terminal 的目录骨架（不含实质业务逻辑）。
 
-### Changed
+### 变更
 
-- Expanded root `README.md` with architecture overview and docs entry points.
+- 扩展根目录 `README.md`，补充架构概览与文档入口。
 
-### Notes
+### 说明
 
-- Protocol-facing constants are draft and may change before first stable release.
+- 协议相关常量目前处于草案阶段，首个稳定版本前可能发生调整。
