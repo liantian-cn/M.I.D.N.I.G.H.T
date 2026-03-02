@@ -1,2 +1,21 @@
--- DejaVu scaffold entrypoint.
--- TODO: initialize matrix container and protocol draft markers.
+--[[
+文件定位：
+  DejaVu 插件入口文件，负责承接 WoW 加载器对插件主入口文件的加载。
+
+输入来源：
+  来自 DejaVu.toc 的最终加载项，以及 bootstrap 模块提供的启动编排意图。
+
+输出职责：
+  明确入口边界，作为后续调用启动流程的固定位置。
+
+生命周期/调用时机：
+  在 DejaVu.toc 加载顺序末尾执行，用于完成最终入口接线。
+
+约束与非目标：
+  本阶段仅保留注释和占位说明，不实现初始化、渲染或业务采集逻辑。
+
+状态：
+  draft
+]]
+
+-- 占位说明：后续阶段将在此文件接入 bootstrap 启动调用。

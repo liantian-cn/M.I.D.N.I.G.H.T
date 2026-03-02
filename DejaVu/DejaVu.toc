@@ -9,5 +9,37 @@
 # LibStub
 LibStub.lua
 
+# Addon Core
+addon.lua
+
+# Config
+config/core.lua
+config/layout.lua
+config/colors.lua
+config/debug.lua
+config/index.lua
+
+# Events
+events/event_map.lua
+events/event_frame.lua
+events/event_router.lua
+
+# Matrix
+matrix/matrix_anchor.lua
+matrix/matrix_frame.lua
+matrix/matrix_grid.lua
+
+# Cells
+cells/cell.lua
+cells/mega_cell.lua
+cells/badge_cell.lua
+cells/factory.lua
+
+# Debug
+debug/print.lua
+debug/overlay.lua
+
+# Bootstrap
+bootstrap.lua
 
 main.lua
