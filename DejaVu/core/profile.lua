@@ -1,3 +1,12 @@
+--[[
+文件说明：
+
+
+
+
+状态：
+  draft
+]]
 local addonName, addonTable = ...
 
 -- 确保保存表存在
