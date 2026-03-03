@@ -20,7 +20,7 @@
 ## 文件与目录命名
 
 1. 文档文件统一使用小写蛇形命名：`protocol.md`、`matrix_spec.md`。
-2. 顶层治理文档使用明确命名：`README.md`、`Warning.md` 等。
+2. 顶层治理文档使用明确命名：`Warning.md` 等。
 3. Python 包路径使用小写：`terminal/`。
 4. Lua 入口文件统一为 `main.lua`，避免多入口歧义。
 

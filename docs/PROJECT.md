@@ -71,14 +71,14 @@ M.I.D.N.I.G.H.T/
 
 ## 快速开始（草案）
 
-1. 先阅读 `docs/README.md`，按顺序理解协议文档。
+1. 先阅读 `docs/PROJECT.md`，按顺序理解协议文档。
 2. DejaVu 端先以占位结构完成加载与矩阵定位。
 3. Terminal 端先以占位结构确认 Python 运行链路。
 4. 在协议稳定前，不承诺跨版本兼容。
 
 ## 文档入口
 
-1. `docs/README.md`：文档导航
+1. `docs/PROJECT.md`：文档导航
 2. `docs/protocol.md`：通信协议（Draft）
 3. `docs/matrix_spec.md`：矩阵布局规范（Draft）
 4. `docs/cell_spec.md`：Cell/MegaCell/BadgeCell 结构规范（Draft）
