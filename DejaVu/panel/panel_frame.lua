@@ -23,8 +23,8 @@ local SIZE -- 尺寸表（在创建面板时初始化）
 local function InitializeSize() -- 初始化尺寸（与 EZPanel 数值一致）
     SIZE = { -- 尺寸表主体
         MainFrame = { -- 主框体尺寸
-            Width = GetUIScaleFactor(scale * 120), -- 主框体宽度
-            Height = GetUIScaleFactor(scale * 24), -- 主框体高度
+            Width = GetUIScaleFactor(scale * 100), -- 主框体宽度
+            Height = GetUIScaleFactor(scale * 2) * 2 + GetUIScaleFactor(scale * 9), -- 主框体单行高度
             Border = GetUIScaleFactor(1), -- 主框体边框
             Spacing = GetUIScaleFactor(scale * 2), -- 内边距/间距
         }, -- MainFrame 结束
@@ -38,9 +38,9 @@ local function InitializeSize() -- 初始化尺寸（与 EZPanel 数值一致）
             Height = GetUIScaleFactor(scale * 9), -- 行高
             Spacing = GetUIScaleFactor(scale * 2), -- 行间距
             TitleWidth = GetUIScaleFactor(scale * 43), -- 标题宽度
-            WidgetWidth = GetUIScaleFactor(scale * 71), -- 控件宽度
+            WidgetWidth = GetUIScaleFactor(scale * 51), -- 控件宽度
             SliderBarHeight = GetUIScaleFactor(scale * 1.5), -- 滑块条高度
-            SliderSquareHeight = GetUIScaleFactor(scale * 4.5), -- 滑块方块高度
+            SliderSquareHeight = GetUIScaleFactor(scale * 4), -- 滑块方块高度
             SliderValueWidth = GetUIScaleFactor(scale * 12), -- 滑块数值区宽度
         } -- SETTING_LINE 结束
     } -- SIZE 结束
@@ -180,31 +180,113 @@ local function CreateSettingRow(title, tooltip) -- 创建一行设置项
 end -- CreateSettingRow 结束
 addonTable.Panel.CreateSettingRow = CreateSettingRow -- 暴露创建行函数
 
-local function CreatePanelFrame() -- 创建面板主框体
-    if addonTable.Panel.Frame then -- 已创建则跳过
+local function CreatePanelFrame() -- 创建控制条与设置面板
+    if addonTable.Panel.ControlFrame then -- 已创建则跳过
         return -- 直接退出
     end -- 已创建判断结束
 
     InitializeSize() -- 初始化尺寸（第二帧时 UI 缩放准确）
 
-    local frame = CreateFrame("Frame", addonName .. "panelFrame", UIParent) -- 主框体
-    frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0) -- 居中
-    frame:SetSize(SIZE.MainFrame.Width, SIZE.MainFrame.Height) -- 尺寸
-    frame:SetFrameStrata("TOOLTIP") -- 层级
-    frame:SetFrameLevel(900) -- 层级
-    frame:SetMovable(true) -- 可拖动
-    frame:EnableMouse(true) -- 可交互
-    frame:RegisterForDrag("LeftButton") -- 左键拖动
-    frame:SetClampedToScreen(true) -- 限制屏幕内
-    frame:SetScript("OnDragStart", frame.StartMoving) -- 开始拖动
-    frame:SetScript("OnDragStop", frame.StopMovingOrSizing) -- 结束拖动
-    frame:Show() -- 显示
+    local spacing = SIZE.MainFrame.Spacing -- 通用间距
+    local areaWidth = (SIZE.MainFrame.Width - spacing * 4) / 3 -- 三等分区域宽度
 
-    frame.bg, frame.art = UI.ApplyBorderAndFill(frame, COLOR.WindowBorder, COLOR.WindowBg, SIZE.MainFrame.Border) -- 边框
-    frame._rowCount = 0 -- 行计数
-    frame._contentHeight = SIZE.MainFrame.Spacing * 2 -- 内容高度
+    local controlFrame = CreateFrame("Frame", addonName .. "controlFrame", UIParent) -- 控制条
+    controlFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0) -- 居中
+    controlFrame:SetSize(SIZE.MainFrame.Width, SIZE.MainFrame.Height) -- 尺寸
+    controlFrame:SetFrameStrata("TOOLTIP") -- 层级
+    controlFrame:SetFrameLevel(900) -- 层级
+    controlFrame:SetMovable(true) -- 可拖动
+    controlFrame:EnableMouse(true) -- 可交互
+    controlFrame:RegisterForDrag("LeftButton") -- 左键拖动
+    controlFrame:SetClampedToScreen(true) -- 限制屏幕内
+    controlFrame:SetScript("OnDragStart", controlFrame.StartMoving) -- 开始拖动
+    controlFrame:SetScript("OnDragStop", controlFrame.StopMovingOrSizing) -- 结束拖动
+    controlFrame:Show() -- 显示
 
-    addonTable.Panel.Frame = frame -- 保存主框体
+    controlFrame.bg, controlFrame.art = UI.ApplyBorderAndFill(controlFrame, COLOR.WindowBorder, COLOR.WindowBg, SIZE.MainFrame.Border) -- 边框
+
+    local toggleButton = UI.CreateButton(controlFrame, "toggleButton", spacing, -spacing, areaWidth, SIZE.BUTTON.Height, "启动") -- 启停按钮
+
+    local statusArea = CreateFrame("Frame", addonName .. "statusArea", controlFrame) -- 状态区域容器
+    statusArea:SetPoint("TOPLEFT", controlFrame, "TOPLEFT", spacing * 2 + areaWidth, -spacing) -- 位置
+    statusArea:SetSize(areaWidth, SIZE.BUTTON.Height) -- 尺寸
+
+    local statusIcon = CreateFrame("Frame", addonName .. "statusIcon", statusArea) -- 状态图标
+    statusIcon:SetPoint("LEFT", statusArea, "LEFT", 0, 0) -- 左对齐
+    statusIcon:SetSize(SIZE.BUTTON.Height, SIZE.BUTTON.Height) -- 尺寸
+    statusIcon.bg = statusIcon:CreateTexture(nil, "BACKGROUND") -- 图标边框
+    statusIcon.bg:SetPoint("TOPLEFT", statusIcon, "TOPLEFT", SIZE.BUTTON.IconBorder / 2, -SIZE.BUTTON.IconBorder / 2) -- 内缩
+    statusIcon.bg:SetPoint("BOTTOMRIGHT", statusIcon, "BOTTOMRIGHT", -SIZE.BUTTON.IconBorder / 2, SIZE.BUTTON.IconBorder / 2) -- 内缩
+    statusIcon.bg:SetColorTexture(COLOR.ButtonBorder:GetRGBA()) -- 边框色
+    statusIcon.art = statusIcon:CreateTexture(nil, "ARTWORK") -- 图标填充
+    statusIcon.art:SetPoint("TOPLEFT", statusIcon, "TOPLEFT", SIZE.BUTTON.IconBorder, -SIZE.BUTTON.IconBorder) -- 内缩
+    statusIcon.art:SetPoint("BOTTOMRIGHT", statusIcon, "BOTTOMRIGHT", -SIZE.BUTTON.IconBorder, SIZE.BUTTON.IconBorder) -- 内缩
+    statusIcon.art:SetColorTexture(1, 0, 0, 1) -- 默认红色
+
+    local statusText = statusArea:CreateFontString(nil, "OVERLAY") -- 状态文字
+    statusText:SetPoint("LEFT", statusIcon, "RIGHT", spacing, 0) -- 左对齐
+    statusText:SetPoint("RIGHT", statusArea, "RIGHT", 0, 0) -- 右对齐
+    statusText:SetFont("Fonts\\FRIZQT__.TTF", GetUIScaleFactor(5 * scale), "") -- 字体
+    statusText:SetJustifyH("LEFT") -- 左对齐
+    statusText:SetJustifyV("MIDDLE") -- 垂直居中
+    statusText:SetTextColor(1, 0, 0) -- 默认红色
+    statusText:SetText("已停止") -- 默认文案
+
+    local configButton = UI.CreateButton(controlFrame, "configButton", spacing * 3 + areaWidth * 2, -spacing, areaWidth, SIZE.BUTTON.Height, "配置") -- 配置按钮
+
+    local settingFrame = CreateFrame("Frame", addonName .. "settingFrame", UIParent) -- 设置面板
+    settingFrame:SetPoint("TOPLEFT", controlFrame, "BOTTOMLEFT", 0, 0) -- 紧贴控制条下方
+    settingFrame:SetSize(SIZE.MainFrame.Width, SIZE.MainFrame.Height) -- 初始尺寸
+    settingFrame:SetFrameStrata("TOOLTIP") -- 层级
+    settingFrame:SetFrameLevel(900) -- 层级
+    settingFrame.bg, settingFrame.art = UI.ApplyBorderAndFill(settingFrame, COLOR.WindowBorder, COLOR.WindowBg, SIZE.MainFrame.Border) -- 边框
+    settingFrame:Hide() -- 默认收缩
+
+    addonTable.Panel.ControlFrame = controlFrame -- 保存控制条
+    addonTable.Panel.SettingFrame = settingFrame -- 保存设置面板
+    addonTable.Panel.Frame = settingFrame -- 设置行容器指向设置面板
+
+    local function UpdateStatusUI(enabled) -- 刷新状态显示
+        if enabled then -- 启用状态
+            statusIcon.art:SetColorTexture(0, 1, 0, 1) -- 绿色
+            statusText:SetTextColor(0, 1, 0) -- 绿色
+            statusText:SetText("已启动") -- 文案
+            toggleButton.text:SetText("停止") -- 按钮文案
+        else -- 停用状态
+            statusIcon.art:SetColorTexture(1, 0, 0, 1) -- 红色
+            statusText:SetTextColor(1, 0, 0) -- 红色
+            statusText:SetText("已停止") -- 文案
+            toggleButton.text:SetText("启动") -- 按钮文案
+        end -- 状态判断结束
+    end -- UpdateStatusUI 结束
+
+    local function ToggleSetting() -- 展开/收缩设置面板
+        if settingFrame:IsShown() then -- 当前已展开
+            settingFrame:Hide() -- 收缩
+            if addonTable.Panel.SpellListEditorFrame and addonTable.Panel.SpellListEditorFrame:IsShown() then -- 编辑器显示时
+                addonTable.Panel.SpellListEditorFrame:Hide() -- 一起隐藏
+            end -- 编辑器判断结束
+        else -- 当前收缩
+            settingFrame:Show() -- 展开
+        end -- 展开判断结束
+    end -- ToggleSetting 结束
+
+    toggleButton:HookScript("OnMouseUp", function() -- 启停按钮点击
+        addonTable.Enable = not addonTable.Enable -- 切换状态
+        UpdateStatusUI(addonTable.Enable == true) -- 刷新显示
+    end) -- 启停回调结束
+
+    configButton:HookScript("OnMouseUp", function() -- 配置按钮点击
+        ToggleSetting() -- 展开/收缩
+    end) -- 配置回调结束
+
+    UpdateStatusUI(addonTable.Enable == true) -- 初始化状态
+
+    controlFrame.StatusIcon = statusIcon -- 保存图标
+    controlFrame.StatusText = statusText -- 保存文字
+    controlFrame.ToggleButton = toggleButton -- 保存按钮
+    controlFrame.ConfigButton = configButton -- 保存按钮
+    controlFrame.ToggleSetting = ToggleSetting -- 保存函数
 end -- CreatePanelFrame 结束
 
 table.insert(InitUI, CreatePanelFrame) -- 第二帧创建面板
