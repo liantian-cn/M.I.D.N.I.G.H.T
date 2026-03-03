@@ -18,13 +18,13 @@
   draft
 ]]
 
-local addon_name, addon_table = ...
+local addonName, addonTable = ...
 
-addon_table = addon_table or {}
-addon_table.__addon_name = addon_name
+addonTable = addonTable or {}
+addonTable.__addonName = addonName
 
 -- 确保Spec命名空间存在
-addon_table.Spec = addon_table.Spec or {}
-addon_table.Spec.DPS = {}
+addonTable.Spec = addonTable.Spec or {}
+addonTable.Spec.DPS = {}
 
-local DPS = addon_table.Spec.DPS
+local DPS = addonTable.Spec.DPS

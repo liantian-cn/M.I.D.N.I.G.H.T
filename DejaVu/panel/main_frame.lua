@@ -7,8 +7,8 @@
   draft
 ]]
 
-local addon_name, addon_table = ...
+local addonName, addonTable = ...
 
-addon_table.Panel.MainFrame = {}
+addonTable.Panel.MainFrame = {}
 
-local MainFrame = addon_table.Panel.MainFrame
+local MainFrame = addonTable.Panel.MainFrame

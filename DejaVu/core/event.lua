@@ -8,5 +8,5 @@
   draft
 ]]
 
-local addon_name, addon_table = ...
-addon_table.Core.Event = {}
+local addonName, addonTable = ...
+addonTable.Event = {}

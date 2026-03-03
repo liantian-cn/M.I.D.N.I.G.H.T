@@ -8,10 +8,10 @@
   draft
 ]]
 
-local addon_name, addon_table = ...
-addon_table.Matrix.MainFrame = {}
+local addonName, addonTable = ...
+addonTable.Matrix.MainFrame = {}
 
-local MainFrame = addon_table.Matrix.MainFrame
+local MainFrame = addonTable.Matrix.MainFrame
 
 -- matrixFrame实例（占位）
 MainFrame.frame = nil

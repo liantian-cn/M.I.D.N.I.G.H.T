@@ -1,8 +1,6 @@
-"""CLI scaffold for Terminal."""
 
 
 def main() -> None:
-    """TODO: implement CLI bootstrap after protocol is stabilized."""
     pass
 
 

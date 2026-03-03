@@ -8,7 +8,7 @@
   draft
 ]]
 
-local addon_name, addon_table = ...
+local addonName, addonTable = ...
 
 -- 插件版本
-addon_table.Core.VERSION = "12.0.1.66198"
+addonTable.VERSION = "12.0.1.66198"
