@@ -36,7 +36,7 @@
   fps:set_value(60) -- 会触发 slider_set_value(60)
 
 状态：
-  draft
+  waiting_real_test（等待真实测试）
 ]]
 
 local addonName, addonTable = ...
