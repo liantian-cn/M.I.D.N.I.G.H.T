@@ -9,41 +9,38 @@
 # LibStub
 LibStub.lua
 
-# Addon Core
-addon.lua
+# Utils (通用组件)
+utils/logging.lua
+utils/string.lua
 
-# Config
-config/index.lua
-config/core.lua
-config/layout.lua
-config/colors.lua
-config/debug.lua
+# Core (核心模组)
+core/variable.lua
+core/event.lua
+core/color.lua
+core/size.lua
 
-# Events
-events/index.lua
-events/event_map.lua
-events/event_frame.lua
-events/event_router.lua
+# Matrix (矩阵容器与Cell创建)
+matrix/main_frame.lua
+matrix/cell.lua
+matrix/mega_cell.lua
+matrix/badge_cell.lua
 
-# Matrix
-matrix/index.lua
-matrix/matrix_anchor.lua
-matrix/matrix_frame.lua
-matrix/matrix_grid.lua
+# Panel (设置面板)
+panel/main_frame.lua
+panel/slider.lua
+panel/combo.lua
+panel/spell_list.lua
 
-# Cells
-cells/index.lua
-cells/cell.lua
-cells/mega_cell.lua
-cells/badge_cell.lua
-cells/factory.lua
+# Slots (通用Cell组配置)
+slots/spell_sequence.lua
+slots/aura/player_buff.lua
+slots/aura/player_debuff.lua
 
-# Debug
-debug/index.lua
-debug/print.lua
-debug/overlay.lua
+# Spec (职业特色Cell组配置)
+spec/tank.lua
+spec/dps.lua
+spec/healer.lua
+spec/durid.lua
 
-# Bootstrap
-bootstrap.lua
-
+# Entry Point
 main.lua

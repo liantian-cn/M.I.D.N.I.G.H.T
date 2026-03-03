@@ -18,6 +18,7 @@
         "Settings",
         "MinimalSliderWithSteppersMixin",
         "SlashCmdList",
-        "ChatFrame1EditBox"
+        "ChatFrame1EditBox",
+        "LEVEL"
     ]
 }
