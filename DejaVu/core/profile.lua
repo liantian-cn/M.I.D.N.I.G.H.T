@@ -1,8 +1,31 @@
 --[[
-文件说明：
+文件用途：
+  Profile 模块负责管理配置分组（profile）。
+  它只做三件事：
+  1) 记录当前 profile 名称（DejaVuSave.current_profile）
+  2) 切换 profile（不存在就自动创建空表）
+  3) 切换后通知所有 Config 对象刷新值并触发回调
 
+持久化结构：
+  DejaVuSave.current_profile = "default"
+  DejaVuSave.profiles = {
+      ["default"] = { fps = 45 },
+      ["profile_1"] = { fps = 60 },
+  }
 
+对外接口：
+  Profile.current_profile() -> string
+  Profile.switch_profile(name) -> nil
 
+内部接口（给 config.lua 使用）：
+  Profile._register_config(config_obj) -> nil
+  Profile._get_current_data() -> table
+
+用例：
+  local Profile = addonTable.Profile
+  print(Profile.current_profile())       -- default
+  Profile.switch_profile("profile_1")    -- 不存在则自动创建
+  print(Profile.current_profile())       -- profile_1
 
 状态：
   draft
