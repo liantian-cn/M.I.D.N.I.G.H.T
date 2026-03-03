@@ -28,32 +28,3 @@ addon_table.Spec = addon_table.Spec or {}
 addon_table.Spec.DPS = {}
 
 local DPS = addon_table.Spec.DPS
-
--- Cell组配置
-DPS.config = {
-    name = "DPS",
-    -- 在矩阵中的起始位置
-    anchor_x = 0,
-    anchor_y = 20,
-    -- Cell组定义
-    cells = {
-        -- 主要资源（MegaCell）
-        { type = "mega", x = 0, y = 0, id = "primary_resource" },
-        -- 爆发技能（BadgeCell显示冷却）
-        { type = "badge", x = 8, y = 0, id = "cooldown_1" },
-        { type = "badge", x = 12, y = 0, id = "cooldown_2" },
-        -- DoT监控（Cell）
-        { type = "cell", x = 16, y = 0, id = "dot_1" },
-        { type = "cell", x = 20, y = 0, id = "dot_2" },
-    }
-}
-
--- 初始化Cell组（占位）
-function DPS.Init(matrix_frame)
-    -- 后续实现：根据config创建Cell实例
-end
-
--- 更新显示（占位）
-function DPS.Update(dps_data)
-    -- 后续实现：更新Cell内容
-end

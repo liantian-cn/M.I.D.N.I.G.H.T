@@ -29,12 +29,14 @@ matrix/mega_cell.lua
 matrix/badge_cell.lua
 
 # Panel (设置面板)
+panel/init.lua
 panel/main_frame.lua
 panel/slider.lua
 panel/combo.lua
 panel/spell_list.lua
 
 # Slots (通用Cell组配置)
+slots/init.lua
 slots/spell_sequence.lua
 slots/aura/player_buff.lua
 slots/aura/player_debuff.lua
