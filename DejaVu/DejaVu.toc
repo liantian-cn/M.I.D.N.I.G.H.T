@@ -1,7 +1,7 @@
 ## Interface: 120001
-## Title: DejaVu
-## Notes: Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
-## Author: liantian-cn
+## Title: DéjàVu
+## Notes: Déjà vu
+## Author: Émile Boirac
 ## Version: 12.0.1.66198
 ## SavedVariables: DejaVuSave
 ## LoadSavedVariablesFirst: 1
@@ -33,7 +33,7 @@ matrix/badge_cell.lua
 
 # Panel (设置面板)
 panel/init.lua
-panel/main_frame.lua
+panel/panel_frame.lua
 panel/slider.lua
 panel/combo.lua
 panel/spell_list.lua
