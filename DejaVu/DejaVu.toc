@@ -1,0 +1,51 @@
+## Interface: 120001
+## Title: DejaVu
+## Notes: Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
+## Author: liantian-cn
+## Version: 12.0.1.66198
+## SavedVariables: DejaVuSave
+## LoadSavedVariablesFirst: 1
+
+# Libs
+Libs/LibStub.lua
+
+# Utils (通用组件)
+utils/init.lua
+utils/logging.lua
+utils/string.lua
+
+# Core (核心模组)
+core/init.lua
+core/variable.lua
+core/event.lua
+core/color.lua
+core/size.lua
+
+# Matrix (矩阵容器与Cell创建)
+matrix/init.lua
+matrix/main_frame.lua
+matrix/cell.lua
+matrix/mega_cell.lua
+matrix/badge_cell.lua
+
+# Panel (设置面板)
+panel/init.lua
+panel/main_frame.lua
+panel/slider.lua
+panel/combo.lua
+panel/spell_list.lua
+
+# Slots (通用Cell组配置)
+slots/init.lua
+slots/spell_sequence.lua
+slots/aura/player_buff.lua
+slots/aura/player_debuff.lua
+
+# Spec (职业特色Cell组配置)
+spec/tank.lua
+spec/dps.lua
+spec/healer.lua
+spec/durid.lua
+
+# Entry Point
+main.lua

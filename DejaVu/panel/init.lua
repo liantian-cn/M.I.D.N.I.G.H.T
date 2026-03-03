@@ -1,0 +1,3 @@
+local addon_name, addon_table = ...
+
+addon_table.Panel = {}

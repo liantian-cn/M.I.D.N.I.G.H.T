@@ -1,0 +1,83 @@
+name: Sync wip to main
+
+on:
+  push:
+    branches:
+      - wip
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-main-from-wip
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+      DS_URL: ${{ secrets.DS_URL }}
+    steps:
+      - name: Checkout wip
+        uses: actions/checkout@v4
+        with:
+          ref: wip
+          path: wip
+
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          path: main
+
+      - name: Replace main content with wip content
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/main"
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+          cd "$GITHUB_WORKSPACE"
+          rsync -a --delete --exclude='.git' wip/ main/
+
+      - name: Commit and push main
+        run: |
+          set -euo pipefail
+
+          cd "$GITHUB_WORKSPACE/main"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          SUMMARY=""
+          if ! SUMMARY=$(
+            git diff --cached . | base64 | tr -d '\n' | \
+            curl -sS -X POST "$DS_URL" \
+              -H "DEEPSEEK_API_KEY: $DEEPSEEK_API_KEY" \
+              --data-urlencode payload@-
+          ); then
+            echo "Diff summary generation failed, fallback to empty summary."
+            SUMMARY=""
+          fi
+
+          TITLE="$(printf '%s' "$SUMMARY" | sed -n '1p' | tr -d '\r' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+          BODY="$(printf '%s' "$SUMMARY" | sed -n '2p' | tr -d '\r' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+
+          if ! printf '%s' "$TITLE" | grep -q '[^[:space:]]'; then
+            TS_BJ="$(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M:%S')"
+            TITLE="sync form wip branch @ ${TS_BJ}"
+            BODY=""
+          fi
+
+          if printf '%s' "$BODY" | grep -q '[^[:space:]]'; then
+            git commit -m "$TITLE" -m "$BODY"
+          else
+            git commit -m "$TITLE"
+          fi
+
+          git push origin HEAD:main
