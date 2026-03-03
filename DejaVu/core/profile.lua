@@ -28,7 +28,7 @@
   print(Profile.current_profile())       -- profile_1
 
 状态：
-  draft
+  waiting_real_test（等待真实测试）
 ]]
 local addonName, addonTable = ...
 
