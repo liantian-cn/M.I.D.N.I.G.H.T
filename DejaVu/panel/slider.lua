@@ -12,3 +12,8 @@
 local addonName, addonTable = ...
 local GetUIScaleFactor = addonTable.Size.GetUIScaleFactor
 local COLOR = addonTable.Panel.COLOR
+
+
+addonTable.Panel.AddSliderRow = function(...)
+    -- do something
+end
