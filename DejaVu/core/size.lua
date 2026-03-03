@@ -8,7 +8,7 @@
   draft
 ]]
 
-local addon_name, addon_table = ...
-addon_table.Core.Size = {}
+local addonName, addonTable = ...
+addonTable.Size = {}
 
-local Size = addon_table.Core.Size
+local Size = addonTable.Size

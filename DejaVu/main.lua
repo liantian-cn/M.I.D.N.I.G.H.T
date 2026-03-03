@@ -18,10 +18,10 @@
   draft
 ]]
 
-local addon_name, addon_table = ...
+local addonName, addonTable = ...
 
-addon_table = addon_table or {}
-addon_table.__addon_name = addon_name
+addonTable = addonTable or {}
+addonTable.__addonName = addonName
 
 -- 插件入口点（占位）
 local function Initialize()
@@ -31,8 +31,8 @@ end
 -- 注册ADDON_LOADED事件
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("ADDON_LOADED")
-frame:SetScript("OnEvent", function(self, event, loaded_addon_name)
-    if loaded_addon_name == addon_name then
+frame:SetScript("OnEvent", function(self, event, loaded_addonName)
+    if loaded_addonName == addonName then
         Initialize()
     end
 end)

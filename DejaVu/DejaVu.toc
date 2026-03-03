@@ -20,6 +20,8 @@ core/variable.lua
 core/event.lua
 core/color.lua
 core/size.lua
+core/profile.lua
+core/config.lua
 
 # Matrix (矩阵容器与Cell创建)
 matrix/init.lua
