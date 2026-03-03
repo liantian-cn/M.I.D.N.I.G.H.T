@@ -17,3 +17,13 @@
 状态：
   draft
 ]]
+
+local addon_name, addon_table = ...
+
+addon_table = addon_table or {}
+addon_table.__addon_name = addon_name
+addon_table.Config = addon_table.Config or {}
+addon_table.Events = addon_table.Events or {}
+addon_table.Matrix = addon_table.Matrix or {}
+addon_table.Cells = addon_table.Cells or {}
+addon_table.Debug = addon_table.Debug or {}

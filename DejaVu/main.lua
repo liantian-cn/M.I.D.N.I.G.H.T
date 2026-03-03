@@ -18,4 +18,10 @@
   draft
 ]]
 
+local addon_name, addon_table = ...
+
+addon_table = addon_table or {}
+addon_table.__addon_name = addon_name
+
+
 -- 占位说明：后续阶段将在此文件接入 bootstrap 启动调用。

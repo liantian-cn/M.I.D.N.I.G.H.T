@@ -17,3 +17,9 @@
 状态：
   draft
 ]]
+
+local addon_name, addon_table = ...
+
+addon_table = addon_table or {}
+addon_table.__addon_name = addon_name
+
