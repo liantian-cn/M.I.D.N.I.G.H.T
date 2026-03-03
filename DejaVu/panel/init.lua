@@ -31,6 +31,7 @@ addonTable.Panel.COLOR = {
 
 
 addonTable.Panel.Rows = {}
+addonTable.Panel.DefaultApplied = {}
 
 --[[
     面板每行的格式的例子

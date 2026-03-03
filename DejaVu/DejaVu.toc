@@ -37,6 +37,7 @@ panel/panel_frame.lua
 panel/slider.lua
 panel/combo.lua
 panel/spell_list.lua
+panel/factory.lua
 
 # Slots (通用Cell组配置)
 slots/init.lua
