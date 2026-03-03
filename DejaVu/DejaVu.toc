@@ -6,20 +6,23 @@
 ## SavedVariables: DejaVuSave
 ## LoadSavedVariablesFirst: 1
 
-# LibStub
-LibStub.lua
+# Libs
+Libs/LibStub.lua
 
 # Utils (通用组件)
+utils/init.lua
 utils/logging.lua
 utils/string.lua
 
 # Core (核心模组)
+core/init.lua
 core/variable.lua
 core/event.lua
 core/color.lua
 core/size.lua
 
 # Matrix (矩阵容器与Cell创建)
+matrix/init.lua
 matrix/main_frame.lua
 matrix/cell.lua
 matrix/mega_cell.lua
