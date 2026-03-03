@@ -1,3 +1,13 @@
+--[[
+文件说明：
+
+
+
+
+状态：
+  draft
+]]
+
 local addonName, addonTable = ...
 
 local Profile = addonTable.Profile
