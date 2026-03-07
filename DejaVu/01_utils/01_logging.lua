@@ -9,3 +9,8 @@
 ]]
 
 local addonName, addonTable = ...
+
+local function logging(msg)
+    print("|cFFFFBB66[DéjàVu]|r" .. tostring(msg))
+end
+addonTable.Logging = logging
