@@ -26,10 +26,18 @@
 
 ## 性能小原则
 
-- `local addonName, addonTable = ...` 之后尽早本地化常用全局函数
+- `local addonName, addonTable = ...` 之后，立刻本地化当前文件会用到的全局函数
+- 不要把全局函数本地化拖到后面的逻辑段里
 - 少创建短命表
 - 高频路径里避免重复查全局
 - 事件刷新优先，少写常驻轮询
+
+## `_` 占位禁用
+
+- 禁止用 `_` 当返回值占位符，尤其不要写 `local _, value = ...`
+- 原因不是代码风格，而是 secret values 可能污染全局 `_`，进而把插件大面积带崩
+- `local addonName, addonTable = ...` 这种固定入口，没用到的名字保留即可，再用 `-- luacheck: ignore addonName` 处理
+- 如果多返回值里只想拿后面的值，优先用 `select(...)`
 
 ## git 工作流
 
@@ -54,4 +62,3 @@ D:\luacheck\luacheck.exe 100_main.lua 01_utils 02_core 03_matrix 04_panel 05_slo
 - 这是 UI/显示导向项目，优先做“看得见但不替玩家判断”的能力
 - 不要实现自动战斗、自动决策或绕过 Blizzard 限制的逻辑
 - 任何战斗态数据，只要有一点怀疑，就回到 `00_secret_values.md`
-

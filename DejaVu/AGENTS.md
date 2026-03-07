@@ -16,6 +16,9 @@
 - Lua 按 5.1 / WoW API 兼容标准写。
 - Lua 检查用 `D:\luacheck\luacheck.exe 100_main.lua 01_utils 02_core 03_matrix 04_panel 05_slots 06_spec`。
 - 改代码前先看 `git status --short`；如果工作区有未提交改动，先做一次备份提交。
+- `local addonName, addonTable = ...` 之后，马上做当前文件会用到的全局函数本地化，不要拖到后面。
+- 禁止用 `_` 当返回值占位符，避免被 secret values 污染后引发整片代码崩溃。
+- 如果多返回值里只想取后面的值，优先用 `select(...)`，不要靠 `_` 占位。
 - 不实现自动战斗或代替玩家决策的逻辑。
 
 关于 secret values：
