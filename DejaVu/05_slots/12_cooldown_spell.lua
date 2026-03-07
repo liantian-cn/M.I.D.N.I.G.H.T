@@ -97,7 +97,7 @@ local function InitializeCooldownFrame()
         end
     end
 
-    local function updateUnknownAndUnusable() -- 更新技能不可用和未知状态
+    local function updateUnusable() -- 更新技能不可用和未知状态
         for i = 1, COOLDOWN_LENGTH do
             local cell = cooldownCells[i]
             if i <= #cooldownSpells then
@@ -107,11 +107,21 @@ local function InitializeCooldownFrame()
 
                 local isUnusable = EvaluateColorFromBoolean(IsSpellUsable(spellID), COLOR.BLACK, COLOR.WHITE)
                 cell.unusable:setCell(isUnusable)
+            else
+                cell.unusable:clearCell()
+            end
+        end
+    end
 
+    local function updateUnknown() -- 更新技能不可用和未知状态
+        for i = 1, COOLDOWN_LENGTH do
+            local cell = cooldownCells[i]
+            if i <= #cooldownSpells then
+                local spell = cooldownSpells[i]
+                local spellID = spell.spellID
                 local isUnknown = EvaluateColorFromBoolean(IsSpellInSpellBook(spellID), COLOR.BLACK, COLOR.WHITE)
                 cell.unknown:setCell(isUnknown)
             else
-                cell.unusable:clearCell()
                 cell.unknown:clearCell()
             end
         end
@@ -121,15 +131,16 @@ local function InitializeCooldownFrame()
         updateIcon()
         updateRemaining()
         updateOverlayed()
-        updateUnknownAndUnusable()
+        updateUnusable()
+        updateUnknown()
     end
     fullUpdate()
-    table.insert(SPELLS_CHANGED, updateIcon)               -- 技能变更时更新图标
-    table.insert(SPELLS_CHANGED, updateRemaining)          -- 技能变更时更新冷却剩余时间
-    table.insert(SPELLS_CHANGED, updateOverlayed)          -- 技能变更时更新高亮状态
-    table.insert(SPELLS_CHANGED, updateUnknownAndUnusable) -- 技能变更时更新可用性状态
-    table.insert(OnUpdateHigh, updateRemaining)            -- 高频更新冷却剩余时间
-    table.insert(OnUpdateLow, updateOverlayed)             -- 低频更新技能高亮状态
-    table.insert(OnUpdateLow, updateUnknownAndUnusable)    -- 低频更新技能状态
+    table.insert(SPELLS_CHANGED, updateIcon)      -- 技能变更时更新图标
+    table.insert(SPELLS_CHANGED, updateRemaining) -- 技能变更时更新冷却剩余时间
+    table.insert(SPELLS_CHANGED, updateOverlayed) -- 技能变更时更新高亮状态
+    table.insert(SPELLS_CHANGED, updateUnknown)   -- 技能变更时更新可用性状态
+    table.insert(OnUpdateHigh, updateRemaining)   -- 高频更新冷却剩余时间
+    table.insert(OnUpdateLow, updateOverlayed)    -- 低频更新技能高亮状态
+    table.insert(OnUpdateLow, updateUnusable)     -- 低频更新技能状态
 end
-table.insert(InitUI, InitializeCooldownFrame)              -- 初始化时创建冷却技能槽位
+table.insert(InitUI, InitializeCooldownFrame)     -- 初始化时创建冷却技能槽位

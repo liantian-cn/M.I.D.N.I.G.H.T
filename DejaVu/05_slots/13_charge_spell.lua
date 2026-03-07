@@ -104,7 +104,24 @@ local function InitializeChargeFrame()
         end
     end
 
-    local function updateUnknownAndUnusable() -- 全量更新
+    local function updateUnknown() -- 全量更新
+        for i = 1, CHARGE_LENGTH do
+            local cell = chargeCells[i]
+            if i <= #chargeSpells then
+                local spell = chargeSpells[i]
+                local spellID = spell.spellID
+
+
+
+                local isUnknown = EvaluateColorFromBoolean(IsSpellInSpellBook(spellID), COLOR.BLACK, COLOR.WHITE)
+                cell.unknown:setCell(isUnknown)
+            else
+                cell.unknown:clearCell()
+            end
+        end
+    end
+
+    local function updateUnusable() -- 全量更新
         for i = 1, CHARGE_LENGTH do
             local cell = chargeCells[i]
             if i <= #chargeSpells then
@@ -114,12 +131,8 @@ local function InitializeChargeFrame()
 
                 local isUnusable = EvaluateColorFromBoolean(IsSpellUsable(spellID), COLOR.BLACK, COLOR.WHITE)
                 cell.unusable:setCell(isUnusable)
-
-                local isUnknown = EvaluateColorFromBoolean(IsSpellInSpellBook(spellID), COLOR.BLACK, COLOR.WHITE)
-                cell.unknown:setCell(isUnknown)
             else
                 cell.unusable:clearCell()
-                cell.unknown:clearCell()
             end
         end
     end
@@ -128,15 +141,16 @@ local function InitializeChargeFrame()
         updateIcon()
         updateRemaining()
         updateOverlayed()
-        updateUnknownAndUnusable()
+        updateUnknown()
+        updateUnusable()
     end
     fullUpdate()
-    table.insert(SPELLS_CHANGED, updateIcon)               -- 技能变更时更新图标
-    table.insert(SPELLS_CHANGED, updateRemaining)          -- 技能变更时更新充能剩余时间
-    table.insert(SPELLS_CHANGED, updateOverlayed)          -- 技能变更时更新高亮状态
-    table.insert(SPELLS_CHANGED, updateUnknownAndUnusable) -- 技能变更时更新可用性状态
-    table.insert(OnUpdateHigh, updateRemaining)            -- 高频更新充能剩余时间
-    table.insert(OnUpdateLow, updateOverlayed)             -- 低频更新技能高亮状态
-    table.insert(OnUpdateLow, updateUnknownAndUnusable)    -- 低频更新技能状态
+    table.insert(SPELLS_CHANGED, updateIcon)      -- 技能变更时更新图标
+    table.insert(SPELLS_CHANGED, updateRemaining) -- 技能变更时更新充能剩余时间
+    table.insert(SPELLS_CHANGED, updateOverlayed) -- 技能变更时更新高亮状态
+    table.insert(SPELLS_CHANGED, updateUnknown)   -- 技能变更时更新可用性状态
+    table.insert(OnUpdateHigh, updateRemaining)   -- 高频更新充能剩余时间
+    table.insert(OnUpdateLow, updateOverlayed)    -- 低频更新技能高亮状态
+    table.insert(OnUpdateLow, updateUnusable)     -- 低频更新技能状态
 end
-table.insert(InitUI, InitializeChargeFrame)                -- 初始化时创建充能技能槽位
+table.insert(InitUI, InitializeChargeFrame)       -- 初始化时创建充能技能槽位
