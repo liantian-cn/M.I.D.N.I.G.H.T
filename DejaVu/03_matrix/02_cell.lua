@@ -87,7 +87,7 @@ end
 ---如果任意颜色是秘密值，返回false（视为不同，需要更新）
 ---如果都不是秘密值，使用IsEqualTo比较
 ---@private
----@param color ColorMixin 要比较的颜色
+---@param color colorRGBA 要比较的颜色
 ---@return boolean 如果颜色相同返回true，否则返回false
 function Cell:_isSameColor(color)
     -- 如果当前没有保存的颜色，视为不同
@@ -96,7 +96,7 @@ function Cell:_isSameColor(color)
     end
 
     -- 如果任意一方是秘密值，无法比较，视为不同
-    if self.lastColorIsSecret or issecretvalue(color) then
+    if self.lastColorIsSecret or issecretvalue(color.r) then
         return false
     end
 
@@ -114,10 +114,17 @@ function Cell:setCell(color)
 
     -- 保存颜色状态
     self.lastColor = color
-    self.lastColorIsSecret = issecretvalue(color)
+    self.lastColorIsSecret = issecretvalue(color.r)
 
     -- 设置贴图颜色
     self.Texture:SetColorTexture(color:GetRGBA())
+end
+
+---清除颜色方法，就是恢复默认的黑色
+function Cell:clearCell()
+    -- 如果颜色相同，跳过设置以提高性能
+    local color = COLOR.BLACK
+    self:setCell(color)
 end
 
 ---工厂函数：创建 Cell 实例
