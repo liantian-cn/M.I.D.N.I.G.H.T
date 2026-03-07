@@ -30,6 +30,7 @@ local UnitCanAttack = UnitCanAttack
 local UnitChannelDuration = UnitChannelDuration
 local UnitCastingDuration = UnitCastingDuration
 local UnitInVehicle = UnitInVehicle
+local EvaluateColorFromBoolean = C_CurveUtil.EvaluateColorFromBoolean
 local IsMounted = IsMounted
 local GetUnitSpeed = GetUnitSpeed
 local UnitAffectingCombat = UnitAffectingCombat
@@ -40,6 +41,7 @@ local GetSpellTexture = C_Spell.GetSpellTexture
 local GetSpellChargeDuration = C_Spell.GetSpellChargeDuration
 local GetSpellCooldownDuration = C_Spell.GetSpellCooldownDuration
 local GetSpellLink = C_Spell.GetSpellLink
+local CreateColorCurve = C_CurveUtil.CreateColorCurve
 
 
 local InitUI = addonTable.Event.Func.InitUI -- 初始化 UI 函数列表
@@ -48,6 +50,16 @@ local Slots = addonTable.Slots
 local Cell = addonTable.Cell
 local BadgeCell = addonTable.BadgeCell
 local CharCell = addonTable.CharCell
+
+local OnUpdateLow = addonTable.Event.Func.OnUpdateLow   -- 低频刷新回调列表（约 2 Hz）
+local OnUpdateHigh = addonTable.Event.Func.OnUpdateHigh -- 高频刷新回调列表（约 10 Hz）
+
+local remainingCurve = addonTable.Slots.remainingCurve
+local playerDebuffCurve = addonTable.Slots.playerDebuffCurve
+local enemyDebuffCurve = addonTable.Slots.enemyDebuffCurve
+local playerBuffCurve = addonTable.Slots.playerBuffCurve
+
+
 
 local function AuraSequenceCreater(unit, filter, maxCount, pos_x, pos_y, sortRule, sortDirection)
     sortRule = sortRule or Enum.UnitAuraSortRule.Default
@@ -63,6 +75,7 @@ local function AuraSequenceCreater(unit, filter, maxCount, pos_x, pos_y, sortRul
     end
 
     local auraCells = {}
+    local InstanceIDtoCell = {}
 
     for i = 1, maxCount do
         local x = pos_x - 2 + 2 * i
@@ -74,11 +87,76 @@ local function AuraSequenceCreater(unit, filter, maxCount, pos_x, pos_y, sortRul
             count = CharCell:New(x, y + 3)    -- 当的层数
         })
     end
+
+    local function wipeCells()
+        for i = 1, maxCount do
+            local cell = auraCells[i]
+            cell.icon:clearCell()
+            cell.duration:clearCell()
+            cell.forever:clearCell()
+            cell.count:clearCell()
+        end
+    end
+
+    local function updateFullSequence()
+        wipe(InstanceIDtoCell)
+        if not UnitExists(unit) then
+            wipeCells()
+            return
+        end
+        local isEnemy = UnitIsEnemy("player", unit)
+        local isPlayer = not isEnemy
+        local auraInstanceIDs = GetUnitAuraInstanceIDs(unit, filter, maxCount, sortRule, sortDirection) or {}
+        for i = 1, maxCount do
+            local cell = auraCells[i]
+            if i > #auraInstanceIDs then
+                cell.count:clearCell()
+                cell.duration:clearCell()
+                cell.forever:clearCell()
+                cell.icon:clearCell()
+            else
+                local auraInstanceID = auraInstanceIDs[i]
+                InstanceIDtoCell[auraInstanceID] = cell
+                local aura = GetAuraDataByAuraInstanceID(unit, auraInstanceID)
+                if aura ~= nil then
+                    local duration = GetAuraDuration(unit, auraInstanceID)
+                    local foreverBoolen = DoesAuraHaveExpirationTime(unit, auraInstanceID)
+                    local count = GetAuraApplicationDisplayCount(unit, auraInstanceID, 1, 9)
+
+                    cell.count:setCell(count)
+
+                    if duration ~= nil then
+                        local durationColor = duration:EvaluateRemainingDuration(remainingCurve)
+                        cell.duration:setCell(durationColor)
+                    else
+                        cell.duration:clearCell()
+                    end
+
+                    if foreverBoolen ~= nil then
+                        local foreverColor = EvaluateColorFromBoolean(foreverBoolen, COLOR.BLACK, COLOR.WHITE) -- 白色是永久buff
+                        cell.forever:setCell(foreverColor)
+                    else
+                        cell.forever:clearCell()
+                    end
+
+                    if isPlayer and isDebuff then
+                        cell.icon:setCell(aura.icon, GetAuraDispelTypeColor(unit, auraInstanceID, playerDebuffCurve))
+                    elseif isPlayer and isBuff then
+                        cell.icon:setCell(aura.icon, GetAuraDispelTypeColor(unit, auraInstanceID, playerBuffCurve))
+                    elseif isEnemy and isDebuff then
+                        cell.icon:setCell(aura.icon, GetAuraDispelTypeColor(unit, auraInstanceID, enemyDebuffCurve))
+                    end
+                end
+            end
+        end
+    end -- updateSequence
+    table.insert(OnUpdateLow, updateFullSequence)
+    wipeCells()
 end
 
 
 
 local InitializeAuraSequence = function() -- 初始化 aura 序列槽位
-    AuraSequenceCreater("player", "HELPFUL", 30, 2, 4, Enum.UnitAuraSortRule.Expiration, Enum.UnitAuraSortDirection.Norma)
+    AuraSequenceCreater("player", "HELPFUL", 30, 2, 4, Enum.UnitAuraSortRule.Expiration, Enum.UnitAuraSortDirection.Normal)
 end
 table.insert(InitUI, InitializeAuraSequence) -- 初始化时创建 aura 序列槽位

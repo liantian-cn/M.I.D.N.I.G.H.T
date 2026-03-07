@@ -27,6 +27,7 @@ addonTable.Event.Func.SPELLS_CHANGED = {}
 addonTable.Event.Func.SPELL_UPDATE_ICON = {}
 addonTable.Event.Func.PLAYER_TALENT_UPDATE = {}
 addonTable.Event.Func.TRAIT_CONFIG_UPDATED = {}
+addonTable.Event.Func.UPDATE_MOUSEOVER_UNIT = {}
 
 
 local eventFrame = CreateFrame("EventFrame", addonName .. "Frame")
@@ -76,6 +77,13 @@ function eventFrame:TRAIT_CONFIG_UPDATED()
     end
 end
 
+function eventFrame:UPDATE_MOUSEOVER_UNIT()
+    for funcIndex = 1, #addonTable.Event.Func.UPDATE_MOUSEOVER_UNIT do
+        local func = addonTable.Event.Func.UPDATE_MOUSEOVER_UNIT[funcIndex]
+        func()
+    end
+end
+
 -- 注册事件
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 -- eventFrame:RegisterEvent("UNIT_AURA")
@@ -84,6 +92,7 @@ eventFrame:RegisterEvent("SPELLS_CHANGED")
 eventFrame:RegisterEvent("SPELL_UPDATE_ICON")
 eventFrame:RegisterEvent("PLAYER_TALENT_UPDATE")
 eventFrame:RegisterEvent("TRAIT_CONFIG_UPDATED")
+eventFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
 -- eventFrame:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
 eventFrame:SetScript("OnEvent", function(self, event, ...)
     self[event](self, ...)

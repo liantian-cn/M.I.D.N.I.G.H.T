@@ -56,7 +56,7 @@ local function InitializeChargeFrame()
 
 
 
-    local function updateIcon() -- 全量更新
+    local function updateIcon() -- 更新图标
         for i = 1, CHARGE_LENGTH do
             local cell = chargeCells[i]
             if i <= #chargeSpells then
@@ -71,7 +71,7 @@ local function InitializeChargeFrame()
         end
     end
 
-    local function updateRemaining() -- 全量更新
+    local function updateRemaining() -- 更新充能恢复剩余时间与当前层数
         for i = 1, CHARGE_LENGTH do
             local cell = chargeCells[i]
             if i <= #chargeSpells then
@@ -89,7 +89,7 @@ local function InitializeChargeFrame()
         end
     end
 
-    local function updateOverlayed() -- 全量更新
+    local function updateOverlayed() -- 更新技能高亮状态
         for i = 1, CHARGE_LENGTH do
             local cell = chargeCells[i]
             if i <= #chargeSpells then
@@ -104,7 +104,7 @@ local function InitializeChargeFrame()
         end
     end
 
-    local function updateUnknown() -- 全量更新
+    local function updateUnknown() -- 更新技能是否不在法术书中
         for i = 1, CHARGE_LENGTH do
             local cell = chargeCells[i]
             if i <= #chargeSpells then
@@ -121,7 +121,7 @@ local function InitializeChargeFrame()
         end
     end
 
-    local function updateUnusable() -- 全量更新
+    local function updateUnusable() -- 更新技能不可施放状态
         for i = 1, CHARGE_LENGTH do
             local cell = chargeCells[i]
             if i <= #chargeSpells then
@@ -148,9 +148,9 @@ local function InitializeChargeFrame()
     table.insert(SPELLS_CHANGED, updateIcon)      -- 技能变更时更新图标
     table.insert(SPELLS_CHANGED, updateRemaining) -- 技能变更时更新充能剩余时间
     table.insert(SPELLS_CHANGED, updateOverlayed) -- 技能变更时更新高亮状态
-    table.insert(SPELLS_CHANGED, updateUnknown)   -- 技能变更时更新可用性状态
+    table.insert(SPELLS_CHANGED, updateUnknown)   -- 技能变更时更新法术书收录状态
     table.insert(OnUpdateHigh, updateRemaining)   -- 高频更新充能剩余时间
     table.insert(OnUpdateLow, updateOverlayed)    -- 低频更新技能高亮状态
-    table.insert(OnUpdateLow, updateUnusable)     -- 低频更新技能状态
+    table.insert(OnUpdateLow, updateUnusable)     -- 低频更新技能不可施放状态
 end
 table.insert(InitUI, InitializeChargeFrame)       -- 初始化时创建充能技能槽位
