@@ -13,9 +13,8 @@ local Wipe = wipe
 
 
 
-local InitUI = addonTable.UpdateFunc.InitUI                             -- 初始化 UI 函数列表
-local PLAYER_TALENT_UPDATE = addonTable.UpdateFunc.PLAYER_TALENT_UPDATE -- PLAYER_TALENT_UPDATE 回调列表
-local TRAIT_CONFIG_UPDATED = addonTable.UpdateFunc.TRAIT_CONFIG_UPDATED -- TRAIT_CONFIG_UPDATED 回调列表
+local InitUI = addonTable.UpdateFunc.InitUI                               -- 初始化 UI 函数列表
+local PLAYER_TALENT_CHANGED = addonTable.UpdateFunc.PLAYER_TALENT_CHANGED -- 所有涉及天赋变化的事件
 local Slots = addonTable.Slots
 
 Slots.chargeSpells = {}
@@ -123,6 +122,5 @@ local function UpdateSpellsTable()
     -- logging("chargeSpells: " .. #chargeSpells)
     -- logging("cooldownSpells: " .. #cooldownSpells)
 end
-InsertTable(InitUI, UpdateSpellsTable)               -- 初始化时建立技能列表
-InsertTable(PLAYER_TALENT_UPDATE, UpdateSpellsTable) -- 天赋变更时刷新技能列表
-InsertTable(TRAIT_CONFIG_UPDATED, UpdateSpellsTable) -- 天赋树配置变更时刷新技能列表
+InsertTable(InitUI, UpdateSpellsTable)                -- 初始化时建立技能列表
+InsertTable(PLAYER_TALENT_CHANGED, UpdateSpellsTable) -- 天赋变更时刷新技能列表
