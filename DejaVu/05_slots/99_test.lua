@@ -1,4 +1,4 @@
-local _, addonTable = ...
+local addonName, addonTable = ... -- luacheck: ignore addonName
 local COLOR = addonTable.COLOR
 local MegaCell = addonTable.MegaCell
 local BadgeCell = addonTable.BadgeCell

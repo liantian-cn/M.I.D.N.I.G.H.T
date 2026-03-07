@@ -9,14 +9,15 @@
 ]]
 
 -- luacheck: globals C_Spell C_SpellActivationOverlay C_SpellBook C_CurveUtil
-local _, addonTable = ...
--- 本地化性能优化
+local addonName, addonTable = ... -- luacheck: ignore addonName
 local GetSpellTexture = C_Spell.GetSpellTexture
 local GetSpellCooldownDuration = C_Spell.GetSpellCooldownDuration
 local IsSpellOverlayed = C_SpellActivationOverlay.IsSpellOverlayed
 local IsSpellUsable = C_Spell.IsSpellUsable
 local IsSpellInSpellBook = C_SpellBook.IsSpellInSpellBook
 local EvaluateColorFromBoolean = C_CurveUtil.EvaluateColorFromBoolean
+
+-- 本地化性能优化
 
 local COLOR = addonTable.COLOR
 local Slots = addonTable.Slots

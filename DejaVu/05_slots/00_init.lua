@@ -1,5 +1,5 @@
 -- luacheck: globals C_CurveUtil Enum
-local _, addonTable = ...
+local addonName, addonTable = ... -- luacheck: ignore addonName
 local CreateColorCurve = C_CurveUtil.CreateColorCurve
 local Enum = Enum
 local COLOR = addonTable.COLOR
