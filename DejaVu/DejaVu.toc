@@ -42,11 +42,12 @@ Libs/LibStub.lua
 # Slots (通用Cell组配置)
 05_slots/00_init.lua
 05_slots/01_mark_point.lua
+## 技能
 05_slots/11_refresh_spell.lua
 05_slots/12_cooldown_spell.lua
 05_slots/13_charge_spell.lua
-# 05_slots/12_player_buff.lua
-# 05_slots/13_player_debuff.lua
+## buff
+05_slots/21_aura_sequence.lua
 05_slots/99_test.lua
 
 # Spec (职业特色Cell组配置)
