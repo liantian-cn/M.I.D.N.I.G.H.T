@@ -150,7 +150,7 @@ local function AuraSequenceCreater(unit, filter, maxCount, pos_x, pos_y, sortRul
             end
         end
     end -- updateSequence
-    table.insert(OnUpdateLow, updateFullSequence)
+    table.insert(OnUpdateHigh, updateFullSequence)
     wipeCells()
 end
 
