@@ -12,19 +12,16 @@
 接口：
   - Cell:New(x, y, backgroundColor) 构造函数
   - cell:setColor(color) 设置颜色
-  - cell:getPosition() 获取位置
-  - cell:show()/hide() 显示/隐藏
-
 状态：
   waiting_real_test（等待真实测试）
 ]]
+
+local addonName, addonTable = ... -- 插件名称与共享表
 -- 本地化提高性能
 local issecretvalue = issecretvalue
 local CreateFrame = CreateFrame
 local setmetatable = setmetatable
 
-
-local addonName, addonTable = ... -- 插件名称与共享表
 local COLOR = addonTable.COLOR
 
 -- Cell 类定义
@@ -102,31 +99,6 @@ function Cell:setColor(color)
 
     -- 设置贴图颜色
     self.Texture:SetColorTexture(color:GetRGBA())
-end
-
--- 获取位置方法
-function Cell:getPosition()
-    return self.X, self.Y
-end
-
--- 获取标识方法
-function Cell:getSlug()
-    return self.Slug
-end
-
--- 显示方法
-function Cell:show()
-    self.Frame:Show()
-end
-
--- 隐藏方法
-function Cell:hide()
-    self.Frame:Hide()
-end
-
--- 判断是否显示
-function Cell:isShown()
-    return self.Frame:IsShown()
 end
 
 -- 工厂函数：创建 Cell 实例

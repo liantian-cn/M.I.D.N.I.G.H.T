@@ -8,6 +8,8 @@
   draft
 ]]
 local addonName, addonTable = ...
+local CreateColor = CreateColor
+
 addonTable.COLOR = {
     RED = CreateColor(255 / 255, 0, 0, 1),                                          -- 红色
     GREEN = CreateColor(0, 255 / 255, 0, 1),                                        -- 绿色

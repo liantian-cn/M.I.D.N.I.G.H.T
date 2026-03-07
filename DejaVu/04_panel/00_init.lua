@@ -11,8 +11,9 @@
   waiting_real_test（等待真实测试）
 ]]
 local addonName, addonTable = ... -- 插件名称与共享表
+local CreateColor = CreateColor
 
-addonTable.Panel = {}             -- 面板模块主表
+addonTable.Panel = {} -- 面板模块主表
 
 
 addonTable.Panel.COLOR = {                                                          -- 面板配色表

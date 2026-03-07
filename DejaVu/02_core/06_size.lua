@@ -9,6 +9,11 @@
 ]]
 
 local addonName, addonTable = ...
+local GetPhysicalScreenSize = GetPhysicalScreenSize
+local GetScreenHeight = GetScreenHeight
+
+
+
 addonTable.Size = {}
 
 local Size = addonTable.Size

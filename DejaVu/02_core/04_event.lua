@@ -9,6 +9,10 @@
 ]]
 
 local addonName, addonTable = ...
+local CreateFrame = CreateFrame
+local C_Timer = C_Timer
+local wipe = wipe
+
 addonTable.Event = {}
 addonTable.Event.Func = {}
 

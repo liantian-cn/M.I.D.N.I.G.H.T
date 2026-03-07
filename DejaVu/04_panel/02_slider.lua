@@ -11,7 +11,14 @@
   waiting_real_test（等待真实测试）
 ]]
 
-local addonName, addonTable = ...                         -- 插件名称与共享表
+local addonName, addonTable = ... -- 插件名称与共享表
+-- 本地化提高性能
+local strFind = string.find       -- 字符查找
+local strSub = string.sub         -- 字符截取
+local strFormat = string.format   -- 字符格式化
+local floor = math.floor
+local CreateFrame = CreateFrame
+
 local GetUIScaleFactor = addonTable.Size.GetUIScaleFactor -- UI 缩放计算
 local Panel = addonTable.Panel                            -- 面板模块
 local COLOR = Panel.COLOR                                 -- 颜色表
@@ -19,12 +26,9 @@ local FONT = Panel.Font                                   -- addonTable.Panel.Fo
 
 
 
-local scale = 4                                                                                                                                             -- UI 缩放基准
+local scale = 4 -- UI 缩放基准
 
-local strFind = string.find                                                                                                                                 -- 字符查找
-local strSub = string.sub                                                                                                                                   -- 字符截取
-local strFormat = string.format                                                                                                                             -- 字符格式化
-local floor = math.floor                                                                                                                                    -- 向下取整
+-- 向下取整
 
 local function GetStepDecimals(step)                                                                                                                        -- 计算步进小数位
     local s = tostring(step)                                                                                                                                -- 转字符串
