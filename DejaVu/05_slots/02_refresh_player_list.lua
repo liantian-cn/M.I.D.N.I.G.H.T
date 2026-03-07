@@ -1,8 +1,8 @@
 -- luacheck: globals C_Spell C_SpellBook Enum wipe
-local _, addonTable = ...
--- 本地化性能优化
-
+local addonName, addonTable = ... -- luacheck: ignore addonName
 local GetSpellCharges = C_Spell.GetSpellCharges
+
+-- 本地化性能优化
 
 
 

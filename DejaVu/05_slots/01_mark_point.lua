@@ -1,4 +1,4 @@
-local _, addonTable = ...
+local addonName, addonTable = ... -- luacheck: ignore addonName
 local COLOR = addonTable.COLOR
 local Cell = addonTable.Cell
 local InitUI = addonTable.Event.Func.InitUI -- 初始化 UI 函数列表
