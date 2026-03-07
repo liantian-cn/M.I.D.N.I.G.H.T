@@ -10,7 +10,18 @@
 
 local addonName, addonTable = ...
 -- 本地化性能优化
+local CreateColorCurve = C_CurveUtil.CreateColorCurve
 local GetSpellCharges = C_Spell.GetSpellCharges
+local GetSpellTexture = C_Spell.GetSpellTexture
+local GetSpellCooldownDuration = C_Spell.GetSpellCooldownDuration
+local IsSpellOverlayed = C_SpellActivationOverlay.IsSpellOverlayed
+local GetSpellChargeDuration = C_Spell.GetSpellChargeDuration
+local GetSpellLink = C_Spell.GetSpellLink
+local IsSpellUsable = C_Spell.IsSpellUsable
+local IsSpellInSpellBook = C_SpellBook.IsSpellInSpellBook
+local EvaluateColorFromBoolean = C_CurveUtil.EvaluateColorFromBoolean
+local GetCooldownViewerCategorySet = C_CooldownViewer.GetCooldownViewerCategorySet
+local GetCooldownViewerCooldownInfo = C_CooldownViewer.GetCooldownViewerCooldownInfo
 
 local COLOR = addonTable.COLOR
 local Slots = addonTable.Slots
@@ -20,6 +31,8 @@ local BadgeCell = addonTable.BadgeCell
 local InitUI = addonTable.Event.Func.InitUI                             -- 初始化 UI 函数列表
 local PLAYER_TALENT_UPDATE = addonTable.Event.Func.PLAYER_TALENT_UPDATE -- 专精更新事件函数列表
 local TRAIT_CONFIG_UPDATED = addonTable.Event.Func.TRAIT_CONFIG_UPDATED -- 专精配置更新事件函数列表
+local SPELLS_CHANGED = addonTable.Event.Func.SPELLS_CHANGED             -- 专精配置更新事件函数列表
+local OnUpdateLow = addonTable.Event.Func.OnUpdateLow
 local logging = addonTable.Logging
 
 local chargeSpells = {}   -- 充能技能的ID列表
@@ -29,6 +42,15 @@ local cooldownSpells = {} -- 冷却技能的ID列表
 local COOLDOWN_LENGTH = 40
 local CHARGE_LENGTH = 10
 
+
+local remaining_curve = CreateColorCurve()
+remaining_curve:SetType(Enum.LuaCurveType.Linear)
+remaining_curve:AddPoint(0.0, COLOR.C0)
+remaining_curve:AddPoint(5.0, COLOR.C100)
+remaining_curve:AddPoint(30.0, COLOR.C150)
+remaining_curve:AddPoint(155.0, COLOR.C200)
+remaining_curve:AddPoint(375.0, COLOR.C255)
+addonTable.remaining_curve = remaining_curve
 
 
 --- 获取技能冷却类型信息
@@ -52,6 +74,10 @@ end
 ---@return table[] spells 技能列表
 local function CollectActiveSpells()
     local spells = {}
+    table.insert(spells, {
+        spellID = 61304,
+        cdType = "cooldown"
+    })
     local spellBank = Enum.SpellBookSpellBank.Player
 
     -- 获取技能书技能线数量（标签页数量）
@@ -88,16 +114,11 @@ local function CollectActiveSpells()
 
                             -- 只收集：非被动技能 且 非其他专精技能
                             if not isPassive and not isOffSpec then
-                                -- 获取技能名称
-                                local spellName = C_Spell.GetSpellName(spellID)
-
                                 -- 获取冷却类型信息
                                 local cdType = GetSpellCooldownType(spellID)
 
                                 table.insert(spells, {
                                     spellID = spellID,
-                                    name = spellName,
-                                    skillLine = skillLineInfo.name,
                                     cdType = cdType
                                 })
                             end
@@ -117,10 +138,6 @@ local function UpdateSpellsTable()
 
     local spells = CollectActiveSpells()
 
-    -- 分类统计
-    local chargeSpells = {}
-    local cooldownSpells = {}
-
     for _, spell in ipairs(spells) do
         if spell.cdType == "charges" then
             table.insert(chargeSpells, spell)
@@ -138,15 +155,52 @@ table.insert(TRAIT_CONFIG_UPDATED, UpdateSpellsTable) -- 第二帧创建面板
 
 
 local function InitializeCooldownFrame()
-    local textrues = {}
+    local cooldownCells = {}
     for i = 1, COOLDOWN_LENGTH do
         local x = 2 * i
         local y = 0
-        local iconCell = BadgeCell:New(x, y)
-
-        local remainingCell = Cell:New(x, y + 2)
-        local overlayedCell = Cell:New(x + 1, y + 2)
-        local usableCell = Cell:New(x, y + 3)
+        table.insert(cooldownCells, {
+            icon = BadgeCell:New(x, y),         -- 技能图标
+            remaining = Cell:New(x, y + 2),     -- 冷却事件
+            overlayed = Cell:New(x + 1, y + 2), -- overlayed 是技能是否高亮，取自C_SpellActivationOverlay.IsSpellOverlayed
+            unusable = Cell:New(x, y + 3),      -- unknown 和 unusable 是重合的，任意满足，该图标为白色，否则为透明色。 C_Spell.IsSpellUsable(spellID)
+            unknown = Cell:New(x, y + 3),       -- unknown 和 unusable 是重合的，任意满足，该图标为白色，否则为透明色。  C_SpellBook.IsSpellInSpellBook(spellID)
+        })
     end
+
+    local function fullUpdate() -- 全量更新
+        for i = 1, COOLDOWN_LENGTH do
+            local cell = cooldownCells[i]
+            if i <= #cooldownSpells then
+                local spell = cooldownSpells[i]
+                local SpellID = spell.spellID
+
+                local iconID = GetSpellTexture(SpellID)
+                cell.icon:setCell(iconID, COLOR.SPELL_TYPE.PLAYER_SPELL)
+
+                local duration = GetSpellCooldownDuration(SpellID)
+                local result = duration:EvaluateRemainingDuration(remaining_curve)
+                cell.remaining:setCell(result)
+
+                local is_overlayed = EvaluateColorFromBoolean(IsSpellOverlayed(SpellID), COLOR.WHITE, COLOR.TRANSPARENT)
+                cell.overlayed:setCell(is_overlayed)
+
+                local is_unusable = EvaluateColorFromBoolean(IsSpellUsable(SpellID), COLOR.TRANSPARENT, COLOR.WHITE)
+                cell.unusable:setCell(is_unusable)
+
+                local is_unknown = EvaluateColorFromBoolean(IsSpellInSpellBook(SpellID), COLOR.TRANSPARENT, COLOR.WHITE)
+                cell.unknown:setCell(is_unknown)
+            else
+                cell.icon:clearCell()
+                cell.remaining:clearCell()
+                cell.overlayed:clearCell()
+                cell.unusable:clearCell()
+                cell.unknown:clearCell()
+            end
+            i = i + 1
+        end
+    end
+
+    table.insert(OnUpdateLow, fullUpdate)     -- 第二帧创建面板
 end
 table.insert(InitUI, InitializeCooldownFrame) -- 第二帧创建面板

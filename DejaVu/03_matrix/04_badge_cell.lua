@@ -110,7 +110,7 @@ function BadgeCell:_initialize(x, y)
     self.Y = y
     self.lastIcon = nil
     self.lastIconIsSecret = false
-    self.lastBadgeColor = nil
+    self.lastBadgeColor = COLOR.BLACK
     self.lastBadgeColorIsSecret = false
 end
 
@@ -139,7 +139,7 @@ end
 ---如果任意颜色是秘密值，返回false（视为不同，需要更新）
 ---如果都不是秘密值，使用IsEqualTo比较
 ---@private
----@param color ColorMixin 要比较的颜色
+---@param color ColorMixin|nil 要比较的颜色
 ---@return boolean 如果颜色相同返回true，否则返回false
 function BadgeCell:_isSameBadgeColor(color)
     -- 如果当前没有保存的颜色，视为不同
@@ -147,8 +147,13 @@ function BadgeCell:_isSameBadgeColor(color)
         return false
     end
 
+    -- 如果要比较的颜色是nil，视为不同
+    if not color then
+        return false
+    end
+
     -- 如果任意一方是秘密值，无法比较，视为不同
-    if self.lastBadgeColorIsSecret or issecretvalue(color) then
+    if self.lastBadgeColorIsSecret or issecretvalue(color.r) then
         return false
     end
 
@@ -172,7 +177,7 @@ function BadgeCell:setCell(icon, color)
     end
 
     -- 处理脚标颜色
-    local colorIsSecret = issecretvalue(color)
+    local colorIsSecret = issecretvalue(color.r)
     local colorChanged = not self:_isSameBadgeColor(color)
 
     if colorChanged then
