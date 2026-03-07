@@ -40,7 +40,8 @@ function eventFrame:PLAYER_ENTERING_WORLD()
         wipe(addonTable.Event.Func.OnEvent_Aura)
         wipe(addonTable.Event.Func.OnEvent_Spell)
 
-        for _, func in ipairs(addonTable.Event.Func.InitUI) do
+        for funcIndex = 1, #addonTable.Event.Func.InitUI do
+            local func = addonTable.Event.Func.InitUI[funcIndex]
             func()
         end
     end)
@@ -48,25 +49,29 @@ function eventFrame:PLAYER_ENTERING_WORLD()
 end
 
 function eventFrame:SPELLS_CHANGED()
-    for _, func in ipairs(addonTable.Event.Func.SPELLS_CHANGED) do
+    for funcIndex = 1, #addonTable.Event.Func.SPELLS_CHANGED do
+        local func = addonTable.Event.Func.SPELLS_CHANGED[funcIndex]
         func()
     end
 end
 
 function eventFrame:SPELL_UPDATE_ICON()
-    for _, func in ipairs(addonTable.Event.Func.SPELL_UPDATE_ICON) do
+    for funcIndex = 1, #addonTable.Event.Func.SPELL_UPDATE_ICON do
+        local func = addonTable.Event.Func.SPELL_UPDATE_ICON[funcIndex]
         func()
     end
 end
 
 function eventFrame:PLAYER_TALENT_UPDATE()
-    for _, func in ipairs(addonTable.Event.Func.PLAYER_TALENT_UPDATE) do
+    for funcIndex = 1, #addonTable.Event.Func.PLAYER_TALENT_UPDATE do
+        local func = addonTable.Event.Func.PLAYER_TALENT_UPDATE[funcIndex]
         func()
     end
 end
 
 function eventFrame:TRAIT_CONFIG_UPDATED()
-    for _, func in ipairs(addonTable.Event.Func.TRAIT_CONFIG_UPDATED) do
+    for funcIndex = 1, #addonTable.Event.Func.TRAIT_CONFIG_UPDATED do
+        local func = addonTable.Event.Func.TRAIT_CONFIG_UPDATED[funcIndex]
         func()
     end
 end
@@ -96,13 +101,15 @@ eventFrame:HookScript("OnUpdate", function(self, elapsed)
     lowFrequencyTimeElapsed      = lowFrequencyTimeElapsed + elapsed
     if timeElapsed > tickOffset then
         timeElapsed = 0
-        for _, updater in ipairs(addonTable.Event.Func.OnUpdateHigh) do
+        for updaterIndex = 1, #addonTable.Event.Func.OnUpdateHigh do
+            local updater = addonTable.Event.Func.OnUpdateHigh[updaterIndex]
             updater()
         end
     end
     if lowFrequencyTimeElapsed > lowFrequencyTickOffset then
         lowFrequencyTimeElapsed = 0
-        for _, updater in ipairs(addonTable.Event.Func.OnUpdateLow) do
+        for updaterIndex = 1, #addonTable.Event.Func.OnUpdateLow do
+            local updater = addonTable.Event.Func.OnUpdateLow[updaterIndex]
             updater()
         end
     end

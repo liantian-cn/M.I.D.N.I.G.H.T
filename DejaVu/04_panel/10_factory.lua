@@ -48,7 +48,7 @@
   waiting_real_test（等待真实测试）
 ]]
 
-local addonName, addonTable = ... -- 插件名称与共享表
+local addonName, addonTable = ... -- luacheck: ignore addonName
 local InitUI = addonTable.Event.Func.InitUI -- 初始化 UI 函数列表
 
 local AddSliderRow = addonTable.Panel.AddSliderRow -- 创建滑块行
@@ -56,7 +56,8 @@ local AddComboRow = addonTable.Panel.AddComboRow -- 创建下拉行
 local AddSpellListRow = addonTable.Panel.AddSpellListRow -- 创建技能列表行
 
 local function CreatePanelRows() -- 构建所有设置行
-    for _, row_info in ipairs(addonTable.Panel.Rows) do -- 遍历 Rows
+    for rowIndex = 1, #addonTable.Panel.Rows do -- 遍历 Rows
+        local row_info = addonTable.Panel.Rows[rowIndex]
         if row_info.type == "slider" then -- 滑块
             AddSliderRow(row_info) -- 创建滑块行
         elseif row_info.type == "combo" then -- 下拉

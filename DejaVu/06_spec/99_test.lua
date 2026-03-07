@@ -1,4 +1,4 @@
-local addonName, addonTable = ...
+local addonName, addonTable = ... -- luacheck: ignore addonName
 
 -- 这是个测试文件，开发阶段使用。正式使用时，应直接文件头部return
 

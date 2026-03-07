@@ -7,4 +7,4 @@
   draft
 ]]
 
-local addonName, addonTable = ...
+local addonName, addonTable = ... -- luacheck: ignore addonName addonTable

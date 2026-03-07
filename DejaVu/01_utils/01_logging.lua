@@ -8,7 +8,7 @@
   draft
 ]]
 
-local addonName, addonTable = ...
+local addonName, addonTable = ... -- luacheck: ignore addonName
 
 local function logging(msg)
     print("|cFFFFBB66[DéjàVu]|r" .. tostring(msg))

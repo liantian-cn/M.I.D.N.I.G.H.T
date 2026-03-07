@@ -30,7 +30,7 @@
 状态：
   waiting_real_test（等待真实测试）
 ]]
-local addonName, addonTable = ...
+local addonName, addonTable = ... -- luacheck: ignore addonName
 
 -- 确保保存表存在
 DejaVuSave = DejaVuSave or {}
@@ -59,7 +59,8 @@ function Profile.switch_profile(name)
     DejaVuSave.current_profile = name
 
     -- 通知所有config回调
-    for _, config in ipairs(all_configs) do
+    for configIndex = 1, #all_configs do
+        local config = all_configs[configIndex]
         config:_notify()
     end
 end
