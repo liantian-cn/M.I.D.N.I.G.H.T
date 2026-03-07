@@ -19,6 +19,7 @@
   waiting_real_test（等待真实测试）
 ]]
 -- 本地化提高性能
+local issecretvalue = issecretvalue
 local CreateFrame = CreateFrame
 local setmetatable = setmetatable
 
@@ -34,6 +35,7 @@ local COLOR = addonTable.COLOR
 ---@field X integer X坐标
 ---@field Y integer Y坐标
 ---@field lastText? string 上次设置的文本
+---@field lastTextIsSecret boolean 上次文本是否为秘密值
 local CharCell = {}
 CharCell.__index = CharCell
 
@@ -95,13 +97,27 @@ function CharCell:_initialize(x, y)
     self.X = x
     self.Y = y
     self.lastText = nil
+    self.lastTextIsSecret = false
 end
 
----比较文本是否相同
+---比较文本是否相同（处理秘密值）
+---如果任意文本是秘密值，返回false（视为不同，需要更新）
+---如果都不是秘密值，直接比较
 ---@private
 ---@param text string 要比较的文本
 ---@return boolean 如果文本相同返回true，否则返回false
 function CharCell:_isSameText(text)
+    -- 如果当前没有保存的文本，视为不同
+    if not self.lastText then
+        return false
+    end
+
+    -- 如果任意一方是秘密值，无法比较，视为不同
+    if self.lastTextIsSecret or issecretvalue(text) then
+        return false
+    end
+
+    -- 都不是秘密值，直接比较
     return self.lastText == text
 end
 
@@ -115,6 +131,7 @@ function CharCell:setCell(text)
 
     -- 保存文本状态
     self.lastText = text
+    self.lastTextIsSecret = issecretvalue(text)
 
     -- 设置文本
     self.FontString:SetText(text)
@@ -124,6 +141,7 @@ end
 function CharCell:clearCell()
     self.FontString:SetText("")
     self.lastText = nil
+    self.lastTextIsSecret = false
 end
 
 ---工厂函数：创建 CharCell 实例
