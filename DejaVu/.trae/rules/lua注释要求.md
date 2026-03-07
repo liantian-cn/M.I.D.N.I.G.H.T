@@ -1,6 +1,6 @@
 ---
 alwaysApply: false
-globs: *.lua
+globs: 
 ---
 # Lua 注释要求
 

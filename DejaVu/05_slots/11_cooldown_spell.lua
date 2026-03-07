@@ -10,7 +10,6 @@
 
 local addonName, addonTable = ...
 -- 本地化性能优化
-local CreateColorCurve = C_CurveUtil.CreateColorCurve
 local GetSpellTexture = C_Spell.GetSpellTexture
 local GetSpellCooldownDuration = C_Spell.GetSpellCooldownDuration
 local IsSpellOverlayed = C_SpellActivationOverlay.IsSpellOverlayed
@@ -28,18 +27,9 @@ local OnUpdateLow = addonTable.Event.Func.OnUpdateLow
 local OnUpdateHigh = addonTable.Event.Func.OnUpdateHigh
 
 local cooldownSpells = Slots.cooldownSpells -- 冷却技能的ID列表
+local remainingCurve = Slots.remainingCurve -- 冷却时间曲线
 
 local COOLDOWN_LENGTH = 40
-local CHARGE_LENGTH = 10
-
-
-local remaining_curve = CreateColorCurve()
-remaining_curve:SetType(Enum.LuaCurveType.Linear)
-remaining_curve:AddPoint(0.0, COLOR.C0)
-remaining_curve:AddPoint(5.0, COLOR.C100)
-remaining_curve:AddPoint(30.0, COLOR.C150)
-remaining_curve:AddPoint(155.0, COLOR.C200)
-remaining_curve:AddPoint(375.0, COLOR.C255)
 
 
 
@@ -51,16 +41,16 @@ local function InitializeCooldownFrame()
         local y = 0
         table.insert(cooldownCells, {
             icon = BadgeCell:New(x, y),         -- 技能图标
-            remaining = Cell:New(x, y + 2),     -- 冷却事件
-            overlayed = Cell:New(x + 1, y + 2), -- overlayed 是技能是否高亮，取自C_SpellActivationOverlay.IsSpellOverlayed
-            unusable = Cell:New(x, y + 3),      -- unknown 和 unusable 是重合的，任意满足，该图标为白色，否则为透明色。 C_Spell.IsSpellUsable(spellID)
-            unknown = Cell:New(x, y + 3),       -- unknown 和 unusable 是重合的，任意满足，该图标为白色，否则为透明色。  C_SpellBook.IsSpellInSpellBook(spellID)
+            remaining = Cell:New(x, y + 2),     -- 冷却剩余时间
+            overlayed = Cell:New(x + 1, y + 2), -- 技能是否高亮，取自C_SpellActivationOverlay.IsSpellOverlayed
+            unusable = Cell:New(x, y + 3),      -- 技能是否不可用，取自C_Spell.IsSpellUsable(spellID)
+            unknown = Cell:New(x, y + 3),       -- 技能是否在法术书中，取自C_SpellBook.IsSpellInSpellBook(spellID)
         })
     end
 
 
 
-    local function updateIcon() -- 全量更新
+    local function updateIcon() -- 更新图标
         for i = 1, COOLDOWN_LENGTH do
             local cell = cooldownCells[i]
             if i <= #cooldownSpells then
@@ -76,14 +66,14 @@ local function InitializeCooldownFrame()
         end
     end
 
-    local function updateRemaining() -- 全量更新
+    local function updateRemaining() -- 更新冷却剩余时间
         for i = 1, COOLDOWN_LENGTH do
             local cell = cooldownCells[i]
             if i <= #cooldownSpells then
                 local spell = cooldownSpells[i]
                 local SpellID = spell.spellID
                 local duration = GetSpellCooldownDuration(SpellID)
-                local result = duration:EvaluateRemainingDuration(remaining_curve)
+                local result = duration:EvaluateRemainingDuration(remainingCurve)
                 cell.remaining:setCell(result)
             else
                 cell.remaining:clearCell()
@@ -92,7 +82,7 @@ local function InitializeCooldownFrame()
         end
     end
 
-    local function updateOverlayed() -- 全量更新
+    local function updateOverlayed() -- 更新技能高亮状态
         for i = 1, COOLDOWN_LENGTH do
             local cell = cooldownCells[i]
             if i <= #cooldownSpells then
@@ -108,7 +98,7 @@ local function InitializeCooldownFrame()
         end
     end
 
-    local function updateUnknownAndUnsable() -- 全量更新
+    local function updateUnknownAndUnusable() -- 更新技能不可用和未知状态
         for i = 1, COOLDOWN_LENGTH do
             local cell = cooldownCells[i]
             if i <= #cooldownSpells then
@@ -133,12 +123,12 @@ local function InitializeCooldownFrame()
         updateIcon()
         updateRemaining()
         updateOverlayed()
-        updateUnknownAndUnsable()
+        updateUnknownAndUnusable()
     end
     fullUpdate()
-    table.insert(SPELLS_CHANGED, updateIcon)           -- 第二帧创建面板
-    table.insert(OnUpdateHigh, updateRemaining)        -- 第二帧创建面板
-    table.insert(OnUpdateHigh, updateOverlayed)        -- 第二帧创建面板
-    table.insert(OnUpdateLow, updateUnknownAndUnsable) -- 第二帧创建面板
+    table.insert(SPELLS_CHANGED, updateIcon)            -- 技能变更时更新图标
+    table.insert(OnUpdateHigh, updateRemaining)         -- 高频更新冷却剩余时间
+    table.insert(OnUpdateHigh, updateOverlayed)         -- 高频更新技能高亮状态
+    table.insert(OnUpdateLow, updateUnknownAndUnusable) -- 低频更新技能状态
 end
-table.insert(InitUI, InitializeCooldownFrame)          -- 第二帧创建面板
+table.insert(InitUI, InitializeCooldownFrame)           -- 初始化时创建面板
