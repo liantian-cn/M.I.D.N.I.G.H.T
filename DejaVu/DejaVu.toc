@@ -41,6 +41,7 @@ Libs/LibStub.lua
 # Slots (通用Cell组配置)
 05_slots/00_init.lua
 05_slots/01_mark_point.lua
+05_slots/02_refresh_player_list.lua
 05_slots/11_spell_sequence.lua
 05_slots/12_player_buff.lua
 05_slots/13_player_debuff.lua
