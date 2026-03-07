@@ -15,6 +15,8 @@
         "c:\\Users\\liantian\\.trae-cn\\extensions\\ketho.wow-api-0.22.3\\Annotations\\Core"
     ],
     "Lua.diagnostics.globals": [
-        "SlashCmdList"
+        "SlashCmdList",
+        "ROLE",
+        "CLASS"
     ]
 }
