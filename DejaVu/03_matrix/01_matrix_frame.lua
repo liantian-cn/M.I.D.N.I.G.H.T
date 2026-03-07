@@ -1,11 +1,18 @@
 --[[
-文件定位：
-
-
-
-
+文件：01_matrix_frame.lua
+定位：DejaVu 矩阵框架创建模块
+功能：
+  - 创建和管理矩阵主框架（MatrixFrame）
+  - 初始化矩阵尺寸（CELL、MEGA、BADGE）
+  - 提供矩阵背景与基础容器
+依赖：
+  - addonTable.Size.GetUIScaleFactor UI缩放计算
+  - addonTable.Event.Func.InitUI 初始化UI函数列表
+接口：
+  - InitializeSize() 初始化尺寸
+  - CreateMatrixFrame() 创建矩阵框架
 状态：
-  draft
+  waiting_real_test（等待真实测试）
 ]]
 
 local addonName, addonTable = ... -- 插件名称与共享表
@@ -20,8 +27,8 @@ local scale = 4
 local function InitializeSize()              -- 初始化尺寸
     local SIZE = {                           -- 尺寸表主体
         MATRIX = {                           -- MatrixFrame有多个Cell
-            Width = 98,                      -- Cell横向个数
-            Height = 36,                     -- Cell纵向个数
+            Width = 82,                      -- Cell横向个数
+            Height = 27,                     -- Cell纵向个数
         },
         CELL = GetUIScaleFactor(scale * 4),  -- Cell尺寸
         MEGA = GetUIScaleFactor(scale * 8),  -- MegaCell尺寸
