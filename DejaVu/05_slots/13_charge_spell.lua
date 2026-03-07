@@ -26,10 +26,10 @@ local Slots = addonTable.Slots
 local Cell = addonTable.Cell
 local BadgeCell = addonTable.BadgeCell
 local CharCell = addonTable.CharCell
-local InitUI = addonTable.Event.Func.InitUI                 -- 初始化 UI 函数列表
-local SPELLS_CHANGED = addonTable.Event.Func.SPELLS_CHANGED -- SPELLS_CHANGED 回调列表
-local OnUpdateLow = addonTable.Event.Func.OnUpdateLow       -- 低频刷新回调列表（约 2 Hz）
-local OnUpdateHigh = addonTable.Event.Func.OnUpdateHigh     -- 高频刷新回调列表（约 10 Hz）
+local InitUI = addonTable.UpdateFunc.InitUI                 -- 初始化 UI 函数列表
+local SPELLS_CHANGED = addonTable.UpdateFunc.SPELLS_CHANGED -- SPELLS_CHANGED 回调列表
+local OnUpdateLow = addonTable.UpdateFunc.OnUpdateLow       -- 低频刷新回调列表（约 2 Hz）
+local OnUpdateHigh = addonTable.UpdateFunc.OnUpdateHigh     -- 高频刷新回调列表（约 10 Hz）
 
 local chargeSpells = Slots.chargeSpells                     -- 充能技能列表
 
