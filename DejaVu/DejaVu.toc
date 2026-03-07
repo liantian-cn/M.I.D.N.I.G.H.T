@@ -44,6 +44,7 @@ Libs/LibStub.lua
 05_slots/11_spell_sequence.lua
 05_slots/12_player_buff.lua
 05_slots/13_player_debuff.lua
+05_slots/99_test.lua
 
 # Spec (职业特色Cell组配置)
 06_spec/00_init.lua

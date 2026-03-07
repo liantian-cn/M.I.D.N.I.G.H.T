@@ -106,7 +106,7 @@ end
 
 ---设置颜色方法
 ---@param color ColorMixin 要设置的颜色
-function Cell:setColor(color)
+function Cell:setCell(color)
     -- 如果颜色相同，跳过设置以提高性能
     if self:_isSameColor(color) then
         return

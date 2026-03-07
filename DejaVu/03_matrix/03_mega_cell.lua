@@ -100,7 +100,7 @@ end
 
 ---设置图标方法
 ---@param icon string|number 图标路径或纹理ID
-function MegaCell:setIcon(icon)
+function MegaCell:setCell(icon)
     -- 检查是否为秘密值
     local isSecret = issecretvalue(icon)
 
@@ -119,7 +119,7 @@ function MegaCell:setIcon(icon)
 end
 
 ---清除图标方法
-function MegaCell:clearIcon()
+function MegaCell:clearCell()
     self.Icon:Hide()
     self.lastIcon = nil
     self.lastIconIsSecret = false
