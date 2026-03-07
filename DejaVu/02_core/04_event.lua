@@ -23,6 +23,10 @@ addonTable.Event.Func.OnUpdateLow = {}
 
 addonTable.Event.Func.OnEvent_Aura = {}
 addonTable.Event.Func.OnEvent_Spell = {}
+addonTable.Event.Func.SPELLS_CHANGED = {}
+addonTable.Event.Func.SPELL_UPDATE_ICON = {}
+addonTable.Event.Func.PLAYER_TALENT_UPDATE = {}
+addonTable.Event.Func.TRAIT_CONFIG_UPDATED = {}
 
 
 local eventFrame = CreateFrame("EventFrame", addonName .. "Frame")
@@ -43,13 +47,38 @@ function eventFrame:PLAYER_ENTERING_WORLD()
     self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 end
 
+function eventFrame:SPELLS_CHANGED()
+    for _, func in ipairs(addonTable.Event.Func.SPELLS_CHANGED) do
+        func()
+    end
+end
+
+function eventFrame:SPELL_UPDATE_ICON()
+    for _, func in ipairs(addonTable.Event.Func.SPELL_UPDATE_ICON) do
+        func()
+    end
+end
+
+function eventFrame:PLAYER_TALENT_UPDATE()
+    for _, func in ipairs(addonTable.Event.Func.PLAYER_TALENT_UPDATE) do
+        func()
+    end
+end
+
+function eventFrame:TRAIT_CONFIG_UPDATED()
+    for _, func in ipairs(addonTable.Event.Func.TRAIT_CONFIG_UPDATED) do
+        func()
+    end
+end
+
 -- 注册事件
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 -- eventFrame:RegisterEvent("UNIT_AURA")
 -- eventFrame:RegisterEvent("UNIT_MAXHEALTH")
--- eventFrame:RegisterEvent("SPELLS_CHANGED")
--- eventFrame:RegisterEvent("SPELL_UPDATE_ICON")
--- eventFrame:RegisterEvent("PLAYER_TALENT_UPDATE")
+eventFrame:RegisterEvent("SPELLS_CHANGED")
+eventFrame:RegisterEvent("SPELL_UPDATE_ICON")
+eventFrame:RegisterEvent("PLAYER_TALENT_UPDATE")
+eventFrame:RegisterEvent("TRAIT_CONFIG_UPDATED")
 -- eventFrame:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
 eventFrame:SetScript("OnEvent", function(self, event, ...)
     self[event](self, ...)
