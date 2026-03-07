@@ -59,25 +59,25 @@ local function InitializeChargeFrame()
 
 
 
-    -- local function updateIcon() -- 全量更新
-    --     for i = 1, COOLDOWN_LENGTH do
-    --         local cell = cooldownCells[i]
-    --         if i <= #cooldownSpells then
-    --             local spell = cooldownSpells[i]
-    --             local SpellID = spell.spellID
+    local function updateIcon() -- 全量更新
+        for i = 1, CHARGE_LENGTH do
+            local cell = chargeCells[i]
+            if i <= #cooldownSpells then
+                local spell = cooldownSpells[i]
+                local SpellID = spell.spellID
 
-    --             local iconID = GetSpellTexture(SpellID)
-    --             cell.icon:setCell(iconID, COLOR.SPELL_TYPE.PLAYER_SPELL)
-    --         else
-    --             cell.icon:clearCell()
-    --         end
-    --         i = i + 1
-    --     end
-    -- end
+                local iconID = GetSpellTexture(SpellID)
+                cell.icon:setCell(iconID, COLOR.SPELL_TYPE.PLAYER_SPELL)
+            else
+                cell.icon:clearCell()
+            end
+            i = i + 1
+        end
+    end
 
     -- local function updateRemaining() -- 全量更新
-    --     for i = 1, COOLDOWN_LENGTH do
-    --         local cell = cooldownCells[i]
+    --     for i = 1, CHARGE_LENGTH do
+    --         local cell = chargeCells[i]
     --         if i <= #cooldownSpells then
     --             local spell = cooldownSpells[i]
     --             local SpellID = spell.spellID
@@ -92,8 +92,8 @@ local function InitializeChargeFrame()
     -- end
 
     -- local function updateOverlayed() -- 全量更新
-    --     for i = 1, COOLDOWN_LENGTH do
-    --         local cell = cooldownCells[i]
+    --     for i = 1, CHARGE_LENGTH do
+    --         local cell = chargeCells[i]
     --         if i <= #cooldownSpells then
     --             local spell = cooldownSpells[i]
     --             local SpellID = spell.spellID
@@ -108,8 +108,8 @@ local function InitializeChargeFrame()
     -- end
 
     -- local function updateUnknownAndUnsable() -- 全量更新
-    --     for i = 1, COOLDOWN_LENGTH do
-    --         local cell = cooldownCells[i]
+    --     for i = 1, CHARGE_LENGTH do
+    --         local cell = chargeCells[i]
     --         if i <= #cooldownSpells then
     --             local spell = cooldownSpells[i]
     --             local SpellID = spell.spellID
