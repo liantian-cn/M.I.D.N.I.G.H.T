@@ -48,24 +48,24 @@
   waiting_real_test（等待真实测试）
 ]]
 
-local addonName, addonTable = ... -- luacheck: ignore addonName
-local InitUI = addonTable.Event.Func.InitUI -- 初始化 UI 函数列表
+local addonName, addonTable = ...                        -- luacheck: ignore addonName
+local InitUI = addonTable.UpdateFunc.InitUI              -- 初始化 UI 函数列表
 
-local AddSliderRow = addonTable.Panel.AddSliderRow -- 创建滑块行
-local AddComboRow = addonTable.Panel.AddComboRow -- 创建下拉行
+local AddSliderRow = addonTable.Panel.AddSliderRow       -- 创建滑块行
+local AddComboRow = addonTable.Panel.AddComboRow         -- 创建下拉行
 local AddSpellListRow = addonTable.Panel.AddSpellListRow -- 创建技能列表行
 
-local function CreatePanelRows() -- 构建所有设置行
-    for rowIndex = 1, #addonTable.Panel.Rows do -- 遍历 Rows
+local function CreatePanelRows()                         -- 构建所有设置行
+    for rowIndex = 1, #addonTable.Panel.Rows do          -- 遍历 Rows
         local row_info = addonTable.Panel.Rows[rowIndex]
-        if row_info.type == "slider" then -- 滑块
-            AddSliderRow(row_info) -- 创建滑块行
-        elseif row_info.type == "combo" then -- 下拉
-            AddComboRow(row_info) -- 创建下拉行
-        elseif row_info.type == "spell_list" then -- 技能列表
-            AddSpellListRow(row_info) -- 创建技能列表行
-        end -- 分支结束
-    end -- Rows 遍历结束
-end -- CreatePanelRows 结束
+        if row_info.type == "slider" then                -- 滑块
+            AddSliderRow(row_info)                       -- 创建滑块行
+        elseif row_info.type == "combo" then             -- 下拉
+            AddComboRow(row_info)                        -- 创建下拉行
+        elseif row_info.type == "spell_list" then        -- 技能列表
+            AddSpellListRow(row_info)                    -- 创建技能列表行
+        end                                              -- 分支结束
+    end                                                  -- Rows 遍历结束
+end                                                      -- CreatePanelRows 结束
 
-table.insert(InitUI, CreatePanelRows) -- 第二帧创建所有行
+table.insert(InitUI, CreatePanelRows)                    -- 第二帧创建所有行

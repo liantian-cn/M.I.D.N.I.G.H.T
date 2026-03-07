@@ -7,7 +7,7 @@
   - 提供矩阵背景与基础容器
 依赖：
   - addonTable.Size.GetUIScaleFactor UI缩放计算
-  - addonTable.Event.Func.InitUI 初始化UI函数列表
+  - addonTable.UpdateFunc.InitUI 初始化UI函数列表
 接口：
   - InitializeSize() 初始化尺寸
   - CreateMatrixFrame() 创建矩阵框架
@@ -18,7 +18,7 @@
 local addonName, addonTable = ... -- 插件名称与共享表
 local CreateFrame = CreateFrame
 local UIParent = UIParent
-local InitUI = addonTable.Event.Func.InitUI               -- 初始化 UI 函数列表
+local InitUI = addonTable.UpdateFunc.InitUI               -- 初始化 UI 函数列表
 local GetUIScaleFactor = addonTable.Size.GetUIScaleFactor -- UI 缩放计算
 
 

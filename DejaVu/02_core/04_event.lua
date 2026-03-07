@@ -14,20 +14,20 @@ local C_Timer = C_Timer
 local wipe = wipe
 
 addonTable.Event = {}
-addonTable.Event.Func = {}
+addonTable.UpdateFunc = {}
 
-addonTable.Event.Func.InitUI = {}
+addonTable.UpdateFunc.InitUI = {}
 
-addonTable.Event.Func.OnUpdateHigh = {}
-addonTable.Event.Func.OnUpdateLow = {}
+addonTable.UpdateFunc.OnUpdateHigh = {}
+addonTable.UpdateFunc.OnUpdateLow = {}
 
 
-addonTable.Event.Func.SPELLS_CHANGED = {}
-addonTable.Event.Func.SPELL_UPDATE_ICON = {}
-addonTable.Event.Func.PLAYER_TALENT_UPDATE = {}
-addonTable.Event.Func.TRAIT_CONFIG_UPDATED = {}
-addonTable.Event.Func.UPDATE_MOUSEOVER_UNIT = {}
-addonTable.Event.Func.UNIT_AURA = {}
+addonTable.UpdateFunc.SPELLS_CHANGED = {}
+addonTable.UpdateFunc.SPELL_UPDATE_ICON = {}
+addonTable.UpdateFunc.PLAYER_TALENT_UPDATE = {}
+addonTable.UpdateFunc.TRAIT_CONFIG_UPDATED = {}
+addonTable.UpdateFunc.UPDATE_MOUSEOVER_UNIT = {}
+addonTable.UpdateFunc.UNIT_AURA = {}
 
 
 local eventFrame = CreateFrame("EventFrame", addonName .. "Frame")
@@ -35,12 +35,12 @@ addonTable.Event.Frame = eventFrame
 
 function eventFrame:PLAYER_ENTERING_WORLD()
     C_Timer.After(0, function()
-        wipe(addonTable.Event.Func.OnUpdateHigh)
-        wipe(addonTable.Event.Func.OnUpdateLow)
+        wipe(addonTable.UpdateFunc.OnUpdateHigh)
+        wipe(addonTable.UpdateFunc.OnUpdateLow)
 
 
-        for funcIndex = 1, #addonTable.Event.Func.InitUI do
-            local func = addonTable.Event.Func.InitUI[funcIndex]
+        for funcIndex = 1, #addonTable.UpdateFunc.InitUI do
+            local func = addonTable.UpdateFunc.InitUI[funcIndex]
             func()
         end
     end)
@@ -48,43 +48,43 @@ function eventFrame:PLAYER_ENTERING_WORLD()
 end
 
 function eventFrame:SPELLS_CHANGED()
-    for funcIndex = 1, #addonTable.Event.Func.SPELLS_CHANGED do
-        local func = addonTable.Event.Func.SPELLS_CHANGED[funcIndex]
+    for funcIndex = 1, #addonTable.UpdateFunc.SPELLS_CHANGED do
+        local func = addonTable.UpdateFunc.SPELLS_CHANGED[funcIndex]
         func()
     end
 end
 
 function eventFrame:SPELL_UPDATE_ICON()
-    for funcIndex = 1, #addonTable.Event.Func.SPELL_UPDATE_ICON do
-        local func = addonTable.Event.Func.SPELL_UPDATE_ICON[funcIndex]
+    for funcIndex = 1, #addonTable.UpdateFunc.SPELL_UPDATE_ICON do
+        local func = addonTable.UpdateFunc.SPELL_UPDATE_ICON[funcIndex]
         func()
     end
 end
 
 function eventFrame:PLAYER_TALENT_UPDATE()
-    for funcIndex = 1, #addonTable.Event.Func.PLAYER_TALENT_UPDATE do
-        local func = addonTable.Event.Func.PLAYER_TALENT_UPDATE[funcIndex]
+    for funcIndex = 1, #addonTable.UpdateFunc.PLAYER_TALENT_UPDATE do
+        local func = addonTable.UpdateFunc.PLAYER_TALENT_UPDATE[funcIndex]
         func()
     end
 end
 
 function eventFrame:TRAIT_CONFIG_UPDATED()
-    for funcIndex = 1, #addonTable.Event.Func.TRAIT_CONFIG_UPDATED do
-        local func = addonTable.Event.Func.TRAIT_CONFIG_UPDATED[funcIndex]
+    for funcIndex = 1, #addonTable.UpdateFunc.TRAIT_CONFIG_UPDATED do
+        local func = addonTable.UpdateFunc.TRAIT_CONFIG_UPDATED[funcIndex]
         func()
     end
 end
 
 function eventFrame:UPDATE_MOUSEOVER_UNIT()
-    for funcIndex = 1, #addonTable.Event.Func.UPDATE_MOUSEOVER_UNIT do
-        local func = addonTable.Event.Func.UPDATE_MOUSEOVER_UNIT[funcIndex]
+    for funcIndex = 1, #addonTable.UpdateFunc.UPDATE_MOUSEOVER_UNIT do
+        local func = addonTable.UpdateFunc.UPDATE_MOUSEOVER_UNIT[funcIndex]
         func()
     end
 end
 
 function eventFrame:UNIT_AURA(unitTarget)
-    for funcIndex = 1, #addonTable.Event.Func.UNIT_AURA do
-        local updaterInfo = addonTable.Event.Func.UNIT_AURA[funcIndex]
+    for funcIndex = 1, #addonTable.UpdateFunc.UNIT_AURA do
+        local updaterInfo = addonTable.UpdateFunc.UNIT_AURA[funcIndex]
         if updaterInfo.unit == unitTarget then
             updaterInfo.func()
         end
@@ -117,15 +117,15 @@ eventFrame:HookScript("OnUpdate", function(self, elapsed)
     lowFrequencyTimeElapsed      = lowFrequencyTimeElapsed + elapsed
     if timeElapsed > tickOffset then
         timeElapsed = 0
-        for updaterIndex = 1, #addonTable.Event.Func.OnUpdateHigh do
-            local updater = addonTable.Event.Func.OnUpdateHigh[updaterIndex]
+        for updaterIndex = 1, #addonTable.UpdateFunc.OnUpdateHigh do
+            local updater = addonTable.UpdateFunc.OnUpdateHigh[updaterIndex]
             updater()
         end
     end
     if lowFrequencyTimeElapsed > lowFrequencyTickOffset then
         lowFrequencyTimeElapsed = 0
-        for updaterIndex = 1, #addonTable.Event.Func.OnUpdateLow do
-            local updater = addonTable.Event.Func.OnUpdateLow[updaterIndex]
+        for updaterIndex = 1, #addonTable.UpdateFunc.OnUpdateLow do
+            local updater = addonTable.UpdateFunc.OnUpdateLow[updaterIndex]
             updater()
         end
     end

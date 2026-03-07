@@ -23,10 +23,10 @@ local COLOR = addonTable.COLOR
 local Slots = addonTable.Slots
 local Cell = addonTable.Cell
 local BadgeCell = addonTable.BadgeCell
-local InitUI = addonTable.Event.Func.InitUI                 -- 初始化 UI 函数列表
-local SPELLS_CHANGED = addonTable.Event.Func.SPELLS_CHANGED -- SPELLS_CHANGED 回调列表
-local OnUpdateLow = addonTable.Event.Func.OnUpdateLow       -- 低频刷新回调列表（约 2 Hz）
-local OnUpdateHigh = addonTable.Event.Func.OnUpdateHigh     -- 高频刷新回调列表（约 10 Hz）
+local InitUI = addonTable.UpdateFunc.InitUI                 -- 初始化 UI 函数列表
+local SPELLS_CHANGED = addonTable.UpdateFunc.SPELLS_CHANGED -- SPELLS_CHANGED 回调列表
+local OnUpdateLow = addonTable.UpdateFunc.OnUpdateLow       -- 低频刷新回调列表（约 2 Hz）
+local OnUpdateHigh = addonTable.UpdateFunc.OnUpdateHigh     -- 高频刷新回调列表（约 10 Hz）
 
 local cooldownSpells = Slots.cooldownSpells                 -- 普通冷却技能列表
 local remainingCurve = Slots.remainingCurve                 -- 剩余时长映射曲线
@@ -73,8 +73,8 @@ local function InitializeCooldownFrame()
             if i <= #cooldownSpells then
                 local spell = cooldownSpells[i]
                 local spellID = spell.spellID
-                local duration = GetSpellCooldownDuration(spellID)
-                local result = duration:EvaluateRemainingDuration(remainingCurve)
+                local remaining = GetSpellCooldownDuration(spellID)
+                local result = remaining:EvaluateRemainingDuration(remainingCurve)
                 cell.remaining:setCell(result)
             else
                 cell.remaining:clearCell()

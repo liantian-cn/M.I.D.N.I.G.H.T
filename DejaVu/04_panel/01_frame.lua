@@ -16,7 +16,7 @@ local CreateFrame = CreateFrame
 
 
 
-local InitUI = addonTable.Event.Func.InitUI -- 初始化 UI 函数列表
+local InitUI = addonTable.UpdateFunc.InitUI -- 初始化 UI 函数列表
 local GetUIScaleFactor = addonTable.Size.GetUIScaleFactor -- UI 缩放计算
 local COLOR = addonTable.Panel.COLOR -- 面板颜色表
 local FONT = addonTable.Panel.Font -- addonTable.Panel.Font -- 自定义字体路径

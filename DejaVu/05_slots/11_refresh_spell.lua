@@ -13,9 +13,9 @@ local Wipe = wipe
 
 
 
-local InitUI = addonTable.Event.Func.InitUI                             -- 初始化 UI 函数列表
-local PLAYER_TALENT_UPDATE = addonTable.Event.Func.PLAYER_TALENT_UPDATE -- PLAYER_TALENT_UPDATE 回调列表
-local TRAIT_CONFIG_UPDATED = addonTable.Event.Func.TRAIT_CONFIG_UPDATED -- TRAIT_CONFIG_UPDATED 回调列表
+local InitUI = addonTable.UpdateFunc.InitUI                             -- 初始化 UI 函数列表
+local PLAYER_TALENT_UPDATE = addonTable.UpdateFunc.PLAYER_TALENT_UPDATE -- PLAYER_TALENT_UPDATE 回调列表
+local TRAIT_CONFIG_UPDATED = addonTable.UpdateFunc.TRAIT_CONFIG_UPDATED -- TRAIT_CONFIG_UPDATED 回调列表
 local Slots = addonTable.Slots
 
 Slots.chargeSpells = {}

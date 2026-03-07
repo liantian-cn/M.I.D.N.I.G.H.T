@@ -1,7 +1,7 @@
 local addonName, addonTable = ... -- luacheck: ignore addonName
 local COLOR = addonTable.COLOR
 local Cell = addonTable.Cell
-local InitUI = addonTable.Event.Func.InitUI -- 初始化 UI 函数列表
+local InitUI = addonTable.UpdateFunc.InitUI -- 初始化 UI 函数列表
 
 
 local function InitializeMarkPoint()
