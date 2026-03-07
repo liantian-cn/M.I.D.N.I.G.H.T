@@ -8,7 +8,9 @@
   draft
 ]]
 
-local addonName, addonTable = ...                         -- 插件名称与共享表
+local addonName, addonTable = ... -- 插件名称与共享表
+local CreateFrame = CreateFrame
+local UIParent = UIParent
 local InitUI = addonTable.Event.Func.InitUI               -- 初始化 UI 函数列表
 local GetUIScaleFactor = addonTable.Size.GetUIScaleFactor -- UI 缩放计算
 
@@ -16,12 +18,13 @@ local GetUIScaleFactor = addonTable.Size.GetUIScaleFactor -- UI 缩放计算
 local scale = 4
 
 local function InitializeSize()              -- 初始化尺寸
-    SIZE = {                                 -- 尺寸表主体
+    local SIZE = {                           -- 尺寸表主体
         MATRIX = {                           -- MatrixFrame有多个Cell
             Width = 97,                      -- Cell横向个数
             Height = 36,                     -- Cell纵向个数
         },
         CELL = GetUIScaleFactor(scale * 4),  -- Cell尺寸
+        MEGA = GetUIScaleFactor(scale * 8),  -- MegaCell尺寸
         BADGE = GetUIScaleFactor(scale * 2), -- Badge尺寸
     }                                        -- SIZE 结束
     addonTable.Matrix.SIZE = SIZE            -- 暴露到面板模块

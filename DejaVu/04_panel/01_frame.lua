@@ -12,6 +12,10 @@
 ]]
 
 local addonName, addonTable = ... -- 插件名称与共享表
+local CreateFrame = CreateFrame
+
+
+
 local InitUI = addonTable.Event.Func.InitUI -- 初始化 UI 函数列表
 local GetUIScaleFactor = addonTable.Size.GetUIScaleFactor -- UI 缩放计算
 local COLOR = addonTable.Panel.COLOR -- 面板颜色表

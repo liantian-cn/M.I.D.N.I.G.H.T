@@ -36,3 +36,14 @@ frame:SetScript("OnEvent", function(self, event, loaded_addonName)
         Initialize()
     end
 end)
+
+
+-- 设置游戏变量，确保插件正常运行
+SetCVar("secretChallengeModeRestrictionsForced", 1)
+SetCVar("secretCombatRestrictionsForced", 1)
+SetCVar("secretEncounterRestrictionsForced", 1)
+SetCVar("secretMapRestrictionsForced", 1)
+SetCVar("secretPvPMatchRestrictionsForced", 1)
+SetCVar("secretAuraDataRestrictionsForced", 1)
+SetCVar("scriptErrors", 1);
+SetCVar("doNotFlashLowHealthWarning", 1);

@@ -104,6 +104,9 @@ local len = #secretString
 
 -- ❌ 禁止：索引访问
 local value = secret["field"]
+
+-- ❌ 禁止：pcall保护（无法阻止秘密值污染，且pcall本身会成为秘密函数）
+local ok, result = pcall(function() return secretValue > 0 end)
 ```
 
 ### 3.2 危险操作检测清单
@@ -117,6 +120,7 @@ local value = secret["field"]
 | 布尔测试 | `if\s+\w+\s+then` | 🔴 高 |
 | 字段访问 | `\.\w+\s*[<>=!]` | 🔴 高 |
 | table键 | `\[.*\]\s*=` | 🟡 中 |
+| pcall保护 | `pcall\s*\(` | 🔴 高 |
 
 ---
 
@@ -173,24 +177,7 @@ table.insert(spells, {
 })
 ```
 
-### 4.4 模式四：pcall保护（必要时）
-
-```lua
--- ⚠️ 谨慎：仅在必要时使用
-local function SafeCompare(value, threshold)
-    local ok, result = pcall(function()
-        return value > threshold
-    end)
-    return ok and result
-end
-
--- 使用
-if SafeCompare(cdInfo.duration, 0) then
-    -- 比较成功才执行
-end
-```
-
-### 4.5 模式五：使用DurationObject/CurveObject
+### 4.4 模式四：使用DurationObject/CurveObject
 
 ```lua
 -- ✅ 安全：使用DurationObject处理时间
