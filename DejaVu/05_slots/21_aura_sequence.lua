@@ -87,10 +87,11 @@ local function AuraSequenceCreater(unit, filter, maxCount, pos_x, pos_y, sortRul
         local x = pos_x - 2 + 2 * i
         local y = pos_y
         table.insert(auraCells, {
-            icon = BadgeCell:New(x, y),       -- aura的图标
-            remaining = Cell:New(x, y + 2),   -- aura的剩余时间的颜色映射
-            forever = Cell:New(x + 1, y + 2), -- aura是否永久生效
-            count = CharCell:New(x, y + 3)    -- 当的层数
+            icon = BadgeCell:New(x, y),         -- aura的图标
+            remaining = Cell:New(x, y + 2),     -- aura的剩余时间的颜色映射
+            forever = Cell:New(x, y + 2),       -- aura是否永久生效，覆盖在剩余时间上
+            spellType = Cell:New(x + 1, y + 2), -- aura的类型颜色
+            count = CharCell:New(x, y + 3)      -- 当的层数
         })
     end
 
@@ -100,6 +101,7 @@ local function AuraSequenceCreater(unit, filter, maxCount, pos_x, pos_y, sortRul
             cell.icon:clearCell()
             cell.remaining:clearCell()
             cell.forever:clearCell()
+            cell.spellType:clearCell()
             cell.count:clearCell()
         end
     end
@@ -119,6 +121,7 @@ local function AuraSequenceCreater(unit, filter, maxCount, pos_x, pos_y, sortRul
                 cell.count:clearCell()
                 cell.remaining:clearCell()
                 cell.forever:clearCell()
+                cell.spellType:clearCell()
                 cell.icon:clearCell()
             else
                 local auraInstanceID = auraInstanceIDs[i]
@@ -139,18 +142,24 @@ local function AuraSequenceCreater(unit, filter, maxCount, pos_x, pos_y, sortRul
                     end
 
                     if foreverBoolen ~= nil then
-                        local foreverColor = EvaluateColorFromBoolean(foreverBoolen, COLOR.BLACK, COLOR.WHITE) -- 白色是永久buff
+                        local foreverColor = EvaluateColorFromBoolean(foreverBoolen, COLOR.TRANSPARENT, COLOR.WHITE) -- 白色是永久buff
                         cell.forever:setCell(foreverColor)
                     else
                         cell.forever:clearCell()
                     end
 
                     if isPlayer and isDebuff then
-                        cell.icon:setCell(aura.icon, GetAuraDispelTypeColor(unit, auraInstanceID, playerDebuffCurve))
+                        local debuffColor = GetAuraDispelTypeColor(unit, auraInstanceID, playerDebuffCurve)
+                        cell.icon:setCell(aura.icon, debuffColor)
+                        cell.spellType:setCell(debuffColor)
                     elseif isPlayer and isBuff then
-                        cell.icon:setCell(aura.icon, GetAuraDispelTypeColor(unit, auraInstanceID, playerBuffCurve))
+                        local buffColor = GetAuraDispelTypeColor(unit, auraInstanceID, playerBuffCurve)
+                        cell.icon:setCell(aura.icon, buffColor)
+                        cell.spellType:setCell(buffColor)
                     elseif isEnemy and isDebuff then
-                        cell.icon:setCell(aura.icon, GetAuraDispelTypeColor(unit, auraInstanceID, enemyDebuffCurve))
+                        local debuffColor = GetAuraDispelTypeColor(unit, auraInstanceID, enemyDebuffCurve)
+                        cell.icon:setCell(aura.icon, debuffColor)
+                        cell.spellType:setCell(debuffColor)
                     end
                 end
             end
