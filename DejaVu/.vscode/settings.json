@@ -17,6 +17,7 @@
     "Lua.diagnostics.globals": [
         "SlashCmdList",
         "ROLE",
-        "CLASS"
+        "CLASS",
+        "COLOR"
     ]
 }

@@ -29,6 +29,7 @@ Libs/LibStub.lua
 03_matrix/02_cell.lua
 03_matrix/03_mega_cell.lua
 03_matrix/04_badge_cell.lua
+03_matrix/05_char_cell.lua
 
 # Panel (设置面板)
 04_panel/00_init.lua
@@ -42,9 +43,10 @@ Libs/LibStub.lua
 05_slots/00_init.lua
 05_slots/01_mark_point.lua
 05_slots/02_refresh_player_list.lua
-05_slots/11_spell_sequence.lua
-05_slots/12_player_buff.lua
-05_slots/13_player_debuff.lua
+05_slots/11_cooldown_spell.lua
+05_slots/12_charge_spell.lua
+# 05_slots/12_player_buff.lua
+# 05_slots/13_player_debuff.lua
 05_slots/99_test.lua
 
 # Spec (职业特色Cell组配置)
