@@ -15,6 +15,7 @@ local addonName, addonTable = ... -- 插件名称与共享表
 local InitUI = addonTable.Event.Func.InitUI -- 初始化 UI 函数列表
 local GetUIScaleFactor = addonTable.Size.GetUIScaleFactor -- UI 缩放计算
 local COLOR = addonTable.Panel.COLOR -- 面板颜色表
+local FONT = addonTable.Panel.Font -- addonTable.Panel.Font -- 自定义字体路径
 
 local scale = 4 -- 与 EZPanel 一致的 UI 缩放基准
 
@@ -112,7 +113,7 @@ function UI.CreateButton(parent, slug, x_pos, y_pos, buttonWidth, buttonHeight, 
 
     button.text = button:CreateFontString(nil, "OVERLAY") -- 按钮文字
     button.text:SetPoint("CENTER", button, "CENTER") -- 居中
-    button.text:SetFont("Fonts\\FRIZQT__.TTF", GetUIScaleFactor(5 * scale), "") -- 字体
+    button.text:SetFont(FONT, GetUIScaleFactor(5 * scale), "") -- 字体
     button.text:SetJustifyH("CENTER") -- 水平居中
     button.text:SetJustifyV("MIDDLE") -- 垂直居中
     button.text:SetTextColor(1, 1, 1) -- 文字颜色
@@ -161,7 +162,7 @@ local function CreateSettingRow(title, tooltip) -- 创建一行设置项
     row.title = row:CreateFontString(nil, "OVERLAY") -- 标题文本
     row.title:SetPoint("LEFT", row, "LEFT", 0, 0) -- 左对齐
     row.title:SetSize(SIZE.SETTING_LINE.TitleWidth, SIZE.SETTING_LINE.Height) -- 标题区域
-    row.title:SetFont("Fonts\\FRIZQT__.TTF", GetUIScaleFactor(5 * scale), "") -- 字体
+    row.title:SetFont(FONT, GetUIScaleFactor(5 * scale), "") -- 字体
     row.title:SetJustifyH("LEFT") -- 左对齐
     row.title:SetJustifyV("MIDDLE") -- 垂直居中
     row.title:SetTextColor(COLOR.Text:GetRGBA()) -- 文字色
@@ -226,7 +227,7 @@ local function CreatePanelFrame() -- 创建控制条与设置面板
     local statusText = statusArea:CreateFontString(nil, "OVERLAY") -- 状态文字
     statusText:SetPoint("LEFT", statusIcon, "RIGHT", spacing, 0) -- 左对齐
     statusText:SetPoint("RIGHT", statusArea, "RIGHT", 0, 0) -- 右对齐
-    statusText:SetFont("Fonts\\FRIZQT__.TTF", GetUIScaleFactor(5 * scale), "") -- 字体
+    statusText:SetFont(FONT, GetUIScaleFactor(5 * scale), "") -- 字体
     statusText:SetJustifyH("LEFT") -- 左对齐
     statusText:SetJustifyV("MIDDLE") -- 垂直居中
     statusText:SetTextColor(1, 0, 0) -- 默认红色

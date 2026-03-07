@@ -15,6 +15,7 @@ local addonName, addonTable = ... -- 插件名称与共享表
 local GetUIScaleFactor = addonTable.Size.GetUIScaleFactor -- UI 缩放
 local Panel = addonTable.Panel -- 面板模块
 local COLOR = Panel.COLOR -- 颜色表
+local FONT = Panel.Font -- addonTable.Panel.Font -- 自定义字体路径
 local UI = Panel.UI -- UI 工具
 
 local GetSpellName = C_Spell.GetSpellName -- 获取技能名
@@ -120,7 +121,7 @@ local function EnsureSpellListEditorFrame() -- 确保编辑器存在
     frame.titleText:SetPoint("TOPLEFT", frame, "TOPLEFT", spacing, -spacing) -- 定位
     frame.titleText:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -spacing, -spacing) -- 定位
     frame.titleText:SetHeight(lineHeight) -- 高度
-    frame.titleText:SetFont("Fonts\\FRIZQT__.TTF", GetUIScaleFactor(5 * scale), "") -- 字体
+    frame.titleText:SetFont(FONT, GetUIScaleFactor(5 * scale), "") -- 字体
     frame.titleText:SetJustifyH("CENTER") -- 水平居中
     frame.titleText:SetJustifyV("MIDDLE") -- 垂直居中
     frame.titleText:SetTextColor(COLOR.Text:GetRGBA()) -- 文字色
@@ -129,7 +130,7 @@ local function EnsureSpellListEditorFrame() -- 确保编辑器存在
     frame.spellIDBox = CreateFrame("EditBox", addonName .. "spellListInputBox", frame) -- 输入框
     frame.spellIDBox:SetPoint("TOPLEFT", frame, "TOPLEFT", inputX, inputRowY) -- 定位
     frame.spellIDBox:SetSize(inputWidth, lineHeight) -- 尺寸
-    frame.spellIDBox:SetFont("Fonts\\FRIZQT__.TTF", GetUIScaleFactor(5 * scale), "") -- 字体
+    frame.spellIDBox:SetFont(FONT, GetUIScaleFactor(5 * scale), "") -- 字体
     frame.spellIDBox:SetJustifyH("LEFT") -- 左对齐
     frame.spellIDBox:SetJustifyV("MIDDLE") -- 垂直居中
     frame.spellIDBox:SetTextColor(COLOR.Text:GetRGBA()) -- 文字色
@@ -164,7 +165,7 @@ local function EnsureSpellListEditorFrame() -- 确保编辑器存在
 
     frame.emptyText = frame.listFrame:CreateFontString(nil, "OVERLAY") -- 空文本
     frame.emptyText:SetPoint("CENTER", frame.listFrame, "CENTER") -- 居中
-    frame.emptyText:SetFont("Fonts\\FRIZQT__.TTF", GetUIScaleFactor(5 * scale), "") -- 字体
+    frame.emptyText:SetFont(FONT, GetUIScaleFactor(5 * scale), "") -- 字体
     frame.emptyText:SetJustifyH("CENTER") -- 居中
     frame.emptyText:SetJustifyV("MIDDLE") -- 居中
     frame.emptyText:SetTextColor(0.65, 0.65, 0.65) -- 文字色
@@ -191,7 +192,7 @@ local function EnsureSpellListEditorFrame() -- 确保编辑器存在
 
         row.idText = row:CreateFontString(nil, "OVERLAY") -- ID 文本
         row.idText:SetPoint("RIGHT", row, "RIGHT", -spacing, 0) -- 右对齐
-        row.idText:SetFont("Fonts\\FRIZQT__.TTF", GetUIScaleFactor(4.5 * scale), "") -- 字体
+        row.idText:SetFont(FONT, GetUIScaleFactor(4.5 * scale), "") -- 字体
         row.idText:SetJustifyH("RIGHT") -- 右对齐
         row.idText:SetJustifyV("MIDDLE") -- 垂直居中
         row.idText:SetTextColor(COLOR.Text:GetRGBA()) -- 文字色
@@ -199,7 +200,7 @@ local function EnsureSpellListEditorFrame() -- 确保编辑器存在
         row.nameText = row:CreateFontString(nil, "OVERLAY") -- 名称文本
         row.nameText:SetPoint("LEFT", row.icon, "RIGHT", spacing, 0) -- 左对齐
         row.nameText:SetPoint("RIGHT", row.idText, "LEFT", -spacing, 0) -- 右对齐
-        row.nameText:SetFont("Fonts\\FRIZQT__.TTF", GetUIScaleFactor(5 * scale), "") -- 字体
+        row.nameText:SetFont(FONT, GetUIScaleFactor(5 * scale), "") -- 字体
         row.nameText:SetJustifyH("LEFT") -- 左对齐
         row.nameText:SetJustifyV("MIDDLE") -- 垂直居中
         row.nameText:SetTextColor(COLOR.Text:GetRGBA()) -- 文字色
