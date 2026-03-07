@@ -147,7 +147,7 @@ addonTable.Panel.AddComboRow = function(row_info)                               
         return nil                                                                                                                            -- 直接返回
     end                                                                                                                                       -- 行创建检查结束
 
-    local _, setValue = CreateDropdownControl(row, row_info.options, row_info.default_value, config)                                          -- 创建控件
+    local setValue = select(2, CreateDropdownControl(row, row_info.options, row_info.default_value, config))                                  -- 创建控件
     if config then                                                                                                                            -- 绑定配置
         setValue(config:get_value(), false)                                                                                                   -- 同步当前值
         config:register_callback(function(value)                                                                                              -- 配置变化回调

@@ -39,7 +39,7 @@
   waiting_real_test（等待真实测试）
 ]]
 
-local addonName, addonTable = ...
+local addonName, addonTable = ... -- luacheck: ignore addonName
 
 local Profile = addonTable.Profile
 
@@ -90,7 +90,8 @@ end
 -- 内部：触发所有回调
 function ConfigObj:_notify()
     local value = self:get_value()
-    for _, callback in ipairs(self.callbacks) do
+    for callbackIndex = 1, #self.callbacks do
+        local callback = self.callbacks[callbackIndex]
         callback(value)
     end
 end

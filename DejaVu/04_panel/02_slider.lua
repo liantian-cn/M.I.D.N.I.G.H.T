@@ -141,8 +141,9 @@ addonTable.Panel.AddSliderRow = function(row_info)                              
         ApplySliderVisual(value)                                                                                                                            -- 同步视觉
     end                                                                                                                                                     -- SetSliderValue 结束
 
-    slider:SetScript("OnValueChanged", function(_, value)                                                                                                   -- 拖动时更新
-        ApplySliderVisual(value)                                                                                                                            -- 更新视觉
+    slider:SetScript("OnValueChanged", function(sliderFrame, value)                                                                                         -- 拖动时更新
+        sliderFrame = sliderFrame or slider                                                                                                                 -- 当前滑块
+        ApplySliderVisual(sliderFrame:GetValue())                                                                                                           -- 更新视觉
     end)                                                                                                                                                    -- 拖动回调结束
     slider:SetScript("OnMouseUp", function()                                                                                                                -- 鼠标抬起时写入配置
         if config then                                                                                                                                      -- 有配置对象

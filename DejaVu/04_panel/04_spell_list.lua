@@ -12,15 +12,15 @@
 ]]
 
 local addonName, addonTable = ... -- 插件名称与共享表
+local GetSpellName = C_Spell.GetSpellName -- 获取技能名
+local GetSpellTexture = C_Spell.GetSpellTexture -- 获取技能图标
+local GetSpellDescription = C_Spell.GetSpellDescription -- 获取技能描述
+
 local GetUIScaleFactor = addonTable.Size.GetUIScaleFactor -- UI 缩放
 local Panel = addonTable.Panel -- 面板模块
 local COLOR = Panel.COLOR -- 颜色表
 local FONT = Panel.Font -- addonTable.Panel.Font -- 自定义字体路径
 local UI = Panel.UI -- UI 工具
-
-local GetSpellName = C_Spell.GetSpellName -- 获取技能名
-local GetSpellTexture = C_Spell.GetSpellTexture -- 获取技能图标
-local GetSpellDescription = C_Spell.GetSpellDescription -- 获取技能描述
 
 local floor = math.floor -- 向下取整
 local insert = table.insert -- 数组插入
@@ -338,17 +338,19 @@ local function EnsureSpellListEditorFrame() -- 确保编辑器存在
         frame:RefreshList() -- 刷新
     end) -- 删除回调结束
 
-    frame.listFrame:SetScript("OnMouseWheel", function(_, delta) -- 列表滚轮
+    frame.listFrame:SetScript("OnMouseWheel", function(listFrame, delta) -- 列表滚轮
+        local editorFrame = listFrame:GetParent()
         if delta > 0 then -- 上滚
-            frame._scrollOffset = (frame._scrollOffset or 0) - 1 -- 向上
+            editorFrame._scrollOffset = (editorFrame._scrollOffset or 0) - 1 -- 向上
         else -- 下滚
-            frame._scrollOffset = (frame._scrollOffset or 0) + 1 -- 向下
+            editorFrame._scrollOffset = (editorFrame._scrollOffset or 0) + 1 -- 向下
         end -- 滚动方向判断结束
-        frame:_ClampScrollOffset() -- 修正
-        frame:RefreshList() -- 刷新
+        editorFrame:_ClampScrollOffset() -- 修正
+        editorFrame:RefreshList() -- 刷新
     end) -- 滚轮回调结束
 
-    for _, row in ipairs(frame.rows) do -- 行交互
+    for rowIndex = 1, #frame.rows do -- 行交互
+        local row = frame.rows[rowIndex]
         row:SetScript("OnMouseDown", function(self) -- 点击选择
             if not self._spellID then -- 无 ID
                 return -- 直接退出
@@ -384,9 +386,10 @@ local function EnsureSpellListEditorFrame() -- 确保编辑器存在
             frame:_SetRowVisual(self) -- 更新
             GameTooltip:Hide() -- 隐藏
         end) -- 离开回调结束
-        row:SetScript("OnMouseWheel", function(_, delta) -- 行滚轮
-            if frame.listFrame:GetScript("OnMouseWheel") then -- 代理到列表
-                frame.listFrame:GetScript("OnMouseWheel")(frame.listFrame, delta) -- 调用列表滚轮
+        row:SetScript("OnMouseWheel", function(rowFrame, delta) -- 行滚轮
+            local listMouseWheelScript = frame.listFrame:GetScript("OnMouseWheel")
+            if listMouseWheelScript then -- 代理到列表
+                listMouseWheelScript(rowFrame:GetParent(), delta) -- 调用列表滚轮
             end -- 代理判断结束
         end) -- 行滚轮回调结束
     end -- 行遍历结束

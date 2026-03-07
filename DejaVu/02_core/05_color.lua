@@ -7,7 +7,7 @@
 状态：
   draft
 ]]
-local addonName, addonTable = ...
+local addonName, addonTable = ... -- luacheck: ignore addonName
 local CreateColor = CreateColor
 
 addonTable.COLOR = {
