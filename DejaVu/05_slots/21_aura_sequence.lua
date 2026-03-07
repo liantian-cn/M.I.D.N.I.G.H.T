@@ -51,9 +51,14 @@ local Cell = addonTable.Cell
 local BadgeCell = addonTable.BadgeCell
 local CharCell = addonTable.CharCell
 
-local OnUpdateLow = addonTable.UpdateFunc.OnUpdateLow   -- 低频刷新回调列表（约 2 Hz）
-local OnUpdateHigh = addonTable.UpdateFunc.OnUpdateHigh -- 高频刷新回调列表（约 10 Hz）
-local UNIT_AURA = addonTable.UpdateFunc.UNIT_AURA       -- UNIT_AURA 回调列表
+local OnUpdateLow = addonTable.UpdateFunc.OnUpdateLow             -- 低频刷新回调列表（约 2 Hz）
+local OnUpdateHigh = addonTable.UpdateFunc.OnUpdateHigh           -- 高频刷新回调列表（约 10 Hz）
+local UNIT_AURA = addonTable.UpdateFunc.UNIT_AURA                 -- UNIT_AURA 回调列表
+local TARGET_CHANGED = addonTable.UpdateFunc.TARGET_CHANGED       -- 目标改变时触发，并不存在这个事件，多个事件会触发这个事件
+local FOCUS_CHANGED = addonTable.UpdateFunc.FOCUS_CHANGED         -- 焦点改变时触发，并不存在这个事件，多个事件会触发这个事件
+local MOUSEOVER_CHANGED = addonTable.UpdateFunc.MOUSEOVER_CHANGED -- 鼠标悬停改变时触发，并不存在这个事件，多个事件会触发这个事件
+
+
 
 local remainingCurve = addonTable.Slots.remainingCurve
 local playerDebuffCurve = addonTable.Slots.playerDebuffCurve
@@ -167,6 +172,13 @@ local function AuraSequenceCreater(unit, filter, maxCount, pos_x, pos_y, sortRul
     end
     table.insert(OnUpdateHigh, updatedRemaining)
     table.insert(UNIT_AURA, { unit = unit, func = updateFullSequence })
+    if unit == "target" then
+        table.insert(TARGET_CHANGED, updateFullSequence)
+    elseif unit == "focus" then
+        table.insert(FOCUS_CHANGED, updateFullSequence)
+    elseif unit == "mouseover" then
+        table.insert(MOUSEOVER_CHANGED, updateFullSequence)
+    end
     updateFullSequence()
 end
 

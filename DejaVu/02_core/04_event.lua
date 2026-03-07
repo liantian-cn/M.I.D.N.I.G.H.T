@@ -23,12 +23,15 @@ addonTable.UpdateFunc.OnUpdateLow = {}
 
 
 addonTable.UpdateFunc.SPELLS_CHANGED = {}
-addonTable.UpdateFunc.SPELL_UPDATE_ICON = {}
-addonTable.UpdateFunc.PLAYER_TALENT_UPDATE = {}
-addonTable.UpdateFunc.TRAIT_CONFIG_UPDATED = {}
-addonTable.UpdateFunc.UPDATE_MOUSEOVER_UNIT = {}
+addonTable.UpdateFunc.PLAYER_TALENT_CHANGED = {} -- 所有涉及天赋变化的事件
 addonTable.UpdateFunc.UNIT_AURA = {}
+addonTable.UpdateFunc.TARGET_CHANGED = {}        -- 目标改变时触发，并不存在这个事件，多个事件会触发这个事件
+addonTable.UpdateFunc.FOCUS_CHANGED = {}         -- 焦点改变时触发，并不存在这个事件，多个事件会触发这个事件
+addonTable.UpdateFunc.MOUSEOVER_CHANGED = {}     -- 鼠标悬停改变时触发，并不存在这个事件，多个事件会触发这个事件
 
+
+
+local eventThisFrame = {} -- 帧内放重复
 
 local eventFrame = CreateFrame("EventFrame", addonName .. "Frame")
 addonTable.Event.Frame = eventFrame
@@ -48,6 +51,10 @@ function eventFrame:PLAYER_ENTERING_WORLD()
 end
 
 function eventFrame:SPELLS_CHANGED()
+    if eventThisFrame["SPELLS_CHANGED"] then
+        return
+    end
+    eventThisFrame["SPELLS_CHANGED"] = true
     for funcIndex = 1, #addonTable.UpdateFunc.SPELLS_CHANGED do
         local func = addonTable.UpdateFunc.SPELLS_CHANGED[funcIndex]
         func()
@@ -55,31 +62,63 @@ function eventFrame:SPELLS_CHANGED()
 end
 
 function eventFrame:SPELL_UPDATE_ICON()
-    for funcIndex = 1, #addonTable.UpdateFunc.SPELL_UPDATE_ICON do
-        local func = addonTable.UpdateFunc.SPELL_UPDATE_ICON[funcIndex]
+    self:SPELLS_CHANGED()
+end
+
+function eventFrame:PLAYER_TALENT_CHANGED()
+    if eventThisFrame["PLAYER_TALENT_CHANGED"] then
+        return
+    end
+    eventThisFrame["PLAYER_TALENT_CHANGED"] = true
+    for funcIndex = 1, #addonTable.UpdateFunc.PLAYER_TALENT_CHANGED do
+        local func = addonTable.UpdateFunc.PLAYER_TALENT_CHANGED[funcIndex]
         func()
     end
 end
 
 function eventFrame:PLAYER_TALENT_UPDATE()
-    for funcIndex = 1, #addonTable.UpdateFunc.PLAYER_TALENT_UPDATE do
-        local func = addonTable.UpdateFunc.PLAYER_TALENT_UPDATE[funcIndex]
+    self:PLAYER_TALENT_CHANGED()
+end
+
+function eventFrame:TRAIT_CONFIG_UPDATED()
+    self:PLAYER_TALENT_CHANGED()
+end
+
+function eventFrame:PLAYER_TARGET_CHANGED()
+    if eventThisFrame["PLAYER_TARGET_CHANGED"] then
+        return
+    end
+    eventThisFrame["PLAYER_TARGET_CHANGED"] = true
+    for funcIndex = 1, #addonTable.UpdateFunc.TARGET_CHANGED do
+        local func = addonTable.UpdateFunc.TARGET_CHANGED[funcIndex]
         func()
     end
 end
 
-function eventFrame:TRAIT_CONFIG_UPDATED()
-    for funcIndex = 1, #addonTable.UpdateFunc.TRAIT_CONFIG_UPDATED do
-        local func = addonTable.UpdateFunc.TRAIT_CONFIG_UPDATED[funcIndex]
+function eventFrame:PLAYER_FOCUS_CHANGED()
+    if eventThisFrame["PLAYER_FOCUS_CHANGED"] then
+        return
+    end
+    eventThisFrame["PLAYER_FOCUS_CHANGED"] = true
+    for funcIndex = 1, #addonTable.UpdateFunc.FOCUS_CHANGED do
+        local func = addonTable.UpdateFunc.FOCUS_CHANGED[funcIndex]
+        func()
+    end
+end
+
+function eventFrame:MOUSEOVER_CHANGED()
+    if eventThisFrame["MOUSEOVER_CHANGED"] then
+        return
+    end
+    eventThisFrame["MOUSEOVER_CHANGED"] = true
+    for funcIndex = 1, #addonTable.UpdateFunc.MOUSEOVER_CHANGED do
+        local func = addonTable.UpdateFunc.MOUSEOVER_CHANGED[funcIndex]
         func()
     end
 end
 
 function eventFrame:UPDATE_MOUSEOVER_UNIT()
-    for funcIndex = 1, #addonTable.UpdateFunc.UPDATE_MOUSEOVER_UNIT do
-        local func = addonTable.UpdateFunc.UPDATE_MOUSEOVER_UNIT[funcIndex]
-        func()
-    end
+    self:MOUSEOVER_CHANGED()
 end
 
 function eventFrame:UNIT_AURA(unitTarget)
@@ -98,9 +137,12 @@ eventFrame:RegisterEvent("UNIT_AURA")
 eventFrame:RegisterEvent("SPELLS_CHANGED")
 eventFrame:RegisterEvent("SPELL_UPDATE_ICON")
 eventFrame:RegisterEvent("PLAYER_TALENT_UPDATE")
+eventFrame:RegisterEvent("TRAIT_NODE_CHANGED")
 eventFrame:RegisterEvent("TRAIT_CONFIG_UPDATED")
 eventFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
--- eventFrame:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
+eventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
+eventFrame:RegisterEvent("PLAYER_FOCUS_CHANGED")
+
 eventFrame:SetScript("OnEvent", function(self, event, ...)
     self[event](self, ...)
 end)
@@ -111,6 +153,7 @@ local timeElapsed = 0
 local lowFrequencyTimeElapsed = 0
 -- 钩子OnUpdate脚本，用于定时更新
 eventFrame:HookScript("OnUpdate", function(self, elapsed)
+    wipe(eventThisFrame)
     local tickOffset             = 1.0 / 10;
     local lowFrequencyTickOffset = 1.0 / 2;
     timeElapsed                  = timeElapsed + elapsed
