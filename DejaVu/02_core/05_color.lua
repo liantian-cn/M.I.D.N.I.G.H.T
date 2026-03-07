@@ -14,6 +14,7 @@ addonTable.COLOR = {
     BLUE = CreateColor(0, 0, 255 / 255, 1),                                         -- 蓝色
     BLACK = CreateColor(0, 0, 0, 1),                                                -- 黑色
     WHITE = CreateColor(1, 1, 1, 1),                                                -- 白色
+    TRANSPARENT = CreateColor(0, 0, 0, 0),                                          -- 透明
     SPELL_TYPE = {                                                                  -- 技能类型颜色表
         MAGIC = CreateColor(60 / 255, 100 / 255, 220 / 255, 1),                     -- 魔法
         CURSE = CreateColor(100 / 255, 0, 120 / 255, 1),                            -- 诅咒

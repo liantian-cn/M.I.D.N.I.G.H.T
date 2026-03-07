@@ -22,6 +22,7 @@ local function InitializeSize()              -- 初始化尺寸
             Height = 36,                     -- Cell纵向个数
         },
         CELL = GetUIScaleFactor(scale * 4),  -- Cell尺寸
+        MEGA = GetUIScaleFactor(scale * 8),  -- MegaCell尺寸
         BADGE = GetUIScaleFactor(scale * 2), -- Badge尺寸
     }                                        -- SIZE 结束
     addonTable.Matrix.SIZE = SIZE            -- 暴露到面板模块
