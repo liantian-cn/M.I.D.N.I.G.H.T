@@ -1,234 +1,272 @@
-﻿# 显示优先模式（来自 EZAddonX2 的经验）
+﻿# 显示优先模式
 
-这份文档专门总结 `D:\World of Warcraft\_retail_\Interface\AddOns\EZAddonX2` 里值得借鉴的做法。
+这份文档只讲一件事：在 WoW 12.x 里，DejaVu 这种展示型插件，应该怎样把战斗属性**安全地显示出来**。
 
-重点不是“抄它的界面”，而是学习它怎么在 WoW 12.x 环境下，**尽量不自己计算战斗属性，而是把官方返回的对象和状态直接转成界面显示**。
+重点不是“算出一个结论”，而是：
 
-## 先说最重要的结论
+- 尽量少做 Lua 计算
+- 尽量直接使用官方返回的 percent / duration / curve 结果
+- 把状态翻译成颜色、图标、亮灭、进度
 
-对于 DejaVu，这些经验最有价值：
+## 最重要的 5 条规则
 
-- **血量/能量优先用百分比接口，不自己除法计算**
-- **施法、引导、冷却、光环优先用 duration 对象，不自己算剩余时间**
-- **状态显示优先编码成颜色、图标、亮灭，不做复杂逻辑推导**
-- **Aura 优先按实例 ID 驱动 UI，不按旧式遍历结果硬猜状态**
-- **事件更新和周期更新分开：结构变化走事件，进度条变化走频率刷新**
+- 血量和能量优先用百分比接口，不自己做除法
+- 施法、引导、冷却、Aura 时间优先用 duration 对象，不自己减时间
+- 布尔状态优先转成颜色、亮灭、角标，不做综合评分
+- Aura 列表优先按实例 ID 维护槽位
+- UI 刷新优先分层：事件更新、标准频率更新、低频更新
 
-这很适合 DejaVu，因为你的目标本来就是“合理展示”，不是“替玩家计算和决策”。
+## 1. 血量和能量：直接显示百分比
 
-## 1. 血量和能量：显示百分比，不算百分比
+最稳的路线不是：
 
-EZAddonX2 的核心思路不是：
+- 先拿当前值
+- 再拿最大值
+- 自己算百分比
 
-- 先拿 `UnitHealth`
-- 再拿 `UnitHealthMax`
-- 最后自己做除法
+而是直接显示官方给的百分比结果。
 
-而是直接使用：
+### 示例：血量显示
 
-- `UnitHealthPercent(unit, true, curve)`
-- `UnitPowerPercent(unit, powerType, true, curve)`
+```lua
+local healthColor = UnitHealthPercent(unit, true, curve)
+healthTexture:SetColorTexture(healthColor:GetRGBA())
+```
 
-然后把结果直接转成颜色或纹理显示。
+### 示例：能量显示
 
-这条经验对 DejaVu 很重要：
+```lua
+local powerType = UnitPowerType(unit)
+local powerColor = UnitPowerPercent(unit, powerType, true, curve)
+powerTexture:SetColorTexture(powerColor:GetRGBA())
+```
 
-- 你不需要“精确数值计算”
-- 你真正需要的是“当前条该怎么画”
-- 那就优先让官方接口把“百分比/曲线映射”直接准备好
+### 适合 DejaVu 的原因
 
-### 对 DejaVu 的建议
+- 不需要自己做 `current / max`
+- 更符合展示用途
+- 更不容易踩 `secret values`
 
-- 血条、能量条、资源条优先做“显示接口层”
-- 不要把血量逻辑写成 `current / max`
-- 如果 cell 只需要亮度、填充度、颜色深浅，优先直接吃 percent 结果
+## 2. 施法和引导：直接显示进度
 
-## 2. 时长类信息：用 Duration 对象，不自己减时间
+施法条和引导条，不要自己做时间差计算。优先使用 duration 对象。
 
-EZAddonX2 在几类地方都用了同样的路线：
+### 示例：施法进度
 
-- `UnitCastingDuration(unit)`
-- `UnitChannelDuration(unit)`
-- `C_Spell.GetSpellCooldownDuration(spellID)`
-- `C_Spell.GetSpellChargeDuration(spellID)`
-- `C_UnitAuras.GetAuraDuration(unit, auraInstanceID)`
+```lua
+local _, _, castTextureID = UnitCastingInfo(unit)
+if castTextureID then
+    castIcon:SetTexture(castTextureID)
 
-然后不是自己做：
+    local duration = UnitCastingDuration(unit)
+    local result = duration:EvaluateElapsedPercent(curve)
+    castProgress:SetColorTexture(result:GetRGBA())
+else
+    castIcon:SetColorTexture(0, 0, 0, 1)
+    castProgress:SetColorTexture(0, 0, 0, 1)
+end
+```
+
+### 示例：引导进度
+
+```lua
+local _, _, channelTextureID = UnitChannelInfo(unit)
+if channelTextureID then
+    channelIcon:SetTexture(channelTextureID)
+
+    local duration = UnitChannelDuration(unit)
+    local result = duration:EvaluateElapsedPercent(curve)
+    channelProgress:SetColorTexture(result:GetRGBA())
+else
+    channelIcon:SetColorTexture(0, 0, 0, 1)
+    channelProgress:SetColorTexture(0, 0, 0, 1)
+end
+```
+
+### 不推荐的思路
 
 - `endTime - GetTime()`
 - `duration - elapsed`
-- `start + duration - now`
+- 手写剩余秒数再决定颜色
 
-而是直接让 duration 对象去做：
+## 3. 冷却和充能：显示剩余进度，不自己算秒数
 
-- `EvaluateElapsedPercent(curve)`
-- `EvaluateRemainingDuration(curve)`
+### 示例：普通冷却
 
-### 这说明什么
+```lua
+local duration = C_Spell.GetSpellCooldownDuration(spellID)
+local result = duration:EvaluateRemainingDuration(remainingCurve)
+cooldownTexture:SetColorTexture(result:GetRGBA())
+```
 
-在 WoW 12.x 里，**持续时间最好的处理方式不是算术，而是评估对象**。
+### 示例：充能技能
 
-对于 DejaVu，这意味着：
+```lua
+local duration = C_Spell.GetSpellChargeDuration(spellID)
+local result = duration:EvaluateRemainingDuration(remainingCurve)
+chargeCooldownTexture:SetColorTexture(result:GetRGBA())
 
-- 冷却 cell 可以直接显示“剩余进度颜色”
-- 施法 cell 可以直接显示“施法进度颜色”
-- aura cell 可以直接显示“剩余时间深浅”
+local chargeInfo = C_Spell.GetSpellCharges(spellID)
+chargeText:SetText(tostring(chargeInfo.currentCharges))
+```
 
-而不是先把数字算出来，再决定怎么画。
+### 适合 DejaVu 的做法
 
-## 3. 布尔状态：更适合转成亮灭、颜色、图标
+- 图标负责“这是什么技能”
+- 进度色负责“还剩多少”
+- 小文本负责“当前层数”
+- 不把冷却再加工成自动建议
 
-EZAddonX2 大量把状态变成非常简单的视觉信号，例如：
+## 4. Aura：结构变化和进度变化分开
 
-- 在战斗中 / 不在战斗中
-- 在移动 / 不在移动
-- 在载具中 / 不在载具中
-- 存在 / 不存在
-- 存活 / 死亡
-- 可打断 / 不可打断
-- 高亮 / 不高亮
-- 会 / 不会这个技能
-- 可用 / 不可用
+Aura 最稳的写法，不是每次全量重建，而是先维护槽位身份，再单独刷剩余时间。
 
-也就是把“状态”翻译成：
+### 示例：事件阶段，按实例 ID 更新槽位
 
-- 一个像素亮不亮
-- 一个颜色是白还是黑
-- 一个图标显示不显示
+```lua
+local auraInstanceIDs = C_UnitAuras.GetUnitAuraInstanceIDs(unit, filter, maxCount, sortRule, sortDirection) or {}
 
-### 对 DejaVu 的建议
+for index = 1, #auraInstanceIDs do
+    local auraInstanceID = auraInstanceIDs[index]
+    local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, auraInstanceID)
 
-这非常适合 `slots` 和 `matrix`：
+    if aura then
+        slot.icon:SetTexture(aura.icon)
+        slotState[index] = auraInstanceID
 
-- 用少量稳定视觉编码表达状态
-- 不要把状态再拼成复杂的数值评分
-- 不要把多个战斗状态堆成一个“智能决策值”
+        local count = C_UnitAuras.GetAuraApplicationDisplayCount(unit, auraInstanceID, 1, 9)
+        slot.count:SetText(count)
+    end
+end
+```
 
-## 4. Aura：以实例 ID 为核心，而不是旧式模糊遍历
+### 示例：标准刷新阶段，只更新剩余时间
 
-EZAddonX2 的 Aura 处理很值得借鉴：
+```lua
+for index, auraInstanceID in pairs(slotState) do
+    local duration = C_UnitAuras.GetAuraDuration(unit, auraInstanceID)
+    if duration then
+        local result = duration:EvaluateRemainingDuration(remainingCurve)
+        slots[index].duration:SetColorTexture(result:GetRGBA())
+    end
+end
+```
 
-- 先拿 `GetUnitAuraInstanceIDs`
-- 再按 `auraInstanceID` 去拿 Aura 数据
-- 用实例 ID 记住当前槽位里是谁
-- 槽位变化时才更新图标
-- 持续时间这种会变化的部分再单独周期刷新
+### 这样拆的好处
 
-### 这比什么更好
+- 图标和层数变化不频繁，走事件更新
+- 剩余时间变化频繁，走标准刷新
+- 逻辑更清楚，也更省维护成本
 
-比“每次整行全重建、全重画”更稳，也更清楚。
+## 5. 布尔状态：用亮灭和颜色表达
 
-### 对 DejaVu 的建议
+很多状态最适合变成一个简单视觉信号，例如：
 
-如果以后 `03_matrix` 或 `05_slots` 要显示 aura：
+- 是否存在
+- 是否存活
+- 是否在战斗中
+- 是否可打断
+- 是否可用
+- 是否高亮
 
-- 槽位身份用 `auraInstanceID` 跟踪
-- 图标、层数、驱散色这种“结构变化”放事件更新
-- 剩余时间这种“进度变化”放标准频率刷新
+### 示例：白色表示开启，黑色表示关闭
 
-这样代码会比“一次更新里全做完”更容易维护。
+```lua
+if UnitAffectingCombat(unit) then
+    inCombat:SetColorTexture(1, 1, 1, 1)
+else
+    inCombat:SetColorTexture(0, 0, 0, 1)
+end
+```
 
-## 5. 结构变化和进度变化分开更新
+### 示例：用布尔转颜色
 
-这是 EZAddonX2 非常实用的一条经验。
+```lua
+local value = C_CurveUtil.EvaluateColorFromBoolean(isUsable, COLOR.WHITE, COLOR.BLACK)
+usableTexture:SetColorTexture(value:GetRGBA())
+```
 
-它大致分成三类：
+### 对 DejaVu 的启发
 
-- **事件更新**：列表变化、技能变化、最大生命值变化
-- **标准频率更新**：冷却进度、施法进度、Aura 剩余时间、目标状态
-- **低频更新**：职业、角色、距离、已知技能这类变化不快的内容
+不要急着把多个状态合并成一个“智能分数”。
 
-### 这条经验为什么重要
+更稳的方式通常是：
 
-因为界面里不是所有东西都该同样频率刷新。
+- 一个格子表达一个状态
+- 一个颜色表达一种含义
+- 一个角标表达一个附加状态
 
-### 对 DejaVu 的建议
+## 6. 吸收条：直接用条形控件显示
 
-- 图标列表、配置切换、槽位重建：走事件或显式刷新
-- 冷却剩余、施法进度、动态条颜色：走标准频率刷新
-- 职业色、角色、静态标签、远近判断：走低频刷新
+如果目标只是展示吸收量，优先让 `StatusBar` 直接工作。
 
-这样能让 `core`、`matrix`、`slots` 的职责更清楚。
+### 示例
 
-## 6. 先显示，再考虑更多信息层
+```lua
+local maxHealth = UnitHealthMax(unit)
+absorbBar:SetMinMaxValues(0, maxHealth)
+absorbBar:SetValue(UnitGetTotalAbsorbs(unit))
+healAbsorbBar:SetValue(UnitGetTotalHealAbsorbs(unit))
+```
 
-EZAddonX2 的另一个特点是：
+### 这里真正值得学的点
 
-一个元素常常被拆成几层显示，而不是一个文本包打天下。例如：
+不是“去推导吸收逻辑”，而是：
 
-- 图标层
-- 脚注色块层
-- 持续时间层
-- 计数文本层
-- 可用/高亮/已知状态层
+- 最大值由官方接口给
+- 当前值由官方接口给
+- 界面直接显示
 
-### 对 DejaVu 的建议
+## 7. 刷新分层：不要一个函数包打天下
 
-不要急着把所有状态压成一个字符或一个颜色。
+推荐拆成三层：
 
-更好的做法通常是：
+### 事件更新
 
-- 图标负责“这是什么”
-- 亮度/颜色负责“当前状态”
-- 小标记负责“附加信息”
+适合：
 
-这样用户读起来更直觉，也更符合“展示型插件”的定位。
+- 技能列表变化
+- Aura 列表变化
+- 最大生命值变化
+- 配置切换
 
-## 7. 吸收量这类值：可以显示，但不要顺手扩展成逻辑引擎
+### 标准频率更新
 
-EZAddonX2 里会直接把吸收量喂给 `StatusBar`，并用 `SetMinMaxValues` 绑定最大生命值。
+适合：
 
-这里最值得借鉴的不是“吸收量本身”，而是：
+- 冷却进度
+- 施法进度
+- 引导进度
+- Aura 剩余时间
+- 当前血量/能量显示
 
-- 如果官方给了适合显示的条形控件，就优先直接显示
-- 不要看到可显示的值，就继续往“可判断、可推理、可自动化”方向扩展
+### 低频更新
 
-DejaVu 应该优先学这个边界感。
+适合：
 
-## 8. 用颜色曲线而不是手写颜色规则
+- 职业色
+- 团队职责
+- 距离状态
+- 已知/未知技能
 
-EZAddonX2 用了 curve / color curve 来把：
+## 8. 给 DejaVu 的直接落地建议
 
-- 百分比
-- 剩余时间
-- 布尔状态
+如果你在写：
 
-变成颜色。
+- `03_matrix`
+- `05_slots`
+- `06_spec`
 
-### 这对 DejaVu 的意义
+优先遵守下面的顺序：
 
-如果你以后发现很多 cell 都在写：
-
-- 血量低于多少变红
-- 剩余时间低于多少变黄
-- 状态满足时变亮
-
-那就说明这些规则值得抽成统一“显示曲线”或“颜色映射”层，而不是散在每个 slot 文件里。
-
-## 最适合 DejaVu 直接采用的 5 条规则
-
-### 规则 1
-
-**凡是百分比显示，先找官方 percent API。**
-
-### 规则 2
-
-**凡是剩余时间或进度显示，先找 duration 对象和评估函数。**
-
-### 规则 3
-
-**凡是状态类信息，先转成颜色/亮灭/图标，不要急着做综合评分。**
-
-### 规则 4
-
-**凡是 Aura 列表，先分“结构变化”和“进度变化”。**
-
-### 规则 5
-
-**凡是 UI 刷新，先分事件更新、标准更新、低频更新。**
+1. 先决定这个信息是“显示”还是“判断”
+2. 如果只是显示，优先找 percent / duration / 原生控件
+3. 把状态拆成颜色、亮灭、图标、角标
+4. 把结构变化和进度变化拆开刷新
+5. 不要把显示数据再反向拼成战斗决策
 
 ## 一句话总结
 
-EZAddonX2 最值得学的，不是它画了哪些东西，而是它遵守了一条对 WoW 12.x 非常重要的路线：
+DejaVu 最适合走的路线是：
 
 **少算，多显示；少推理，多映射；少自己展开战斗数据，多让官方对象直接驱动 UI。**

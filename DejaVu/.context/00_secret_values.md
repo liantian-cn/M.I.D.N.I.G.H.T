@@ -126,9 +126,9 @@ end
 3. `warcraft.wiki.gg/wiki/Patch_12.0.0/API_changes` 查是否有 secret 或限制说明
 4. 还不确定，就按 secret 处理
 
-## 从 EZAddonX2 提炼的显示经验
+## 显示型写法要点
 
-从 `EZAddonX2` 的做法看，最稳的路线是：
+最稳的路线是：
 
 - 血量/能量优先 `UnitHealthPercent()`、`UnitPowerPercent()`，不要自己做除法
 - 冷却、充能、施法、引导、Aura 时间优先用 duration 对象，不自己减时间
@@ -142,5 +142,6 @@ end
 - 任何 cell / slot / panel 代码，只要读取战斗态数据，都先假设有 secret 风险
 - 不要在 Lua 里做“自动决策式”的战斗逻辑
 - 优先做显示、状态同步、用户配置，不做替玩家判断
+
 
 
