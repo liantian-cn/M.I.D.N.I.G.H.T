@@ -33,6 +33,7 @@ local PLAYER_TALENT_UPDATE = addonTable.Event.Func.PLAYER_TALENT_UPDATE -- 专�
 local TRAIT_CONFIG_UPDATED = addonTable.Event.Func.TRAIT_CONFIG_UPDATED -- 专精配置更新事件函数列表
 local SPELLS_CHANGED = addonTable.Event.Func.SPELLS_CHANGED             -- 专精配置更新事件函数列表
 local OnUpdateLow = addonTable.Event.Func.OnUpdateLow
+local OnUpdateHigh = addonTable.Event.Func.OnUpdateHigh
 local logging = addonTable.Logging
 
 local chargeSpells = {}   -- 充能技能的ID列表
@@ -168,7 +169,9 @@ local function InitializeCooldownFrame()
         })
     end
 
-    local function fullUpdate() -- 全量更新
+
+
+    local function updateIcon() -- 全量更新
         for i = 1, COOLDOWN_LENGTH do
             local cell = cooldownCells[i]
             if i <= #cooldownSpells then
@@ -177,23 +180,59 @@ local function InitializeCooldownFrame()
 
                 local iconID = GetSpellTexture(SpellID)
                 cell.icon:setCell(iconID, COLOR.SPELL_TYPE.PLAYER_SPELL)
+            else
+                cell.icon:clearCell()
+            end
+            i = i + 1
+        end
+    end
 
+    local function updateRemaining() -- 全量更新
+        for i = 1, COOLDOWN_LENGTH do
+            local cell = cooldownCells[i]
+            if i <= #cooldownSpells then
+                local spell = cooldownSpells[i]
+                local SpellID = spell.spellID
                 local duration = GetSpellCooldownDuration(SpellID)
                 local result = duration:EvaluateRemainingDuration(remaining_curve)
                 cell.remaining:setCell(result)
-
-                local is_overlayed = EvaluateColorFromBoolean(IsSpellOverlayed(SpellID), COLOR.WHITE, COLOR.TRANSPARENT)
-                cell.overlayed:setCell(is_overlayed)
-
-                local is_unusable = EvaluateColorFromBoolean(IsSpellUsable(SpellID), COLOR.TRANSPARENT, COLOR.WHITE)
-                cell.unusable:setCell(is_unusable)
-
-                local is_unknown = EvaluateColorFromBoolean(IsSpellInSpellBook(SpellID), COLOR.TRANSPARENT, COLOR.WHITE)
-                cell.unknown:setCell(is_unknown)
             else
-                cell.icon:clearCell()
                 cell.remaining:clearCell()
+            end
+            i = i + 1
+        end
+    end
+
+    local function updateOverlayed() -- 全量更新
+        for i = 1, COOLDOWN_LENGTH do
+            local cell = cooldownCells[i]
+            if i <= #cooldownSpells then
+                local spell = cooldownSpells[i]
+                local SpellID = spell.spellID
+
+                local isOverlayed = EvaluateColorFromBoolean(IsSpellOverlayed(SpellID), COLOR.WHITE, COLOR.TRANSPARENT)
+                cell.overlayed:setCell(isOverlayed)
+            else
                 cell.overlayed:clearCell()
+            end
+            i = i + 1
+        end
+    end
+
+    local function updateUnknownAndUnsable() -- 全量更新
+        for i = 1, COOLDOWN_LENGTH do
+            local cell = cooldownCells[i]
+            if i <= #cooldownSpells then
+                local spell = cooldownSpells[i]
+                local SpellID = spell.spellID
+
+
+                local isUnusable = EvaluateColorFromBoolean(IsSpellUsable(SpellID), COLOR.TRANSPARENT, COLOR.WHITE)
+                cell.unusable:setCell(isUnusable)
+
+                local isUnknown = EvaluateColorFromBoolean(IsSpellInSpellBook(SpellID), COLOR.TRANSPARENT, COLOR.WHITE)
+                cell.unknown:setCell(isUnknown)
+            else
                 cell.unusable:clearCell()
                 cell.unknown:clearCell()
             end
@@ -201,6 +240,16 @@ local function InitializeCooldownFrame()
         end
     end
 
-    table.insert(OnUpdateLow, fullUpdate)     -- 第二帧创建面板
+    local function fullUpdate() -- 全量更新
+        updateIcon()
+        updateRemaining()
+        updateOverlayed()
+        updateUnknownAndUnsable()
+    end
+    fullUpdate()
+    table.insert(SPELLS_CHANGED, updateIcon)           -- 第二帧创建面板
+    table.insert(OnUpdateHigh, updateRemaining)        -- 第二帧创建面板
+    table.insert(OnUpdateHigh, updateOverlayed)        -- 第二帧创建面板
+    table.insert(OnUpdateLow, updateUnknownAndUnsable) -- 第二帧创建面板
 end
-table.insert(InitUI, InitializeCooldownFrame) -- 第二帧创建面板
+table.insert(InitUI, InitializeCooldownFrame)          -- 第二帧创建面板
