@@ -40,9 +40,10 @@ Libs/LibStub.lua
 
 # Slots (通用Cell组配置)
 05_slots/00_init.lua
-05_slots/01_spell_sequence.lua
-05_slots/02_player_buff.lua
-05_slots/03_player_debuff.lua
+05_slots/01_mark_point.lua
+05_slots/11_spell_sequence.lua
+05_slots/12_player_buff.lua
+05_slots/13_player_debuff.lua
 
 # Spec (职业特色Cell组配置)
 06_spec/00_init.lua
@@ -50,6 +51,7 @@ Libs/LibStub.lua
 06_spec/02_dps.lua
 06_spec/03_healer.lua
 06_spec/04_durid.lua
+06_spec/99_test.lua
 
 # Entry Point
 100_main.lua

@@ -20,7 +20,7 @@ local scale = 4
 local function InitializeSize()              -- 初始化尺寸
     local SIZE = {                           -- 尺寸表主体
         MATRIX = {                           -- MatrixFrame有多个Cell
-            Width = 97,                      -- Cell横向个数
+            Width = 98,                      -- Cell横向个数
             Height = 36,                     -- Cell纵向个数
         },
         CELL = GetUIScaleFactor(scale * 4),  -- Cell尺寸
