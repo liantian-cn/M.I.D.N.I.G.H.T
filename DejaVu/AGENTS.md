@@ -10,6 +10,7 @@
 6. 查插件结构、存档、库、开发约定，读 `.context/03_architecture_and_data.md` 与 `.context/04_dev_rules.md`。
 
 开发规则：
+
 - Windows 默认用 PowerShell。
 - Python 一律用 `uv run`。
 - Lua 按 5.1 / WoW API 兼容标准写。
@@ -18,6 +19,6 @@
 - 不实现自动战斗或代替玩家决策的逻辑。
 
 关于 secret values：
+
 - 判断不清时，先按“它是秘密值”处理。
 - 优先把秘密值直接传给官方明确支持的显示接口，不要在 Lua 里比较、计算或分支判断。
-

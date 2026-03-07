@@ -51,8 +51,8 @@ local function InitializeChargeFrame()
             icon = BadgeCell:New(x, y),         -- 技能图标
             remaining = Cell:New(x, y + 2),     -- 冷却事件
             overlayed = Cell:New(x + 1, y + 2), -- overlayed 是技能是否高亮，取自C_SpellActivationOverlay.IsSpellOverlayed
-            unusable = Cell:New(x, y + 3),      -- unknown 和 unusable 是重合的，任意满足，该图标为白色，否则为透明色。 C_Spell.IsSpellUsable(spellID)
-            unknown = Cell:New(x, y + 3),       -- unknown 和 unusable 是重合的，任意满足，该图标为白色，否则为透明色。  C_SpellBook.IsSpellInSpellBook(spellID)
+            unusable = Cell:New(x, y + 3),      --  unusable 满足，该图标为白色，否则为透明色。 C_Spell.IsSpellUsable(spellID)
+            unknown = Cell:New(x + 1, y + 3),   -- unknown 满足，该图标为白色，否则为透明色。  C_SpellBook.IsSpellInSpellBook(spellID)
             count = CharCell:New(x, y + 4)
         })
     end
@@ -138,9 +138,12 @@ local function InitializeChargeFrame()
         updateUnknownAndUnsable()
     end
     fullUpdate()
-    table.insert(SPELLS_CHANGED, updateIcon)           -- 第二帧创建面板
-    table.insert(OnUpdateHigh, updateRemaining)        -- 第二帧创建面板
-    table.insert(OnUpdateHigh, updateOverlayed)        -- 第二帧创建面板
-    table.insert(OnUpdateLow, updateUnknownAndUnsable) -- 第二帧创建面板
+    table.insert(SPELLS_CHANGED, updateIcon)              -- 第二帧创建面板
+    table.insert(SPELLS_CHANGED, updateRemaining)         -- 第二帧创建面板
+    table.insert(SPELLS_CHANGED, updateOverlayed)         -- 第二帧创建面板
+    table.insert(SPELLS_CHANGED, updateUnknownAndUnsable) -- 第二帧创建面板
+    table.insert(OnUpdateHigh, updateRemaining)           -- 第二帧创建面板
+    table.insert(OnUpdateLow, updateOverlayed)            -- 第二帧创建面板
+    table.insert(OnUpdateLow, updateUnknownAndUnsable)    -- 第二帧创建面板
 end
-table.insert(InitUI, InitializeChargeFrame)            -- 第二帧创建面板
+table.insert(InitUI, InitializeChargeFrame)               -- 第二帧创建面板

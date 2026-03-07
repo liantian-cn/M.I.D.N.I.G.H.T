@@ -43,8 +43,8 @@ local function InitializeCooldownFrame()
             icon = BadgeCell:New(x, y),         -- 技能图标
             remaining = Cell:New(x, y + 2),     -- 冷却剩余时间
             overlayed = Cell:New(x + 1, y + 2), -- 技能是否高亮，取自C_SpellActivationOverlay.IsSpellOverlayed
-            unusable = Cell:New(x, y + 3),      -- 技能是否不可用，取自C_Spell.IsSpellUsable(spellID)
-            unknown = Cell:New(x, y + 3),       -- 技能是否在法术书中，取自C_SpellBook.IsSpellInSpellBook(spellID)
+            unusable = Cell:New(x, y + 3),      --  unusable 满足，该图标为白色，否则为透明色。 C_Spell.IsSpellUsable(spellID)
+            unknown = Cell:New(x + 1, y + 3),   -- unknown 满足，该图标为白色，否则为透明色。  C_SpellBook.IsSpellInSpellBook(spellID)
         })
     end
 
@@ -126,9 +126,12 @@ local function InitializeCooldownFrame()
         updateUnknownAndUnusable()
     end
     fullUpdate()
-    table.insert(SPELLS_CHANGED, updateIcon)            -- 技能变更时更新图标
-    table.insert(OnUpdateHigh, updateRemaining)         -- 高频更新冷却剩余时间
-    table.insert(OnUpdateHigh, updateOverlayed)         -- 高频更新技能高亮状态
-    table.insert(OnUpdateLow, updateUnknownAndUnusable) -- 低频更新技能状态
+    table.insert(SPELLS_CHANGED, updateIcon)               -- 技能变更时更新图标
+    table.insert(SPELLS_CHANGED, updateRemaining)          -- 技能变更时更新图标
+    table.insert(SPELLS_CHANGED, updateOverlayed)          -- 技能变更时更新图标
+    table.insert(SPELLS_CHANGED, updateUnknownAndUnusable) -- 技能变更时更新图标
+    table.insert(OnUpdateHigh, updateRemaining)            -- 高频更新冷却剩余时间
+    table.insert(OnUpdateLow, updateOverlayed)             -- 高频更新技能高亮状态
+    table.insert(OnUpdateLow, updateUnknownAndUnusable)    -- 低频更新技能状态
 end
-table.insert(InitUI, InitializeCooldownFrame)           -- 初始化时创建面板
+table.insert(InitUI, InitializeCooldownFrame)              -- 初始化时创建面板
