@@ -1,9 +1,10 @@
-local addonName, addonTable = ...
+-- luacheck: globals C_CurveUtil Enum
+local _, addonTable = ...
 local CreateColorCurve = C_CurveUtil.CreateColorCurve
 local Enum = Enum
 local COLOR = addonTable.COLOR
 
--- Slots模块命名空间
+-- `05_slots` 模块命名空间
 addonTable.Slots = {}
 
 

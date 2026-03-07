@@ -1,4 +1,5 @@
-local addonName, addonTable = ...
+-- luacheck: globals C_Spell C_SpellBook Enum wipe
+local _, addonTable = ...
 -- 本地化性能优化
 
 local GetSpellCharges = C_Spell.GetSpellCharges
@@ -6,17 +7,16 @@ local GetSpellCharges = C_Spell.GetSpellCharges
 
 
 local InitUI = addonTable.Event.Func.InitUI                             -- 初始化 UI 函数列表
-local PLAYER_TALENT_UPDATE = addonTable.Event.Func.PLAYER_TALENT_UPDATE -- 专精更新事件函数列表
-local TRAIT_CONFIG_UPDATED = addonTable.Event.Func.TRAIT_CONFIG_UPDATED -- 专精配置更新事件函数列表
-local logging = addonTable.Logging
+local PLAYER_TALENT_UPDATE = addonTable.Event.Func.PLAYER_TALENT_UPDATE -- PLAYER_TALENT_UPDATE 回调列表
+local TRAIT_CONFIG_UPDATED = addonTable.Event.Func.TRAIT_CONFIG_UPDATED -- TRAIT_CONFIG_UPDATED 回调列表
 local Slots = addonTable.Slots
 
 Slots.chargeSpells = {}
 Slots.cooldownSpells = {}
 
 
-local chargeSpells = Slots.chargeSpells     -- 充能技能的ID列表
-local cooldownSpells = Slots.cooldownSpells -- 冷却技能的ID列表
+local chargeSpells = Slots.chargeSpells     -- 充能技能列表
+local cooldownSpells = Slots.cooldownSpells -- 普通冷却技能列表
 
 
 
@@ -26,10 +26,8 @@ local cooldownSpells = Slots.cooldownSpells -- 冷却技能的ID列表
 ---@param spellID number 技能ID
 ---@return "charges"|"cooldown" cdType 冷却类型
 local function GetSpellCooldownType(spellID)
-    -- 检查是否为充能技能
-    -- C_Spell.GetSpellCharges() 返回值：
-    --   - nil = cooldown 技能
-    --   - table = charge 技能（table本身不是秘密值，可以if判断）
+    -- `C_Spell.GetSpellCharges()` 对充能技能返回 `SpellChargeInfo`，
+    -- 对非充能技能或无效技能返回 `nil`。
     local chargeInfo = GetSpellCharges(spellID)
     if chargeInfo then
         return "charges"
@@ -117,6 +115,6 @@ local function UpdateSpellsTable()
     -- logging("chargeSpells: " .. #chargeSpells)
     -- logging("cooldownSpells: " .. #cooldownSpells)
 end
-table.insert(InitUI, UpdateSpellsTable)               -- 第二帧创建面板
-table.insert(PLAYER_TALENT_UPDATE, UpdateSpellsTable) -- 第二帧创建面板
-table.insert(TRAIT_CONFIG_UPDATED, UpdateSpellsTable) -- 第二帧创建面板
+table.insert(InitUI, UpdateSpellsTable)               -- 初始化时建立技能列表
+table.insert(PLAYER_TALENT_UPDATE, UpdateSpellsTable) -- 天赋变更时刷新技能列表
+table.insert(TRAIT_CONFIG_UPDATED, UpdateSpellsTable) -- 天赋树配置变更时刷新技能列表
