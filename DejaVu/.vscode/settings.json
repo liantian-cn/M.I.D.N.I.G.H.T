@@ -5,7 +5,12 @@
         "MinimalSliderWithSteppersMixin",
         "DISABLE",
         "COLOR",
-        "Add"
+        "Add",
+        "CreateColor",
+        "UIParent",
+        "GameFontHighlight",
+        "GameTooltip",
+        "SetCVar"
     ],
     "Lua.type.weakUnionCheck": true,
     "Lua.runtime.version": "Lua 5.1",
@@ -21,6 +26,6 @@
         "utf8": "disable"
     },
     "Lua.workspace.library": [
-        "c:\\Users\\liantian\\.trae-cn\\extensions\\ketho.wow-api-0.22.3\\Annotations\\Core"
+        "~\\.vscode\\extensions\\ketho.wow-api-0.22.3\\Annotations\\Core"
     ]
 }
