@@ -1,70 +1,32 @@
 -- luacheck: globals C_Spell C_SpellBook Enum wipe
 local addonName, addonTable = ... -- luacheck: ignore addonName
 -- 本地化性能优化
-local GetSpellCharges = C_Spell.GetSpellCharges
-local GetNumSpellBookSkillLines = C_SpellBook.GetNumSpellBookSkillLines
-local GetSpellBookSkillLineInfo = C_SpellBook.GetSpellBookSkillLineInfo
-local GetSpellBookItemInfo = C_SpellBook.GetSpellBookItemInfo
-local IsSpellPassive = C_Spell.IsSpellPassive
-local IsSpellBookItemOffSpec = C_SpellBook.IsSpellBookItemOffSpec
-local InsertTable = table.insert
-local Wipe = wipe
 local GetUnitAuraInstanceIDs = C_UnitAuras.GetUnitAuraInstanceIDs
 local GetAuraDataByAuraInstanceID = C_UnitAuras.GetAuraDataByAuraInstanceID
 local GetAuraDuration = C_UnitAuras.GetAuraDuration
 local GetAuraApplicationDisplayCount = C_UnitAuras.GetAuraApplicationDisplayCount
 local GetAuraDispelTypeColor = C_UnitAuras.GetAuraDispelTypeColor
 local DoesAuraHaveExpirationTime = C_UnitAuras.DoesAuraHaveExpirationTime
-local UnitHealthPercent = UnitHealthPercent
-local UnitPowerPercent = UnitPowerPercent
-local UnitGetTotalHealAbsorbs = UnitGetTotalHealAbsorbs
-local UnitGetTotalAbsorbs = UnitGetTotalAbsorbs
-local UnitHealthMax = UnitHealthMax
-local UnitClass = UnitClass
-local UnitGroupRolesAssigned = UnitGroupRolesAssigned
-local UnitIsUnit = UnitIsUnit
 local UnitIsEnemy = UnitIsEnemy
-local UnitIsDeadOrGhost = UnitIsDeadOrGhost
 local UnitExists = UnitExists
-local UnitCanAttack = UnitCanAttack
-local UnitChannelDuration = UnitChannelDuration
-local UnitCastingDuration = UnitCastingDuration
-local UnitInVehicle = UnitInVehicle
 local EvaluateColorFromBoolean = C_CurveUtil.EvaluateColorFromBoolean
-local IsMounted = IsMounted
-local GetUnitSpeed = GetUnitSpeed
-local UnitAffectingCombat = UnitAffectingCombat
-local UnitCastingInfo = UnitCastingInfo
-local UnitChannelInfo = UnitChannelInfo
-local IsSpellUsable = C_Spell.IsSpellUsable
-local GetSpellTexture = C_Spell.GetSpellTexture
-local GetSpellChargeDuration = C_Spell.GetSpellChargeDuration
-local GetSpellCooldownDuration = C_Spell.GetSpellCooldownDuration
-local GetSpellLink = C_Spell.GetSpellLink
-local CreateColorCurve = C_CurveUtil.CreateColorCurve
-
 
 local InitUI = addonTable.UpdateFunc.InitUI -- 初始化 UI 函数列表
 local COLOR = addonTable.COLOR
-local Slots = addonTable.Slots
 local Cell = addonTable.Cell
 local BadgeCell = addonTable.BadgeCell
 local CharCell = addonTable.CharCell
 
-local OnUpdateLow = addonTable.UpdateFunc.OnUpdateLow             -- 低频刷新回调列表（约 2 Hz）
 local OnUpdateHigh = addonTable.UpdateFunc.OnUpdateHigh           -- 高频刷新回调列表（约 10 Hz）
 local UNIT_AURA = addonTable.UpdateFunc.UNIT_AURA                 -- UNIT_AURA 回调列表
 local TARGET_CHANGED = addonTable.UpdateFunc.TARGET_CHANGED       -- 目标改变时触发，并不存在这个事件，多个事件会触发这个事件
 local FOCUS_CHANGED = addonTable.UpdateFunc.FOCUS_CHANGED         -- 焦点改变时触发，并不存在这个事件，多个事件会触发这个事件
 local MOUSEOVER_CHANGED = addonTable.UpdateFunc.MOUSEOVER_CHANGED -- 鼠标悬停改变时触发，并不存在这个事件，多个事件会触发这个事件
 
-
-
 local remainingCurve = addonTable.Slots.remainingCurve
 local playerDebuffCurve = addonTable.Slots.playerDebuffCurve
 local enemyDebuffCurve = addonTable.Slots.enemyDebuffCurve
 local playerBuffCurve = addonTable.Slots.playerBuffCurve
-
 
 
 local function AuraSequenceCreater(unit, filter, maxCount, pos_x, pos_y, sortRule, sortDirection)

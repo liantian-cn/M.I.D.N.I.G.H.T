@@ -39,3 +39,23 @@ local GetSpellChargeDuration = C_Spell.GetSpellChargeDuration
 local GetSpellCooldownDuration = C_Spell.GetSpellCooldownDuration
 local GetSpellLink = C_Spell.GetSpellLink
 local CreateColorCurve = C_CurveUtil.CreateColorCurve
+
+
+-- [unit]存在 → unitExists
+-- [unit]存活 → unitIsAlive
+-- [unit]的职业 → unitClass
+-- [unit]的职责 → unitRole
+-- [unit]的血量 → unitHealthPercent
+-- [unit]的能量 → unitPowerPercent
+-- [unit]是敌人 → unitIsEnemy
+-- [unit]可以攻击 → unitCanAttack
+-- [unit]施法图标 → unitCastIcon
+-- [unit]通道法术图标 → unitChannelIcon
+-- [unit]施法进度 → unitCastProgress
+-- [unit]通道法术进度 → unitChannelProgress
+-- [unit]施法可打断 → unitCastIsInterruptible
+-- [unit]通道法术可打断 → unitChannelIsInterruptible
+-- [unit]在远程范围 → unitIsInRangedRange
+-- [unit]在近战范围 → unitIsInMeleeRange
+-- [unit]在战斗中 → unitIsInCombat
+-- [unit]是当前目标 → unitIsTarget
