@@ -195,9 +195,9 @@ end
 
 local InitializeAuraSequence = function() -- 初始化 aura 序列槽位
     AuraSequenceCreater("player", "HELPFUL", 30, 2, 4, Enum.UnitAuraSortRule.Expiration, Enum.UnitAuraSortDirection.Normal)
-    AuraSequenceCreater("player", "HARMFUL", 15, 2, 10, Enum.UnitAuraSortRule.Expiration, Enum.UnitAuraSortDirection.Normal)
-    AuraSequenceCreater("target", "HARMFUL|PLAYER", 15, 42, 10, Enum.UnitAuraSortRule.Expiration, Enum.UnitAuraSortDirection.Normal)
-    AuraSequenceCreater("focus", "HARMFUL|PLAYER", 15, 2, 15, Enum.UnitAuraSortRule.Expiration, Enum.UnitAuraSortDirection.Normal)
-    AuraSequenceCreater("mouseover", "HARMFUL|PLAYER", 15, 42, 15, Enum.UnitAuraSortRule.Expiration, Enum.UnitAuraSortDirection.Normal)
+    AuraSequenceCreater("player", "HARMFUL", 10, 2, 9, Enum.UnitAuraSortRule.Expiration, Enum.UnitAuraSortDirection.Normal)
+    AuraSequenceCreater("target", "HARMFUL|PLAYER", 15, 22, 9, Enum.UnitAuraSortRule.Expiration, Enum.UnitAuraSortDirection.Normal)
+    AuraSequenceCreater("focus", "HARMFUL|PLAYER", 10, 2, 14, Enum.UnitAuraSortRule.Expiration, Enum.UnitAuraSortDirection.Normal)
+    AuraSequenceCreater("mouseover", "HARMFUL|PLAYER", 10, 22, 14, Enum.UnitAuraSortRule.Expiration, Enum.UnitAuraSortDirection.Normal)
 end
 table.insert(InitUI, InitializeAuraSequence) -- 初始化时创建 aura 序列槽位
