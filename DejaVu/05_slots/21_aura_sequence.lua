@@ -1,4 +1,14 @@
--- luacheck: globals C_Spell C_SpellBook Enum wipe
+--[[
+文件定位：
+  DejaVu Aura 序列槽位显示模块，负责 Buff / Debuff 的 Cell 布局与刷新。
+
+
+
+状态：
+  draft
+]]
+
+-- luacheck: globals C_UnitAuras C_CurveUtil Enum UnitExists UnitIsEnemy wipe
 local addonName, addonTable = ... -- luacheck: ignore addonName
 -- 本地化性能优化
 local GetUnitAuraInstanceIDs = C_UnitAuras.GetUnitAuraInstanceIDs
@@ -29,18 +39,12 @@ local enemyDebuffCurve = addonTable.Slots.enemyDebuffCurve
 local playerBuffCurve = addonTable.Slots.playerBuffCurve
 
 
-local function AuraSequenceCreater(unit, filter, maxCount, pos_x, pos_y, sortRule, sortDirection)
+local function AuraSequenceCreator(unit, filter, maxCount, pos_x, pos_y, sortRule, sortDirection)
     sortRule = sortRule or Enum.UnitAuraSortRule.Default
     sortDirection = sortDirection or Enum.UnitAuraSortDirection.Normal
 
-    local start_idx, end_idx = string.find(filter, "HELPFUL")
-    local isBuff = false
-    local isDebuff = false
-    if start_idx then
-        isBuff = true
-    else
-        isDebuff = true
-    end
+    local isBuff = string.find(filter, "HELPFUL", 1, true) ~= nil
+    local isDebuff = not isBuff
 
     local auraCells = {}
     local InstanceIDtoCell = {}
@@ -88,11 +92,11 @@ local function AuraSequenceCreater(unit, filter, maxCount, pos_x, pos_y, sortRul
             else
                 local auraInstanceID = auraInstanceIDs[i]
                 InstanceIDtoCell[auraInstanceID] = cell
-                local aura = GetAuraDataByAuraInstanceID(unit, auraInstanceID)
-                if aura ~= nil then
-                    local remaining = GetAuraDuration(unit, auraInstanceID)
-                    local foreverBoolen = DoesAuraHaveExpirationTime(unit, auraInstanceID)
-                    local count = GetAuraApplicationDisplayCount(unit, auraInstanceID, 1, 9)
+                    local aura = GetAuraDataByAuraInstanceID(unit, auraInstanceID)
+                    if aura ~= nil then
+                        local remaining = GetAuraDuration(unit, auraInstanceID)
+                        local hasExpirationTime = DoesAuraHaveExpirationTime(unit, auraInstanceID)
+                        local count = GetAuraApplicationDisplayCount(unit, auraInstanceID, 1, 9)
 
                     cell.count:setCell(count)
 
@@ -103,11 +107,15 @@ local function AuraSequenceCreater(unit, filter, maxCount, pos_x, pos_y, sortRul
                         cell.remaining:clearCell()
                     end
 
-                    if foreverBoolen ~= nil then
-                        local foreverColor = EvaluateColorFromBoolean(foreverBoolen, COLOR.TRANSPARENT, COLOR.WHITE) -- 白色是永久buff
-                        cell.forever:setCell(foreverColor)
-                    else
-                        cell.forever:clearCell()
+                        if hasExpirationTime ~= nil then
+                            local foreverColor = EvaluateColorFromBoolean(
+                                hasExpirationTime,
+                                COLOR.TRANSPARENT,
+                                COLOR.WHITE
+                            )
+                            cell.forever:setCell(foreverColor)
+                        else
+                            cell.forever:clearCell()
                     end
 
                     if isPlayer and isDebuff then
@@ -128,7 +136,7 @@ local function AuraSequenceCreater(unit, filter, maxCount, pos_x, pos_y, sortRul
         end
     end -- updateSequence
 
-    local function updatedRemaining()
+    local function updateRemaining()
         for auraInstanceID, cell in pairs(InstanceIDtoCell) do
             if cell ~= nil then
                 local remaining = GetAuraDuration(unit, auraInstanceID)
@@ -141,7 +149,7 @@ local function AuraSequenceCreater(unit, filter, maxCount, pos_x, pos_y, sortRul
             end
         end
     end
-    table.insert(OnUpdateHigh, updatedRemaining)
+    table.insert(OnUpdateHigh, updateRemaining)
     table.insert(UNIT_AURA, { unit = unit, func = updateFullSequence })
     if unit == "target" then
         table.insert(TARGET_CHANGED, updateFullSequence)
@@ -155,11 +163,51 @@ end
 
 
 
-local InitializeAuraSequence = function() -- 初始化 aura 序列槽位
-    AuraSequenceCreater("player", "HELPFUL", 30, 2, 4, Enum.UnitAuraSortRule.Expiration, Enum.UnitAuraSortDirection.Normal)
-    AuraSequenceCreater("player", "HARMFUL", 10, 2, 9, Enum.UnitAuraSortRule.Expiration, Enum.UnitAuraSortDirection.Normal)
-    AuraSequenceCreater("target", "HARMFUL|PLAYER", 15, 22, 9, Enum.UnitAuraSortRule.Expiration, Enum.UnitAuraSortDirection.Normal)
-    AuraSequenceCreater("focus", "HARMFUL|PLAYER", 10, 2, 14, Enum.UnitAuraSortRule.Expiration, Enum.UnitAuraSortDirection.Normal)
-    AuraSequenceCreater("mouseover", "HARMFUL|PLAYER", 10, 22, 14, Enum.UnitAuraSortRule.Expiration, Enum.UnitAuraSortDirection.Normal)
+local function InitializeAuraSequence() -- 初始化 aura 序列槽位
+    AuraSequenceCreator(
+        "player",
+        "HELPFUL",
+        30,
+        2,
+        4,
+        Enum.UnitAuraSortRule.Expiration,
+        Enum.UnitAuraSortDirection.Normal
+    )
+    AuraSequenceCreator(
+        "player",
+        "HARMFUL",
+        10,
+        2,
+        9,
+        Enum.UnitAuraSortRule.Expiration,
+        Enum.UnitAuraSortDirection.Normal
+    )
+    AuraSequenceCreator(
+        "target",
+        "HARMFUL|PLAYER",
+        15,
+        22,
+        9,
+        Enum.UnitAuraSortRule.Expiration,
+        Enum.UnitAuraSortDirection.Normal
+    )
+    AuraSequenceCreator(
+        "focus",
+        "HARMFUL|PLAYER",
+        10,
+        2,
+        14,
+        Enum.UnitAuraSortRule.Expiration,
+        Enum.UnitAuraSortDirection.Normal
+    )
+    AuraSequenceCreator(
+        "mouseover",
+        "HARMFUL|PLAYER",
+        10,
+        22,
+        14,
+        Enum.UnitAuraSortRule.Expiration,
+        Enum.UnitAuraSortDirection.Normal
+    )
 end
 table.insert(InitUI, InitializeAuraSequence) -- 初始化时创建 aura 序列槽位

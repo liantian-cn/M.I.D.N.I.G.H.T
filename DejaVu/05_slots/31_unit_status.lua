@@ -51,8 +51,8 @@ local CreateColorCurve = C_CurveUtil.CreateColorCurve
 -- [unit]可以攻击 → unitCanAttack
 -- [unit]施法图标 → unitCastIcon
 -- [unit]通道法术图标 → unitChannelIcon
--- [unit]施法进度 → unitCastProgress
--- [unit]通道法术进度 → unitChannelProgress
+-- [unit]施法进度 → unitCastDuration
+-- [unit]通道法术进度 → unitChannelDuration
 -- [unit]施法可打断 → unitCastIsInterruptible
 -- [unit]通道法术可打断 → unitChannelIsInterruptible
 -- [unit]在远程范围 → unitIsInRangedRange
