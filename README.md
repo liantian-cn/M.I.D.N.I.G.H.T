@@ -62,3 +62,26 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 ## 意见建议
 
 访问[repo discussions](https://github.com/liantian-cn/M.I.D.N.I.G.H.T/discussions)
+
+## 当前repo专精支持情况
+
+- **血DK** 比较OK，可以用在13层及以下的大米，需要自行开冰刃和吸血鬼、符文剑简易手动开或爆发模式。
+- **熊德**：相对OK，可以用在13层及以下的大米，需要自行提前开爆发、本能。
+- **奶德**：制作中。
+
+### 爆发宏
+```
+/burst x.x
+```
+在x.x秒内处于爆发状态。
+血DK的符文剑会开启。熊的化身会开启。奶德会预铺5人双回春。
+
+### 延迟宏
+```
+/delay x.x
+```
+在x.x秒内处于暂停状态。
+0.4秒就可以有效插入技能了。
+
+   
+
