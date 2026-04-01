@@ -19,7 +19,7 @@ local Cell   = addonTable.Cell             -- 基础色块单元
 local Config = addonTable.Config           -- 配置对象工厂
 
 
-addonTable.RangedRange = 30 -- 近战范围阈值, 单位为码
+addonTable.RangedRange = 30 -- 远程范围阈值, 单位为码
 
 
 do
@@ -77,109 +77,5 @@ do
     end
 
 
-
-
-
-
-
     insert(InitUI, InitializeDKSetting) -- 注册 aura 序列初始化入口
-end
-
-if currentSpec == 1 then
-    -- 血DK
-    do
-        local blood_death_strike_health_threshold = Config("blood_death_strike_health_threshold")                             -- 死亡打击生命值阈值
-        local blood_death_strike_runic_power_overflow_threshold = Config("blood_death_strike_runic_power_overflow_threshold") -- 死亡打击泄能阈值
-        local reaper_mark_health_threshold = Config("reaper_mark_health_threshold")                                           -- 死亡打击泄能阈值
-        local dancing_rune_mode = Config("dancing_rune_mode")                                                                 -- 符文刃舞模式
-
-        insert(addonTable.Panel.Rows, {
-            type = "slider",
-            key = "blood_death_strike_health_threshold",
-            name = "死亡打击生命值阈值",
-            tooltip = "当前生命值低于该百分比时, 使用死亡打击",
-            min_value = 40,
-            max_value = 70,
-            step = 5,
-            default_value = 55,
-            bind_config = blood_death_strike_health_threshold,
-        })
-
-        insert(addonTable.Panel.Rows, {
-            type = "slider",
-            key = "blood_death_strike_runic_power_overflow_threshold",
-            name = "死亡打击泄能阈值",
-            tooltip = "当前符文能量高于该值时, 使用死亡打击避免浪费",
-            min_value = 80,
-            max_value = 120,
-            step = 10,
-            default_value = 100,
-            bind_config = blood_death_strike_runic_power_overflow_threshold,
-        })
-
-        insert(addonTable.Panel.Rows, {
-            type = "slider",
-            key = "reaper_mark_health_threshold",
-            name = "死神印记血量阈值",
-            tooltip = "当敌人生命值低于此值时, 就不会再使用死神印记",
-            min_value = 10,
-            max_value = 60,
-            step = 10,
-            default_value = 30,
-            bind_config = reaper_mark_health_threshold,
-        })
-
-
-        table.insert(addonTable.Panel.Rows, {
-            type = "combo",
-            key = "dancing_rune_mode",
-            name = "符文刃舞模式",
-            tooltip = "手动模式: 完全不施放符文刃舞\n爆发模式: 仅在爆发阶段施放符文刃舞\n战斗时间模式: 根据战斗时间，开开怪期间自动施放符文刃舞。",
-            default_value = "manual",
-            options = {
-                { k = "manual", v = "手动" },
-                { k = "burst_mode", v = "爆发模式" },
-                { k = "combat_mode", v = "战斗时间模式" }
-            },
-            bind_config = dancing_rune_mode
-        })
-        local function InitializeBloodSettingCell() -- 符文能量 Cell 初始化函数
-            local blood_death_strike_health_threshold_cell = Cell:New(57, 12)
-            local blood_death_strike_runic_power_overflow_threshold_cell = Cell:New(58, 12)
-            local reaper_mark_health_threshold_cell = Cell:New(59, 12)
-            local dancing_rune_mode_cell = Cell:New(60, 12)
-
-
-            local function set_blood_death_strike_health_threshold(value)
-                blood_death_strike_health_threshold_cell:setCellRGBA(value / 255)
-            end
-            set_blood_death_strike_health_threshold(blood_death_strike_health_threshold:get_value()) -- 初始化时设置一次颜色
-            blood_death_strike_health_threshold:register_callback(set_blood_death_strike_health_threshold)
-
-            local function set_blood_death_strike_runic_power_overflow_threshold(value)
-                blood_death_strike_runic_power_overflow_threshold_cell:setCellRGBA(value / 255)
-            end
-            set_blood_death_strike_runic_power_overflow_threshold(blood_death_strike_runic_power_overflow_threshold:get_value()) -- 初始化时设置一次颜色
-            blood_death_strike_runic_power_overflow_threshold:register_callback(set_blood_death_strike_runic_power_overflow_threshold)
-
-            local function set_reaper_mark_health_threshold(value)
-                reaper_mark_health_threshold_cell:setCellRGBA(value / 255)
-            end
-            set_reaper_mark_health_threshold(reaper_mark_health_threshold:get_value()) -- 初始化时设置一次颜色
-            reaper_mark_health_threshold:register_callback(set_reaper_mark_health_threshold)
-
-            local function set_dancing_rune_mode(value)
-                if value == "manual" then
-                    dancing_rune_mode_cell:setCellRGBA(255 / 255) -- 绿色表示手动模式
-                elseif value == "burst_mode" then
-                    dancing_rune_mode_cell:setCellRGBA(127 / 255) -- 黄色表示爆发模式
-                else
-                    dancing_rune_mode_cell:setCellRGBA(0 / 255)   -- 红色表示战斗时间模式
-                end
-            end
-            set_dancing_rune_mode(dancing_rune_mode:get_value()) -- 初始化时设置一次颜色
-            dancing_rune_mode:register_callback(set_dancing_rune_mode)
-        end
-        insert(InitUI, InitializeBloodSettingCell) -- 注册 aura 序列初始化入口
-    end
 end
