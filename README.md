@@ -13,6 +13,14 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 - 游戏内设置：动态变量设置由游戏内插件完成。
 - 循环热加载：在ide里编辑代码，保存后，rotation会自动重载。
 
+## 截图
+
+
+### DejaVu
+
+### Terminal
+
+
 ## 使用方式
 
 ### 安装DejaVu到你的游戏插件路径
