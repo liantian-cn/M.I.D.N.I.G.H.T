@@ -38,7 +38,6 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 - 使用`Windows Terminal`进入项目目录。
 - `uv sync`完成依赖安装
 - 执行`clear ; uv run .\main.py`运行程序。
-- 将[DejaVu](https://github.com/liantian-cn/DejaVu)安装到游戏的插件目录。
 
 ### 基础逻辑
 
