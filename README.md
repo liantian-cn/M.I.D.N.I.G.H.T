@@ -66,7 +66,13 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 ## 当前repo专精支持情况
 
 - **血DK**：比较OK，可以用在13层及以下的大米，需要自行开冰刃和吸血鬼、符文剑简易手动开或爆发模式。
+```
+CoPASnrjTdwaLTX9NnLQoJJXfwMz2MzwMmZmhZbmZmmZxMjZmxAAAAAmxMzMzMDzYMAYMzMzAAAYmZbMMmxySjltlhJbDDLAmxMAAMzAAGA
+```
 - **熊德**：相对OK，可以用在13层及以下的大米，需要自行提前开爆发、本能。
+```
+CgGA8cL7tpvige+kkmGM9zUPWDAAAAAAAAAAAgZmxswMjZWmZZeAmZZZgZzwoJamZWYmZmlxMAAAAAAMjtZAAAAomZZWmZmBAwCzMPAwy2MDDYxiBAzsBD
+```
 - **奶德**：制作中。
 
 PS：目前熊T和血DK还是下水道难兄难弟，还是需要有点副本理解才能玩的。
@@ -84,6 +90,21 @@ PS：目前熊T和血DK还是下水道难兄难弟，还是需要有点副本理
 ```
 在x.x秒内处于暂停状态。
 0.4秒就可以有效插入技能了。
+
+### 打断黑名单
+
+T不断小条
+```
+1254669
+1258436
+1248327
+1262510
+468962
+1262526
+```
+节点尾王： `1257613`
+熊不断执政老2：`248831`
+
 
    
 
