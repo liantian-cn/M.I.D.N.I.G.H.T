@@ -6,7 +6,7 @@ from .base import BaseRotation
 
 class DruidGuardian(BaseRotation):
     name = "熊德"
-    desc = "熊德旋转"
+    desc = "利爪，兼容月光。"
 
     def __init__(self) -> None:
         super().__init__()
@@ -328,7 +328,6 @@ class DruidGuardian(BaseRotation):
                     return self.cast("补痛击")
                 if is_aoe:
                     return self.cast("AOE痛击")
-        # # print("205")
 
         # 裂伤一层时，没2层优先那么高。
         if ctx.spell_charges_ready("裂伤", 1, spell_queue_window):

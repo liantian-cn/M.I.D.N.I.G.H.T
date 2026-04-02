@@ -3,12 +3,11 @@ from datetime import datetime
 
 from terminal.context import Context
 from .base import BaseRotation
-#  https: // github.com/liantian-cn/Deprecated/blob/main/world-of-warcraft/Shion/DeathKnightBlood/rotation.lua
 
 
 class DeathKnightBlood(BaseRotation):
     name = "血DK"
-    desc = "目前只适配死亡使者，其他天赋可能会有问题"
+    desc = "目前只适配死亡使者，萨莱因可能会有问题"
 
     def __init__(self) -> None:
         super().__init__()
