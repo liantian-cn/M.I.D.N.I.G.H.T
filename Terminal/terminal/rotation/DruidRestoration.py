@@ -104,6 +104,7 @@ class DruidRestoration(BaseRotation):
             "target月火术": "CTRL-NUMPAD5",
             "target愤怒": "CTRL-NUMPAD6",
             "激活": "CTRL-NUMPAD7",
+            "mouseover复生": "CTRL-NUMPAD8",
         }
 
     def calculate_party_health_score(self, ctx: Context) -> list[RestorationPartyMember]:
@@ -525,7 +526,16 @@ class DruidRestoration(BaseRotation):
             if (player.powerPercent < 90):
                 return self.cast(f"激活")
 
-        # 4.0 战斗部分，在治疗之外的填充
+        # 3.2 复生逻辑
+        # 如果鼠标指向，死亡、是友方。
+        # 如果复生在CD。人物不在移动。
+        # 复生
+        mouseover = ctx.mouseover
+        if mouseover.exists and (not mouseover.alive) and (not mouseover.isEnemy):
+            if ctx.spell_cooldown_ready("复生", spell_queue_window) and player_is_stand:
+                return self.cast(f"mouseover复生")
+
+                # 4.0 战斗部分，在治疗之外的填充
 
         target = ctx.target
         combat_point_cell = ctx.spec.cell(0)  # 连击点
