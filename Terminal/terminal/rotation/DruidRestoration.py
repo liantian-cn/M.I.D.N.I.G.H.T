@@ -169,7 +169,7 @@ class DruidRestoration(BaseRotation):
                 if health_deficit < self.tank_deficit_ignore_percent:
                     health_deficit = 0
                     health_base = 100
-                    health_score = health_base + damage_absorbs
+                    health_score = (health_base + damage_absorbs) * self.tank_health_score_multiplier
 
             # 先找出单位身上可驱散的 debuff，再按黑名单过滤。
             dispel_list = [debuff.title for debuff in member.debuff if (debuff.type in self.dispel_types)]
@@ -354,7 +354,7 @@ class DruidRestoration(BaseRotation):
         if player.hasBuff("旅行形态"):
             return self.idle("旅行形态中")
 
-        if not player.isInCombat:
+        if (not player.isInCombat) and (ctx.burst_time <= 0):  # 爆发模式则忽略战斗判断，直接开始预铺
             return self.idle("未进入战斗")
         # if not player.hasBuff("熊形态"):
         #     return self.cast("any熊形态")
@@ -507,17 +507,31 @@ class DruidRestoration(BaseRotation):
         # 爆发模式开启且回春术可用时，先给 0 层回春的目标补第一层，再给 1 层回春的目标补第二层。
         # 每一轮都在候选目标里选择 health_score 最低的单位施放回春术。
         if ctx.spell_cooldown_ready("回春术", spell_queue_window) and (ctx.burst_time > 0):
+            # 先给没回春的铺一圈
             rejuvenation_targets = [member for member in party_members if (member.rejuvenation_count == 0)]
+            # rejuvenation_targets = [member for member in party_members if (member.rejuvenation_count == 0)]
+
+            for member in rejuvenation_targets:
+                print(f"{member.unitToken=} {member.health_score=} {member.unitRole=}", end="; ")
+                # print()
+            print("")
             if rejuvenation_targets:
                 target = min(rejuvenation_targets, key=lambda member: member.health_score)
                 return self.cast(f"{target.unitToken}回春术")
                 # print(f"对{target.unitToken}施放回春术", end="; ")
 
+            # 再给有回春的铺一圈第二层
             rejuvenation_targets = [member for member in party_members if (member.rejuvenation_count == 1)]
             if rejuvenation_targets:
                 target = min(rejuvenation_targets, key=lambda member: member.health_score)
                 return self.cast(f"{target.unitToken}回春术")
                 # print(f"对{target.unitToken}施放回春术", end="; ")
+
+            # 再给回春层数小于4的铺一圈第三层
+            rejuvenation_targets = [member for member in party_members if (member.rejuvenation_remaining < 4) or (member.germination_remaining < 4)]
+            if rejuvenation_targets:
+                target = min(rejuvenation_targets, key=lambda member: member.health_score)
+                return self.cast(f"{target.unitToken}回春术")
 
         # 3.0 保持瑞吉
         # 3.1 如果丰饶层数小于阈值，给无回春目标释放回春
@@ -527,6 +541,7 @@ class DruidRestoration(BaseRotation):
         abundance_stack_limit = party_count * abundance_stack_threshold_per_unit    # 适合当前小队的丰饶层数
         if ctx.spell_cooldown_ready("回春术", spell_queue_window) and (abundance_stack < abundance_stack_limit):
             rejuvenation_targets = [member for member in party_members if (member.rejuvenation_count == 0)]
+
             if rejuvenation_targets:
                 target = min(rejuvenation_targets, key=lambda member: member.health_score)
                 return self.cast(f"{target.unitToken}回春术")
