@@ -53,6 +53,7 @@ class DruidRestoration(BaseRotation):
         self.regrowth_hp_threshold = 85  # 愈合血量
         self.rejuvenation_hp_threshold = 99  # 回春血量
         self.abundance_stack_threshold = 5  # 丰饶层数阈值
+        self.hot_hp_threshold = 3.2  # 每个hot增加的血量阈值
         self.dispel_types = {"MAGIC", "CURSE", "POISON"}  # 可驱散的 debuff 类型
         self.dispel_blacklist: list[str] = []
 
@@ -86,7 +87,7 @@ class DruidRestoration(BaseRotation):
             "party1愈合": "ALT-F9",
             "party2愈合": "ALT-F10",
             "party3愈合": "ALT-F11",
-            "party4愈合": "ALT-F12",
+            "party4愈合": "ALT-F1",
             "player回春术": "SHIFT-F2",
             "party1回春术": "SHIFT-F3",
             "party2回春术": "SHIFT-F5",
@@ -96,7 +97,7 @@ class DruidRestoration(BaseRotation):
             "万灵之召": "SHIFT-F9",
             "宁静": "SHIFT-F10",
             "自然迅捷": "SHIFT-F11",
-            "迅捷治愈": "SHIFT-F12",
+            "迅捷治愈": "SHIFT-F1",
             "target斜掠": "CTRL-NUMPAD1",
             "target撕碎": "CTRL-NUMPAD2",
             "target割裂": "CTRL-NUMPAD3",
@@ -125,23 +126,34 @@ class DruidRestoration(BaseRotation):
             regrowth_remaining = member.buffRemain("愈合")
             wild_growth_remaining = member.buffRemain("野性成长")
             lifebloom_remaining = member.buffRemain("生命绽放")
+
+            # 血量基线使用“当前血量 - 治疗吸收”，数值越低说明越危险。
+            health_base = health_percent - heal_absorbs
+
+            # 计算hot数量，并且每个hot，增加3点血量。
             rejuvenation_count = 0
             hot_count = 0
             if rejuvenation_remaining > spell_queue_window:
                 rejuvenation_count += 1
                 hot_count += 1
+                health_base += self.hot_hp_threshold
             if germination_remaining > spell_queue_window:
                 rejuvenation_count += 1
                 hot_count += 1
+                health_base += self.hot_hp_threshold
             if regrowth_remaining > spell_queue_window:
                 hot_count += 1
+                health_base += self.hot_hp_threshold
             if wild_growth_remaining > spell_queue_window:
                 hot_count += 1
+                health_base += self.hot_hp_threshold
             if lifebloom_remaining > spell_queue_window:
                 hot_count += 1
+                health_base += self.hot_hp_threshold
 
-            # 血量基线使用“当前血量 - 治疗吸收”，数值越低说明越危险。
-            health_base = health_percent - heal_absorbs
+            health_base = min(health_base, 100)
+            # health_base = max(health_base, 0)
+
             # 血量缺口表示补满到 100% 还需要多少治疗量。
             health_deficit = 100 - health_base
             # 健康分数越低越优先，伤害吸收越多会让单位看起来更安全。
@@ -282,6 +294,13 @@ class DruidRestoration(BaseRotation):
             self.tank_deficit_ignore_percent = float(restoration_tank_deficit_ignore_percent_cell.mean)
             # print(f"{self.tank_deficit_ignore_percent=}", end="; ")
 
+        restoration_hot_hp_threshold_cell = ctx.setting.cell(13)
+        if restoration_hot_hp_threshold_cell is None:
+            self.hot_hp_threshold = 3.2
+        else:
+            self.hot_hp_threshold = float(restoration_hot_hp_threshold_cell.mean/20)
+            # print(f"{self.hot_hp_threshold=}", end="; ")
+
         self.dispel_blacklist = ctx.dispel_blacklist
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
@@ -290,11 +309,11 @@ class DruidRestoration(BaseRotation):
         spell_queue_window = float(ctx.spell_queue_window or 0.3)
 
         if not ctx.enable:
-            print("总开关未开启")
+            # print("总开关未开启")
             return self.idle("总开关未开启")
 
         if ctx.delay:
-            print("延迟开关开启")
+            # print("延迟开关开启")
             return self.idle("延迟开关开启")
 
         player = [member for member in party_members if member.unitToken == "player"][0]
@@ -332,12 +351,11 @@ class DruidRestoration(BaseRotation):
         if player.hasBuff("食物和饮料"):
             return self.idle("正在吃喝")
 
-        if not player.isInCombat:
-            return self.idle("未进入战斗")
-
         if player.hasBuff("旅行形态"):
             return self.idle("旅行形态中")
 
+        if not player.isInCombat:
+            return self.idle("未进入战斗")
         # if not player.hasBuff("熊形态"):
         #     return self.cast("any熊形态")
 
@@ -535,7 +553,7 @@ class DruidRestoration(BaseRotation):
             if ctx.spell_cooldown_ready("复生", spell_queue_window) and player_is_stand:
                 return self.cast(f"mouseover复生")
 
-                # 4.0 战斗部分，在治疗之外的填充
+        # 4.0 战斗部分，在治疗之外的填充
 
         target = ctx.target
         combat_point_cell = ctx.spec.cell(0)  # 连击点
@@ -553,12 +571,13 @@ class DruidRestoration(BaseRotation):
         #   - 撕碎
         if target.exists and target.isInMeleeRange and target.canAttack:
             if in_cat_form and ctx.spell_cooldown_ready("野性之心", spell_queue_window):
+                print(f"对{target.unitToken}施放野性之心", end="; ")
                 return self.cast("target野性之心")
-            elif combat_point >= 5 and ctx.spell_cooldown_ready("割裂", spell_queue_window) and (not target.hasDebuff("割裂")):
+            elif (combat_point >= 5) and in_cat_form and ctx.spell_cooldown_ready("割裂", spell_queue_window) and (not target.hasDebuff("割裂")):
                 return self.cast("target割裂")
-            elif combat_point < 5 and ctx.spell_cooldown_ready("斜掠", spell_queue_window) and (not target.hasDebuff("斜掠")):
+            elif ctx.spell_cooldown_ready("斜掠", spell_queue_window) and (not target.hasDebuff("斜掠")):
                 return self.cast("target斜掠")
-            elif combat_point < 5 and ctx.spell_cooldown_ready("撕碎", spell_queue_window):
+            elif ctx.spell_cooldown_ready("撕碎", spell_queue_window):
                 return self.cast("target撕碎")
 
         if target.exists and target.isInRangedRange and (not target.isInMeleeRange) and target.canAttack and target.isInCombat:

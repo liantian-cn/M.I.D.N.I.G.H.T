@@ -235,16 +235,19 @@ class DeathKnightBlood(BaseRotation):
         # 补骨盾逻辑，当骨盾剩余层数<5，并且骨盾剩余时间<5秒时，要积极的补骨盾。
 
         if (BoneShieldCount < 5) or (BoneShieldRemainingTime < 5):
+            # 如果符文多，优先用精髓分裂来补骨盾
             # 优先使用死神的抚摩，因为死神的抚摩是直接补满5层骨盾的
             # 如果死神的抚摩可用就用死神的抚摩，否则如果精髓分裂可用就用精髓分裂
-            if DeathCaressUsable:
-                return self.cast("死神的抚摩")
-                # print("死神的抚摩", end="; ")
             # 如果死神印记可用，并且敌人血量高于设定的阈值，就用死神印记来补骨盾。
             if ReaperMarkUsable and (main_target is not None):
                 if main_target.healthPercent > reaper_mark_health_threshold:
                     return self.cast(f"{main_target.unitToken}死神印记")
                     # print(f"{main_target.unitToken}死神印记", end="; ")
+            if runes >= 3 and (main_target is not None):
+                return self.cast(f"{main_target.unitToken}精髓分裂")
+            if DeathCaressUsable:
+                return self.cast("死神的抚摩")
+                # print("死神的抚摩", end="; ")
 
             # 精髓分裂使用条件
             # 如果没有破灭，那就随便打。
