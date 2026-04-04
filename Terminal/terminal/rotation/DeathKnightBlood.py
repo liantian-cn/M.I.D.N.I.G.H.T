@@ -303,6 +303,11 @@ class DeathKnightBlood(BaseRotation):
                 if ctx.combat_time < 10:
                     return self.cast(f"{main_target.unitToken}符文刃舞")
 
+        # 死亡印记多打出去
+        if ReaperMarkUsable and (main_target is not None):
+            if main_target.healthPercent > reaper_mark_health_threshold:
+                return self.cast(f"{main_target.unitToken}死神印记")
+                # print(f"{main_target.unitToken}死神印记", end="; ")
         # 符文有3个以上，积极打心打
         if runes >= 3:
             if ctx.spell_cooldown_ready("心脏打击", spell_queue_window):
@@ -316,12 +321,6 @@ class DeathKnightBlood(BaseRotation):
             if target.exists and target.canAttack and target.isInMeleeRange:
                 return self.cast("血液沸腾")
                 # print("血液沸腾", end="; ")
-
-        # 死亡印记多打出去
-        if ReaperMarkUsable and (main_target is not None):
-            if main_target.healthPercent > reaper_mark_health_threshold:
-                return self.cast(f"{main_target.unitToken}死神印记")
-                # print(f"{main_target.unitToken}死神印记", end="; ")
 
         # 只要骨盾还没满，那就随便补。
         if BoneShieldCount < 9:
