@@ -443,8 +443,12 @@ class DruidRestoration(BaseRotation):
         # 1.4 野性成长逻辑（满足人数后补群 HoT）
         # 玩家站定且野性成长可用时，统计血量基线低于野性成长阈值的人数是否达到设定人数。
         # 如果满足条件，就把野性成长打给当前血量基线最低的单位。
+        # wild_growth_targets = [member for member in party_members if member.health_base < self.wild_growth_hp_threshold]
+        # print(f"野性成长目标: {wild_growth_targets}")
         if ctx.spell_cooldown_ready("野性成长", spell_queue_window) and player_is_stand:
+            # print("野性成长冷却好了", end="; ")
             wild_growth_targets = [member for member in party_members if member.health_base < self.wild_growth_hp_threshold]
+            print(f"野性成长目标: {wild_growth_targets}")
             if len(wild_growth_targets) >= self.wild_growth_count_threshold:
                 return self.cast(f"{lowest_health_base_member.unitToken}野性成长")
                 # print(f"对{lowest_health_base_member.unitToken}施放野性成长", end="; ")
