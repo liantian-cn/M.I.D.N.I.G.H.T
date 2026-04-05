@@ -94,27 +94,5 @@ addonTable.COLOR = {
         HEALTHSTONE_USABLE = CreateColor(22 / 255, 233 / 255, 229 / 255, 1),       -- 治疗石可用
         HEALING_POTION_USABLE = CreateColor(97 / 255, 165 / 255, 227 / 255, 1),    -- 治疗药水可用
         IS_WAITING_DELAYED_UPDATE = CreateColor(122 / 255, 238 / 255, 1 / 255, 1), -- 在等待延迟更新
-    },
-    MARK_FRAME = {
-        PLAYER_BUFF = CreateColor(214 / 255, 93 / 255, 177 / 255, 1),
-        CHARGE_SPELL = CreateColor(48 / 255, 201 / 255, 128 / 255, 1),
-        PLAYER_DEBUFF = CreateColor(10 / 255, 76 / 255, 60 / 255, 1),
-        TARGET_DEBUFF = CreateColor(52 / 255, 152 / 255, 219 / 255, 1),
-        TARGET_STATUS = CreateColor(241 / 255, 196 / 255, 15 / 255, 1),
-        FOCUS_STATUS = CreateColor(230 / 255, 126 / 255, 34 / 255, 1),
-        MOUSEOVER_STATUS = CreateColor(155 / 255, 89 / 255, 182 / 255, 1),
-        SPEC = CreateColor(39 / 255, 174 / 255, 96 / 255, 1),
-        SETTING = CreateColor(127 / 255, 140 / 255, 141 / 255, 1),
-        FOCUS_DEBUFF = CreateColor(192 / 255, 57 / 255, 43 / 255, 1),
-        MOUSEOVER_DEBUFF = CreateColor(233 / 255, 30 / 255, 99 / 255, 1),
-        PLAYER_STATUS = CreateColor(26 / 255, 188 / 255, 156 / 255, 1),
-        PARTY1 = CreateColor(243 / 255, 156 / 255, 18 / 255, 1),
-        PARTY2 = CreateColor(142 / 255, 68 / 255, 173 / 255, 1),
-        PARTY3 = CreateColor(22 / 255, 160 / 255, 133 / 255, 1),
-        PARTY4 = CreateColor(211 / 255, 84 / 255, 0 / 255, 1),
-        SPELL_LIST_1 = CreateColor(255 / 255, 71 / 255, 87 / 255, 1),
-        SPELL_LIST_2 = CreateColor(0 / 255, 196 / 255, 255 / 255, 1),
-        SPELL_LIST_3 = CreateColor(57 / 255, 255 / 255, 20 / 255, 1),
-        SPELL_LIST_4 = CreateColor(255 / 255, 0 / 255, 245 / 255, 1),
     }
 }

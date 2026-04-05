@@ -10,118 +10,38 @@ local addonName, addonTable = ... -- luacheck: ignore addonName -- 插件入口�
 
 -- Lua 原生函数
 local insert = table.insert
+local random = math.random
 
 -- 插件内引用
 local InitUI = addonTable.Listeners.InitUI -- 初始化入口列表
 local Cell = addonTable.Cell               -- 基础色块单元
-local COLOR = addonTable.COLOR
+
+local function CreateMarkSet(x, y, height)
+    for i = 1, height do
+        Cell:New(x, y - 1 + i, CreateColor(random(), random(), random(), 1))
+    end
+end
 
 local function InitializeMarkPointCell() -- 初始化标记点槽位
-    -- Player Buff
-    Cell:New(0, 4, COLOR.MARK_FRAME.PLAYER_BUFF)
-    Cell:New(0, 5, COLOR.MARK_FRAME.PLAYER_BUFF)
-    Cell:New(0, 6, COLOR.MARK_FRAME.PLAYER_BUFF)
-    Cell:New(0, 7, COLOR.MARK_FRAME.PLAYER_BUFF)
-    Cell:New(0, 8, COLOR.MARK_FRAME.PLAYER_BUFF)
-    -- CHARGE_SPELL
-    Cell:New(61, 4, COLOR.MARK_FRAME.CHARGE_SPELL)
-    Cell:New(61, 5, COLOR.MARK_FRAME.CHARGE_SPELL)
-    Cell:New(61, 6, COLOR.MARK_FRAME.CHARGE_SPELL)
-    Cell:New(61, 7, COLOR.MARK_FRAME.CHARGE_SPELL)
-    Cell:New(61, 8, COLOR.MARK_FRAME.CHARGE_SPELL)
-    -- PLAYER_DEBUFF
-    Cell:New(0, 9, COLOR.MARK_FRAME.PLAYER_DEBUFF)
-    Cell:New(0, 10, COLOR.MARK_FRAME.PLAYER_DEBUFF)
-    Cell:New(0, 11, COLOR.MARK_FRAME.PLAYER_DEBUFF)
-    Cell:New(0, 12, COLOR.MARK_FRAME.PLAYER_DEBUFF)
-    Cell:New(0, 13, COLOR.MARK_FRAME.PLAYER_DEBUFF)
-    -- TARGET_DEBUFF
-    Cell:New(21, 9, COLOR.MARK_FRAME.TARGET_DEBUFF)
-    Cell:New(21, 10, COLOR.MARK_FRAME.TARGET_DEBUFF)
-    Cell:New(21, 11, COLOR.MARK_FRAME.TARGET_DEBUFF)
-    Cell:New(21, 12, COLOR.MARK_FRAME.TARGET_DEBUFF)
-    Cell:New(21, 13, COLOR.MARK_FRAME.TARGET_DEBUFF)
-    -- TARGET_STATUS
-    Cell:New(54, 10, COLOR.MARK_FRAME.TARGET_STATUS)
-    Cell:New(54, 11, COLOR.MARK_FRAME.TARGET_STATUS)
-    -- FOCUS_STATUS
-    Cell:New(69, 10, COLOR.MARK_FRAME.FOCUS_STATUS)
-    Cell:New(69, 11, COLOR.MARK_FRAME.FOCUS_STATUS)
-    -- MOUSEOVER_STATUS
-    Cell:New(69, 12, COLOR.MARK_FRAME.MOUSEOVER_STATUS)
-    Cell:New(69, 13, COLOR.MARK_FRAME.MOUSEOVER_STATUS)
-    -- SPEC
-    Cell:New(54, 13, COLOR.MARK_FRAME.SPEC)
-    -- Setting
-    Cell:New(54, 12, COLOR.MARK_FRAME.SETTING)
-    -- FOCUS_DEBUFF
-    Cell:New(0, 14, COLOR.MARK_FRAME.FOCUS_DEBUFF)
-    Cell:New(0, 15, COLOR.MARK_FRAME.FOCUS_DEBUFF)
-    Cell:New(0, 16, COLOR.MARK_FRAME.FOCUS_DEBUFF)
-    Cell:New(0, 17, COLOR.MARK_FRAME.FOCUS_DEBUFF)
-    Cell:New(0, 18, COLOR.MARK_FRAME.FOCUS_DEBUFF)
-    -- MOUSEOVER_DEBUFF
-    Cell:New(21, 14, COLOR.MARK_FRAME.MOUSEOVER_DEBUFF)
-    Cell:New(21, 15, COLOR.MARK_FRAME.MOUSEOVER_DEBUFF)
-    Cell:New(21, 16, COLOR.MARK_FRAME.MOUSEOVER_DEBUFF)
-    Cell:New(21, 17, COLOR.MARK_FRAME.MOUSEOVER_DEBUFF)
-    Cell:New(21, 18, COLOR.MARK_FRAME.MOUSEOVER_DEBUFF)
-    -- PLAYER_STATUS
-    Cell:New(42, 14, COLOR.MARK_FRAME.PLAYER_STATUS)
-    Cell:New(42, 15, COLOR.MARK_FRAME.PLAYER_STATUS)
-    Cell:New(42, 16, COLOR.MARK_FRAME.PLAYER_STATUS)
-    Cell:New(63, 14, COLOR.MARK_FRAME.PLAYER_STATUS)
-    -- PARTY1
-    Cell:New(0, 19, COLOR.MARK_FRAME.PARTY1)
-    Cell:New(0, 20, COLOR.MARK_FRAME.PARTY1)
-    Cell:New(0, 21, COLOR.MARK_FRAME.PARTY1)
-    Cell:New(0, 22, COLOR.MARK_FRAME.PARTY1)
-    Cell:New(0, 23, COLOR.MARK_FRAME.PARTY1)
-    Cell:New(0, 24, COLOR.MARK_FRAME.PARTY1)
-    Cell:New(0, 25, COLOR.MARK_FRAME.PARTY1)
-    Cell:New(11, 24, COLOR.MARK_FRAME.PARTY1)
-    Cell:New(11, 25, COLOR.MARK_FRAME.PARTY1)
-    -- PARTY2
-    Cell:New(21, 19, COLOR.MARK_FRAME.PARTY2)
-    Cell:New(21, 20, COLOR.MARK_FRAME.PARTY2)
-    Cell:New(21, 21, COLOR.MARK_FRAME.PARTY2)
-    Cell:New(21, 22, COLOR.MARK_FRAME.PARTY2)
-    Cell:New(21, 23, COLOR.MARK_FRAME.PARTY2)
-    Cell:New(21, 24, COLOR.MARK_FRAME.PARTY2)
-    Cell:New(21, 25, COLOR.MARK_FRAME.PARTY2)
-    Cell:New(32, 24, COLOR.MARK_FRAME.PARTY2)
-    Cell:New(32, 25, COLOR.MARK_FRAME.PARTY2)
-    -- PARTY3
-    Cell:New(42, 19, COLOR.MARK_FRAME.PARTY3)
-    Cell:New(42, 20, COLOR.MARK_FRAME.PARTY3)
-    Cell:New(42, 21, COLOR.MARK_FRAME.PARTY3)
-    Cell:New(42, 22, COLOR.MARK_FRAME.PARTY3)
-    Cell:New(42, 23, COLOR.MARK_FRAME.PARTY3)
-    Cell:New(42, 24, COLOR.MARK_FRAME.PARTY3)
-    Cell:New(42, 25, COLOR.MARK_FRAME.PARTY3)
-    Cell:New(53, 24, COLOR.MARK_FRAME.PARTY3)
-    Cell:New(53, 25, COLOR.MARK_FRAME.PARTY3)
-    -- PARTY4
-    Cell:New(63, 19, COLOR.MARK_FRAME.PARTY4)
-    Cell:New(63, 20, COLOR.MARK_FRAME.PARTY4)
-    Cell:New(63, 21, COLOR.MARK_FRAME.PARTY4)
-    Cell:New(63, 22, COLOR.MARK_FRAME.PARTY4)
-    Cell:New(63, 23, COLOR.MARK_FRAME.PARTY4)
-    Cell:New(63, 24, COLOR.MARK_FRAME.PARTY4)
-    Cell:New(63, 25, COLOR.MARK_FRAME.PARTY4)
-    Cell:New(74, 24, COLOR.MARK_FRAME.PARTY4)
-    Cell:New(74, 25, COLOR.MARK_FRAME.PARTY4)
-    -- SPELL_LIST_1
-    Cell:New(63, 15, COLOR.MARK_FRAME.SPELL_LIST_1)
-    Cell:New(63, 16, COLOR.MARK_FRAME.SPELL_LIST_1)
-    -- SPELL_LIST_2
-    Cell:New(42, 17, COLOR.MARK_FRAME.SPELL_LIST_2)
-    Cell:New(42, 18, COLOR.MARK_FRAME.SPELL_LIST_2)
-    -- SPELL_LIST_3
-    Cell:New(0, 26, COLOR.MARK_FRAME.SPELL_LIST_3)
-    Cell:New(0, 27, COLOR.MARK_FRAME.SPELL_LIST_3)
-    -- SPELL_LIST_4
-    Cell:New(41, 26, COLOR.MARK_FRAME.SPELL_LIST_4)
-    Cell:New(41, 27, COLOR.MARK_FRAME.SPELL_LIST_4)
+    CreateMarkSet(0, 4, 5)
+    CreateMarkSet(61, 4, 5)
+    CreateMarkSet(0, 9, 5)
+    CreateMarkSet(21, 9, 5)
+    CreateMarkSet(54, 10, 2)
+    CreateMarkSet(69, 10, 2)
+    CreateMarkSet(69, 12, 2)
+    CreateMarkSet(54, 13, 1)
+    CreateMarkSet(54, 12, 1)
+    CreateMarkSet(0, 14, 5)
+    CreateMarkSet(21, 14, 5)
+    CreateMarkSet(42, 14, 4)
+    CreateMarkSet(0, 19, 9)
+    CreateMarkSet(21, 19, 9)
+    CreateMarkSet(42, 19, 9)
+    CreateMarkSet(63, 19, 9)
+    CreateMarkSet(63, 15, 2)
+    CreateMarkSet(42, 17, 2)
+    CreateMarkSet(0, 26, 2)
+    CreateMarkSet(41, 26, 2)
 end
 insert(InitUI, InitializeMarkPointCell)
