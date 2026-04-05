@@ -406,7 +406,7 @@ class DruidRestoration(BaseRotation):
         # 0.3 自然之愈逻辑（优先驱散可驱散 debuff）
         # 自然之愈可用时，顺序检查队伍成员身上是否存在可驱散且不在黑名单里的 debuff。
         # 找到符合条件的成员后，就对该成员施放自然之愈。
-        if ctx.spell_cooldown_ready("自然之愈", spell_queue_window):
+        if ctx.spell_charges_ready("自然之愈", 1, spell_queue_window):
             for member in party_members:
                 if member.can_dispel:
                     return self.cast(f"{member.unitToken}自然之愈")
@@ -469,7 +469,7 @@ class DruidRestoration(BaseRotation):
         # 1.7 迅捷治愈逻辑
         # 统计迅捷治愈的人数：血量低于阈值，且身上有2层hot。
         # 如果满足人数条件，就施放迅捷治愈。
-        if ctx.spell_cooldown_ready("迅捷治愈", spell_queue_window):
+        if ctx.spell_charges_ready("迅捷治愈", 1, spell_queue_window):
             swiftmend_targets = [member for member in party_members if (member.health_base < self.swiftmend_hp_threshold) and (member.hot_count > 1)]
             if (len(swiftmend_targets) >= self.swiftmend_count_threshold):
                 return self.cast("迅捷治愈")
