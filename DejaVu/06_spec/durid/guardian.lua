@@ -98,7 +98,8 @@ insert(macroList,
        { title = "nearest裂伤", key = "SHIFT-NUMPAD9", text = "/cleartarget \n/targetenemy [noharm][dead][noexists][help] \n/cast [nocombat] 裂伤 \n/stopmacro [channeling] \n/startattack \n/cast [harm]裂伤 \n/targetlasttarget" })
 insert(macroList,
        { title = "nearest毁灭", key = "SHIFT-NUMPAD0", text = "/cleartarget \n/targetenemy [noharm][dead][noexists][help] \n/cast [nocombat] 毁灭 \n/stopmacro [channeling] \n/startattack \n/cast [harm]毁灭 \n/targetlasttarget" })
-
+insert(macroList, { title = "target安抚", key = "SHIFT-F1", text = "/cast [@target] 安抚" })
+insert(macroList, { title = "focus安抚", key = "SHIFT-F2", text = "/cast [@focus] 安抚" })
 
 for _, macro in pairs(macroList) do --输出2 test2, 6 test3, 4 test1
     local buttonName = addonName .. "Button" .. macro.title
