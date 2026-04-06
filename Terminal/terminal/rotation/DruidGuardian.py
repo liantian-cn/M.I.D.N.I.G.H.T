@@ -359,14 +359,13 @@ class DruidGuardian(BaseRotation):
 
         # 泄怒
         if (rage > rage_threshold):
-            if is_aoe:
-                if ctx.spell_cooldown_ready("摧折", spell_queue_window):
-                    return self.cast("enemy摧折")
-            elif (main_target is not None):
-                if ctx.spell_cooldown_ready("重殴", spell_queue_window):
-                    return self.cast(f"{main_target.unitToken}重殴")
-            elif ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True):
-                return self.cast("泻怒铁鬃")
+            if is_aoe and ctx.spell_cooldown_ready("摧折", spell_queue_window):
+                return self.cast("enemy摧折")
+            elif (main_target is not None) and ctx.spell_cooldown_ready("重殴", spell_queue_window):
+                return self.cast(f"{main_target.unitToken}重殴")
+
+        if (rage > 110) and ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True):
+            return self.cast("泻怒铁鬃")
 
         # 填充
         # 优先痛击

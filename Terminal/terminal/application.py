@@ -1,3 +1,4 @@
+import ctypes
 import sys
 from contextlib import contextmanager
 from typing import Any, Callable, cast
@@ -9,6 +10,7 @@ from .embedded_assets import get_logo_icon
 from .ui.main_window import MainWindow
 
 
+_WINDOWS_APP_USER_MODEL_ID = "midnight.terminal"
 _QT_DPI_WARNING_PREFIXES = (
     "SetProcessDpiAwarenessContext() failed:",
     "Qt's default DPI awareness context is DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2.",
@@ -18,6 +20,15 @@ _QtMessageHandler = Callable[[Any, Any, str], None]
 
 def _should_suppress_qt_startup_warning(message: str) -> bool:
     return any(message.startswith(prefix) for prefix in _QT_DPI_WARNING_PREFIXES)
+
+
+def _set_windows_app_user_model_id(app_id: str = _WINDOWS_APP_USER_MODEL_ID) -> None:
+    if sys.platform != "win32":
+        return
+    try:
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
+    except Exception:
+        return
 
 
 @contextmanager
@@ -40,6 +51,7 @@ def _suppress_known_qt_startup_warnings():
 
 
 def create_qapplication(argv: list[str]) -> QApplication:
+    _set_windows_app_user_model_id()
     with _suppress_known_qt_startup_warnings():
         existing_app = QApplication.instance()
         if isinstance(existing_app, QApplication):
@@ -55,7 +67,9 @@ class Termnal:
 
     def run(self) -> int:
         self.app = create_qapplication(sys.argv)
-        self.app.setWindowIcon(get_logo_icon())
+        logo_icon = get_logo_icon()
+        self.app.setWindowIcon(logo_icon)
         self.window = MainWindow()
+        self.window.setWindowIcon(logo_icon)
         self.window.show()
         return self.app.exec()
