@@ -1,3 +1,4 @@
+from terminal import application
 import os
 import sys
 from pathlib import Path
@@ -7,8 +8,6 @@ import pytest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-from terminal import application
 
 
 def test_set_windows_app_user_model_id_calls_win32_api(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -27,7 +26,7 @@ def test_set_windows_app_user_model_id_calls_win32_api(monkeypatch: pytest.Monke
 
     application._set_windows_app_user_model_id()
 
-    assert received_app_ids == ["liantian.terminal"]
+    assert received_app_ids == ["midnight.terminal"]
 
 
 def test_set_windows_app_user_model_id_skips_non_windows(monkeypatch: pytest.MonkeyPatch) -> None:
