@@ -44,7 +44,7 @@ function CharCell:_initialize(x, y)
     local cellSize = addonTable.SIZE.CELL
     local megaSize = addonTable.SIZE.MEGA
     local fontSize = addonTable.SIZE.FONT
-    local fontPath = addonTable.Font
+    local fontPath = addonTable.FontPath
     local cellSlug = x .. "_" .. y
     local cellName = addonName .. "CharCell_" .. cellSlug
 

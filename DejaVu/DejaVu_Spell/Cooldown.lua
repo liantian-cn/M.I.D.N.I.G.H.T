@@ -1,10 +1,12 @@
 -- luacheck: globals C_SpellActivationOverlay
 local addonName, addonTable = ... -- luacheck: ignore addonName
 
-local insert = table.insert       -- 表插入
+local pairs = pairs
+local insert = table.insert -- 表插入
 local Enum = Enum
-
+local After = C_Timer.After
 -- WoW 官方 API
+local CreateFrame = CreateFrame
 local GetSpellTexture = C_Spell.GetSpellTexture
 local GetSpellCooldownDuration = C_Spell.GetSpellCooldownDuration
 local IsSpellOverlayed = C_SpellActivationOverlay.IsSpellOverlayed
@@ -35,14 +37,14 @@ remainingCurve:AddPoint(375.0, COLOR.C255)
 local COOLDOWN_LENGTH = 40
 
 
-C_Timer.After(2, function()
+After(2, function()
     if #cooldownSpells > COOLDOWN_LENGTH then
         print("DejaVu_Spell: Cooldown spells number is greater than COOLDOWN_LENGTH")
         return
     end
     local cellMap = {}
 
-    function InitCellMap()
+    local function InitCellMap()
         for i = 1, #cooldownSpells do
             local spellID = cooldownSpells[i].spellID
             local baseID = FindBaseSpellByID(spellID)
@@ -142,7 +144,7 @@ C_Timer.After(2, function()
     local superLowTimeElapsed = 0
     eventFrame:HookScript("OnUpdate", function(self, elapsed)
         fastTimeElapsed = fastTimeElapsed + elapsed
-        if fastTimeElapsed > 0.1 then
+        if fastTimeElapsed > 0.2 then
             fastTimeElapsed = 0
             updateRemainingAll()
             updateUnusableAll()
