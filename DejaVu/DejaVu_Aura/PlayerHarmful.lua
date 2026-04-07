@@ -204,19 +204,15 @@ After(2, function()
         if fastTimeElapsed > 0.2 then
             fastTimeElapsed = 0
             updateAll()
-            -- updateRemainingAll()
-            -- updateUnusableAll()
         end
         lowTimeElapsed = lowTimeElapsed + elapsed
         if lowTimeElapsed > 0.5 then
             lowTimeElapsed = 0
-            -- updateUnknownAll()
-            -- updateOverlayedAll()
         end
         superLowTimeElapsed = superLowTimeElapsed + elapsed
         if superLowTimeElapsed > 2 then
             superLowTimeElapsed = 0
-            -- updateIconAll()
+            refreshAll()
         end
     end)
 
