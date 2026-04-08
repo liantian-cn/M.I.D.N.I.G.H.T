@@ -5,6 +5,7 @@ local ipairs = ipairs
 local pairs = pairs
 local wipe = wipe
 local After = C_Timer.After
+local random = math.random
 
 -- WoW 官方 API
 local GetUnitAuraInstanceIDs = C_UnitAuras.GetUnitAuraInstanceIDs                 -- 读取单位 aura 实例 ID 列表
@@ -192,9 +193,9 @@ After(2, function()
     refreshAll()
 
     local eventFrame = CreateFrame("eventFrame")
-    local fastTimeElapsed = 0
-    local lowTimeElapsed = 0
-    local superLowTimeElapsed = 0
+    local fastTimeElapsed = -random()
+    local lowTimeElapsed = -random()
+    local superLowTimeElapsed = -random()
     eventFrame:HookScript("OnUpdate", function(self, elapsed)
         fastTimeElapsed = fastTimeElapsed + elapsed
         if fastTimeElapsed > 0.2 then

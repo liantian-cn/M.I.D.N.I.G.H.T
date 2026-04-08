@@ -5,6 +5,7 @@ local ipairs = ipairs
 local pairs = pairs
 local wipe = wipe
 local After = C_Timer.After
+local random = math.random
 
 -- WoW 官方 API
 local GetUnitAuraInstanceIDs = C_UnitAuras.GetUnitAuraInstanceIDs                 -- 读取单位 aura 实例 ID 列表
@@ -196,7 +197,6 @@ After(2, function()
             return
         end
         local cell = Cells[index]
-        -- local aura = GetAuraDataByAuraInstanceID(UNIT_KEY, instanceID)             -- 取当前 aura 数据
         local remaining = GetAuraDuration(UNIT_KEY, instanceID)                  -- 剩余时间对象
         local count = GetAuraApplicationDisplayCount(UNIT_KEY, instanceID, 1, 9) -- 取层数字符串
         cell.remaining:setCell(
@@ -219,9 +219,9 @@ After(2, function()
     refreshAll()
 
     local eventFrame = CreateFrame("eventFrame")
-    local fastTimeElapsed = 0
-    local lowTimeElapsed = 0
-    local superLowTimeElapsed = 0
+    local fastTimeElapsed = -random()     -- 随机初始时间，避免所有事件在同一帧更新
+    local lowTimeElapsed = -random()      -- 随机初始时间，避免所有事件在同一帧更新
+    local superLowTimeElapsed = -random() -- 随机初始时间，避免所有事件在同一帧更新
     eventFrame:HookScript("OnUpdate", function(self, elapsed)
         fastTimeElapsed = fastTimeElapsed + elapsed
         if fastTimeElapsed > 0.2 then
