@@ -112,7 +112,7 @@ class DruidRestoration(BaseRotation):
         spell_queue_window = float(ctx.spell_queue_window or 0.3)
         party_members: list[RestorationPartyMember] = []
         for unit in ctx.parties:
-            if unit.exists and unit.isInRangedRange:
+            if unit.exists and unit.isInRangedRange and unit.alive:
                 party_members.append(cast(RestorationPartyMember, unit))
         party_members.append(cast(RestorationPartyMember, ctx.player))
 
@@ -483,7 +483,7 @@ class DruidRestoration(BaseRotation):
         # 愈合可用时，检查最低血量基线目标是否低于愈合阈值，并且身上至少已有一个 HoT。
         # 如果满足条件，就对这个最低血量基线目标施放愈合。
         if ctx.spell_cooldown_ready("愈合", spell_queue_window) and player_is_stand:
-            if (lowest_health_base_member.health_base < self.regrowth_hp_threshold) and (lowest_health_base_member.hot_count > 0):
+            if (lowest_health_base_member.health_base < self.regrowth_hp_threshold) and (lowest_health_base_member.hot_count > 1):
                 return self.cast(f"{lowest_health_base_member.unitToken}愈合")
                 # print(f"对{lowest_health_base_member.unitToken}施放愈合", end="; ")
 
@@ -515,10 +515,10 @@ class DruidRestoration(BaseRotation):
             rejuvenation_targets = [member for member in party_members if (member.rejuvenation_count == 0)]
             # rejuvenation_targets = [member for member in party_members if (member.rejuvenation_count == 0)]
 
-            for member in rejuvenation_targets:
-                print(f"{member.unitToken=} {member.health_score=} {member.unitRole=}", end="; ")
-                # print()
-            print("")
+            # for member in rejuvenation_targets:
+            #     print(f"{member.unitToken=} {member.health_score=} {member.unitRole=}", end="; ")
+            # print()
+            # print("")
             if rejuvenation_targets:
                 target = min(rejuvenation_targets, key=lambda member: member.health_score)
                 return self.cast(f"{target.unitToken}回春术")
