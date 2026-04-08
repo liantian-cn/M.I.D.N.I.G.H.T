@@ -50,3 +50,10 @@ end
 --         DejaVuCore.BurstTime = GetTime() + delaySeconds
 --     end
 -- end
+
+SetCVar("secretChallengeModeRestrictionsForced", 1)
+SetCVar("secretCombatRestrictionsForced", 1)
+SetCVar("secretEncounterRestrictionsForced", 1)
+SetCVar("secretMapRestrictionsForced", 1)
+SetCVar("secretPvPMatchRestrictionsForced", 1)
+SetCVar("secretAuraDataRestrictionsForced", 1)

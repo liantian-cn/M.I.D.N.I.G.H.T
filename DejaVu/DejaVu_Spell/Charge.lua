@@ -5,6 +5,7 @@ local insert = table.insert       -- 表插入
 local Enum = Enum
 local After = C_Timer.After
 local ipairs = ipairs
+local random = math.random
 
 -- WoW 官方 API
 local CreateFrame = CreateFrame
@@ -45,102 +46,126 @@ After(2, function()
         return
     end
     local cellMap = {}
+    local validSpellID = {}
+    local baseIDToSpellID = {}
+
+    local function getValidSpellID(spellID)
+        if not spellID or not validSpellID[spellID] then
+            return nil
+        end
+        return spellID
+    end
+
+    local function getSpellIDFromBaseID(baseID)
+        if not baseID then
+            return nil
+        end
+
+        local spellID = baseIDToSpellID[baseID]
+        if not spellID or not validSpellID[spellID] then
+            return nil
+        end
+        return spellID
+    end
 
     local function InitCellMap()
         for i = 1, #chargeSpells do
             local spellID = chargeSpells[i].spellID
-            local baseID = FindBaseSpellByID(spellID)
-
             local x = 60 + 2 * i
             local y = 4
+            local baseID = FindBaseSpellByID(spellID)
+            local iconCell = BadgeCell:New(x, y)         -- 技能图标
+            local remainingCell = Cell:New(x, y + 2)     -- 冷却剩余时间的颜色映射
+            local overlayedCell = Cell:New(x + 1, y + 2) -- 技能高亮提示
+            local isUsableCell = Cell:New(x, y + 3)      -- 当前不可施放时显示白色
+            local isKnownCell = Cell:New(x + 1, y + 3)   -- 不在法术书中时显示白色
+            local countCell = CharCell:New(x, y + 4)     -- 当前可用层数
+            local iconID = GetSpellTexture(spellID)
+
+            validSpellID[spellID] = true
             if baseID then
-                local iconCell = BadgeCell:New(x, y)         -- 技能图标
-                local remainingCell = Cell:New(x, y + 2)     -- 冷却剩余时间的颜色映射
-                local overlayedCell = Cell:New(x + 1, y + 2) -- 技能高亮提示
-                local isUsableCell = Cell:New(x, y + 3)      -- 当前不可施放时显示白色
-                local isKnownCell = Cell:New(x + 1, y + 3)   -- 不在法术书中时显示白色
-                local countCell = CharCell:New(x, y + 4)     -- 当前可用层数
-                local iconID = GetSpellTexture(baseID)
-                iconCell:setCell(iconID, COLOR.SPELL_TYPE.PLAYER_SPELL)
-                cellMap[baseID] = {
-                    icon = iconCell,
-                    remaining = remainingCell,
-                    overlayed = overlayedCell,
-                    isUsable = isUsableCell,
-                    isKnown = isKnownCell,
-                    count = countCell,
-                }
+                baseIDToSpellID[baseID] = spellID
             end
+
+            iconCell:setCell(iconID, COLOR.SPELL_TYPE.PLAYER_SPELL)
+            cellMap[spellID] = {
+                icon = iconCell,
+                remaining = remainingCell,
+                overlayed = overlayedCell,
+                isUsable = isUsableCell,
+                isKnown = isKnownCell,
+                count = countCell,
+            }
         end
     end
 
     InitCellMap()
 
     local function updateIcon(spellID)
-        local baseID = FindBaseSpellByID(spellID)
-        local iconID = GetSpellTexture(baseID)
-        cellMap[baseID].icon:setCell(iconID, COLOR.SPELL_TYPE.PLAYER_SPELL)
+        local iconID = GetSpellTexture(spellID)
+        cellMap[spellID].icon:setCell(iconID, COLOR.SPELL_TYPE.PLAYER_SPELL)
     end
 
     local function updateIconAll()
-        for baseID in pairs(cellMap) do
-            updateIcon(baseID)
+        for spellID in pairs(cellMap) do
+            updateIcon(spellID)
         end
     end
 
-    local function updateRemaining(baseID)
-        local remaining = GetSpellCooldownDuration(baseID)
+    local function updateRemaining(spellID)
+        local remaining = GetSpellCooldownDuration(spellID)
         local result = remaining:EvaluateRemainingDuration(remainingCurve)
-        cellMap[baseID].remaining:setCell(result)
+        cellMap[spellID].remaining:setCell(result)
     end
 
     local function updateRemainingAll()
-        for baseID in pairs(cellMap) do
-            updateRemaining(baseID)
+        for spellID in pairs(cellMap) do
+            updateRemaining(spellID)
         end
     end
 
-    local function updateOverlayed(baseID)
-        local isOverlayed = EvaluateColorFromBoolean(IsSpellOverlayed(baseID), COLOR.SPELL_BOOLEAN.IS_HIGH_LIGHTED, COLOR.BLACK)
-        cellMap[baseID].overlayed:setCell(isOverlayed)
+    local function updateOverlayed(spellID)
+        local isOverlayed = EvaluateColorFromBoolean(IsSpellOverlayed(spellID), COLOR.SPELL_BOOLEAN.IS_HIGH_LIGHTED, COLOR.BLACK)
+        cellMap[spellID].overlayed:setCell(isOverlayed)
     end
 
     local function updateOverlayedAll()
-        for baseID in pairs(cellMap) do
-            updateOverlayed(baseID)
+        for spellID in pairs(cellMap) do
+            updateOverlayed(spellID)
         end
     end
 
-    local function updateUnusable(baseID)
-        local isUsable = EvaluateColorFromBoolean(IsSpellUsable(baseID), COLOR.SPELL_BOOLEAN.IS_USABLE, COLOR.BLACK)
-        cellMap[baseID].isUsable:setCell(isUsable)
+    local function updateUnusable(spellID)
+        local isUsable = EvaluateColorFromBoolean(IsSpellUsable(spellID), COLOR.SPELL_BOOLEAN.IS_USABLE, COLOR.BLACK)
+        cellMap[spellID].isUsable:setCell(isUsable)
     end
 
     local function updateUnusableAll()
-        for baseID in pairs(cellMap) do
-            updateUnusable(baseID)
+        for spellID in pairs(cellMap) do
+            updateUnusable(spellID)
         end
     end
 
-    local function updateUnknown(baseID)
-        local isKnown = EvaluateColorFromBoolean(IsSpellInSpellBook(baseID), COLOR.SPELL_BOOLEAN.IS_KNOWN, COLOR.BLACK)
-        cellMap[baseID].isKnown:setCell(isKnown)
+    local function updateUnknown(spellID)
+        local isKnown = EvaluateColorFromBoolean(IsSpellInSpellBook(spellID), COLOR.SPELL_BOOLEAN.IS_KNOWN, COLOR.BLACK)
+        cellMap[spellID].isKnown:setCell(isKnown)
     end
 
     local function updateUnknownAll()
-        for baseID in pairs(cellMap) do
-            updateUnknown(baseID)
+        for spellID in pairs(cellMap) do
+            updateUnknown(spellID)
         end
     end
 
-    local function updateCount(baseID)
-        local chargeInfo = GetSpellCharges(baseID)
-        cellMap[baseID].count:setCell(tostring(chargeInfo.currentCharges))
+    local function updateCount(spellID)
+        local chargeInfo = GetSpellCharges(spellID)
+        cellMap[spellID].count:setCell(tostring(chargeInfo.currentCharges))
     end
 
     local function updateCountAll()
-        for baseID in pairs(cellMap) do
-            updateCount(baseID)
+        for spellID in pairs(cellMap) do
+            -- print("Updating count for spellID:", spellID)
+            updateCount(spellID)
         end
     end
 
@@ -156,9 +181,9 @@ After(2, function()
 
 
     local eventFrame = CreateFrame("eventFrame")
-    local fastTimeElapsed = 0
-    local lowTimeElapsed = 0
-    local superLowTimeElapsed = 0
+    local fastTimeElapsed = -random()     -- 随机初始时间，避免所有事件在同一帧更新
+    local lowTimeElapsed = -random()      -- 随机初始时间，避免所有事件在同一帧更新
+    local superLowTimeElapsed = -random() -- 随机初始时间，避免所有事件在同一帧更新
     eventFrame:HookScript("OnUpdate", function(self, elapsed)
         fastTimeElapsed = fastTimeElapsed + elapsed
         if fastTimeElapsed > 0.2 then
@@ -179,23 +204,35 @@ After(2, function()
         end
     end)
 
-    function eventFrame:SPELL_UPDATE_ICON(spellID)
+    function eventFrame:SPELL_UPDATE_ICON(baseID)
+        local spellID = getSpellIDFromBaseID(baseID)
+        if not spellID then
+            return
+        end
         updateIcon(spellID)
     end
 
     function eventFrame:SPELL_ACTIVATION_OVERLAY_GLOW_SHOW(spellID)
-        updateOverlayed(spellID)
+        local validID = getValidSpellID(spellID)
+        if not validID then
+            return
+        end
+        updateOverlayed(validID)
     end
 
     function eventFrame:SPELL_ACTIVATION_OVERLAY_GLOW_HIDE(spellID)
-        updateOverlayed(spellID)
+        local validID = getValidSpellID(spellID)
+        if not validID then
+            return
+        end
+        updateOverlayed(validID)
     end
 
-    function eventFrame:SPELL_UPDATE_USES(spellID, baseSpellID)
-        updateCount(baseSpellID)
+    function eventFrame:SPELL_UPDATE_CHARGES()
+        updateCountAll()
     end
 
-    eventFrame:RegisterEvent("SPELL_UPDATE_USES")
+    eventFrame:RegisterEvent("SPELL_UPDATE_CHARGES")
     eventFrame:RegisterEvent("SPELL_UPDATE_ICON")
     eventFrame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW")
     eventFrame:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE")

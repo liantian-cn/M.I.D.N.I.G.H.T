@@ -13,6 +13,7 @@ local GetAuraDuration = C_UnitAuras.GetAuraDuration                             
 local GetAuraApplicationDisplayCount = C_UnitAuras.GetAuraApplicationDisplayCount -- 读取 aura 层数字符串
 local DoesAuraHaveExpirationTime = C_UnitAuras.DoesAuraHaveExpirationTime         -- 判断 aura 是否会自然结束
 local CreateColorCurve = C_CurveUtil.CreateColorCurve
+local EvaluateColorFromBoolean = C_CurveUtil.EvaluateColorFromBoolean             -- 把布尔值映射成颜色
 
 -- DejaVu Core
 local DejaVu = _G["DejaVu"]
@@ -35,7 +36,7 @@ local BASE_Y = 4
 local UNIT_KEY = "player"
 local AURA_FILTER = "HELPFUL"
 local SORT_RULE = Enum.UnitAuraSortRule.Default
-local SORT_DIRECTION = Enum.UnitAuraSortDirection.Normal
+local SORT_DIRECTION = Enum.UnitAuraSortDirection.Reverse
 
 
 
@@ -81,22 +82,21 @@ After(2, function()
         end
         cell.instanceID = instanceID
 
-        local remaining = GetAuraDuration(UNIT_KEY, instanceID)                    -- 剩余时间对象
-        local count = GetAuraApplicationDisplayCount(UNIT_KEY, instanceID, 1, 9)   -- 取层数字符串
-        local hasExpirationTime = DoesAuraHaveExpirationTime(UNIT_KEY, instanceID) -- 是否会到时结束
-        local spellTypeColor = COLOR.SPELL_TYPE.BUFF_ON_FRIENDLY                   -- 本次 aura 的边框 / 类型颜色
+        local remaining = GetAuraDuration(UNIT_KEY, instanceID)                  -- 剩余时间对象
+        local count = GetAuraApplicationDisplayCount(UNIT_KEY, instanceID, 1, 9) -- 取层数字符串
+        local spellTypeColor = COLOR.SPELL_TYPE.BUFF_ON_FRIENDLY                 -- 本次 aura 的边框 / 类型颜色
 
         -- 1 icon
         cell.icon:setCell(aura.icon, spellTypeColor)
 
+
         -- 2 remaining
-        local remainingColor = COLOR.WHITE -- 默认是白色，也就是无限持续
-        if not hasExpirationTime then
-            remainingColor = COLOR.WHITE
-        else                                                                     -- 有剩余时间对象时更新颜色
-            remainingColor = remaining:EvaluateRemainingDuration(remainingCurve) -- 计算时间颜色
-        end
-        cell.remaining:setCell(remainingColor)
+        cell.remaining:setCell(
+            EvaluateColorFromBoolean( -- 如果有持续事件，是remaining:EvaluateRemainingDuration(remainingCurve)的颜色，没有是白色
+                DoesAuraHaveExpirationTime(UNIT_KEY, instanceID),
+                remaining:EvaluateRemainingDuration(remainingCurve),
+                COLOR.WHITE
+            ))
         -- 3 spellType
         cell.spellType:setCell(spellTypeColor)
         -- 4 count
@@ -112,30 +112,65 @@ After(2, function()
         end
     end
 
+    local function compactCellsFrom(startIndex)
+        local writeIndex = startIndex
+        local readIndex = startIndex + 1
+
+        while writeIndex <= MAX_AURA_COUNT do
+            while readIndex <= MAX_AURA_COUNT and Cells[readIndex].instanceID == nil do
+                readIndex = readIndex + 1
+            end
+
+            if readIndex > MAX_AURA_COUNT then
+                for i = writeIndex, MAX_AURA_COUNT do
+                    clearCell(Cells[i])
+                end
+                return
+            end
+
+            local nextInstanceID = Cells[readIndex].instanceID
+            InstanceIDMap[nextInstanceID] = writeIndex
+
+            if not drawCell(Cells[writeIndex], nextInstanceID) then
+                InstanceIDMap[nextInstanceID] = nil
+                clearCell(Cells[writeIndex])
+            end
+
+            writeIndex = writeIndex + 1
+            readIndex = readIndex + 1
+        end
+    end
+
     local function removeAura(instanceID)
         local index = InstanceIDMap[instanceID]
         if index == nil then
             return
         end
-        clearCell(Cells[index])
+
         InstanceIDMap[instanceID] = nil
+        compactCellsFrom(index)
     end
 
     local function addAura(instanceID)
         if instanceID == nil then
             return
         end
-        if InstanceIDMap[instanceID] ~= nil then
-            drawCell(Cells[InstanceIDMap[instanceID]], instanceID)
+
+        local index = InstanceIDMap[instanceID]
+        if index ~= nil then
+            drawCell(Cells[index], instanceID)
             return
         end
-        local index = findFirstEmptyCellIndex()
+
+        index = findFirstEmptyCellIndex()
         if index == nil then
             return
         end
+
         InstanceIDMap[instanceID] = index
         if not drawCell(Cells[index], instanceID) then
             InstanceIDMap[instanceID] = nil
+            clearCell(Cells[index])
         end
     end
 
@@ -162,16 +197,14 @@ After(2, function()
         end
         local cell = Cells[index]
         -- local aura = GetAuraDataByAuraInstanceID(UNIT_KEY, instanceID)             -- 取当前 aura 数据
-        local remaining = GetAuraDuration(UNIT_KEY, instanceID)                    -- 剩余时间对象
-        local count = GetAuraApplicationDisplayCount(UNIT_KEY, instanceID, 1, 9)   -- 取层数字符串
-        local hasExpirationTime = DoesAuraHaveExpirationTime(UNIT_KEY, instanceID) -- 是否会到时结束
-        local remainingColor = COLOR.WHITE                                         -- 默认是白色，也就是无限持续
-        if not hasExpirationTime then
-            remainingColor = COLOR.WHITE
-        else                                                                     -- 有剩余时间对象时更新颜色
-            remainingColor = remaining:EvaluateRemainingDuration(remainingCurve) -- 计算时间颜色
-        end
-        cell.remaining:setCell(remainingColor)
+        local remaining = GetAuraDuration(UNIT_KEY, instanceID)                  -- 剩余时间对象
+        local count = GetAuraApplicationDisplayCount(UNIT_KEY, instanceID, 1, 9) -- 取层数字符串
+        cell.remaining:setCell(
+            EvaluateColorFromBoolean(                                            -- 如果有持续事件，是remaining:EvaluateRemainingDuration(remainingCurve)的颜色，没有是白色
+                DoesAuraHaveExpirationTime(UNIT_KEY, instanceID),
+                remaining:EvaluateRemainingDuration(remainingCurve),
+                COLOR.WHITE
+            ))
         cell.count:setCell(count)
     end
 
@@ -202,7 +235,7 @@ After(2, function()
         superLowTimeElapsed = superLowTimeElapsed + elapsed
         if superLowTimeElapsed > 2 then
             superLowTimeElapsed = 0
-            refreshAll()
+            -- refreshAll()
         end
     end)
 

@@ -14,6 +14,7 @@ local GetAuraApplicationDisplayCount = C_UnitAuras.GetAuraApplicationDisplayCoun
 local DoesAuraHaveExpirationTime = C_UnitAuras.DoesAuraHaveExpirationTime         -- 判断 aura 是否会自然结束
 local CreateColorCurve = C_CurveUtil.CreateColorCurve
 local GetAuraDispelTypeColor = C_UnitAuras.GetAuraDispelTypeColor                 -- 按曲线映射 aura 类型颜色
+local EvaluateColorFromBoolean = C_CurveUtil.EvaluateColorFromBoolean             -- 把布尔值映射成颜色
 
 -- DejaVu Core
 local DejaVu = _G["DejaVu"]
@@ -93,20 +94,18 @@ After(2, function()
 
         local remaining = GetAuraDuration(UNIT_KEY, instanceID)                                    -- 剩余时间对象
         local count = GetAuraApplicationDisplayCount(UNIT_KEY, instanceID, 1, 9)                   -- 取层数字符串
-        local hasExpirationTime = DoesAuraHaveExpirationTime(UNIT_KEY, instanceID)                 -- 是否会到时结束
         local spellTypeColor = GetAuraDispelTypeColor(UNIT_KEY, instanceID, debuffOnFriendlyCurve) -- 计算减益颜色
 
         -- 1 icon
         cell.icon:setCell(aura.icon, spellTypeColor)
 
         -- 2 remaining
-        local remainingColor = COLOR.WHITE -- 默认是白色，也就是无限持续
-        if not hasExpirationTime then
-            remainingColor = COLOR.WHITE
-        else                                                                     -- 有剩余时间对象时更新颜色
-            remainingColor = remaining:EvaluateRemainingDuration(remainingCurve) -- 计算时间颜色
-        end
-        cell.remaining:setCell(remainingColor)
+        cell.remaining:setCell(
+            EvaluateColorFromBoolean( -- 如果有持续事件，是remaining:EvaluateRemainingDuration(remainingCurve)的颜色，没有是白色
+                DoesAuraHaveExpirationTime(UNIT_KEY, instanceID),
+                remaining:EvaluateRemainingDuration(remainingCurve),
+                COLOR.WHITE
+            ))
         -- 3 spellType
         cell.spellType:setCell(spellTypeColor)
         -- 4 count
@@ -171,17 +170,14 @@ After(2, function()
             return
         end
         local cell = Cells[index]
-        -- local aura = GetAuraDataByAuraInstanceID(UNIT_KEY, instanceID)             -- 取当前 aura 数据
-        local remaining = GetAuraDuration(UNIT_KEY, instanceID)                    -- 剩余时间对象
-        local count = GetAuraApplicationDisplayCount(UNIT_KEY, instanceID, 1, 9)   -- 取层数字符串
-        local hasExpirationTime = DoesAuraHaveExpirationTime(UNIT_KEY, instanceID) -- 是否会到时结束
-        local remainingColor = COLOR.WHITE                                         -- 默认是白色，也就是无限持续
-        if not hasExpirationTime then
-            remainingColor = COLOR.WHITE
-        else                                                                     -- 有剩余时间对象时更新颜色
-            remainingColor = remaining:EvaluateRemainingDuration(remainingCurve) -- 计算时间颜色
-        end
-        cell.remaining:setCell(remainingColor)
+        local remaining = GetAuraDuration(UNIT_KEY, instanceID)                  -- 剩余时间对象
+        local count = GetAuraApplicationDisplayCount(UNIT_KEY, instanceID, 1, 9) -- 取层数字符串
+        cell.remaining:setCell(
+            EvaluateColorFromBoolean(                                            -- 如果有持续事件，是remaining:EvaluateRemainingDuration(remainingCurve)的颜色，没有是白色
+                DoesAuraHaveExpirationTime(UNIT_KEY, instanceID),
+                remaining:EvaluateRemainingDuration(remainingCurve),
+                COLOR.WHITE
+            ))
         cell.count:setCell(count)
     end
 
