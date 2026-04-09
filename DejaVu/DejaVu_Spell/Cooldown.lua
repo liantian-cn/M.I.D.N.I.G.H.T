@@ -168,20 +168,20 @@ After(2, function()
     local superLowTimeElapsed = -random() -- 随机初始时间，避免所有事件在同一帧更新
     eventFrame:HookScript("OnUpdate", function(self, elapsed)
         fastTimeElapsed = fastTimeElapsed + elapsed
-        if fastTimeElapsed > 0.2 then
-            fastTimeElapsed = 0
+        if fastTimeElapsed > 0.1 then
+            fastTimeElapsed = fastTimeElapsed - 0.1
             updateUnusableAll()
         end
         lowTimeElapsed = lowTimeElapsed + elapsed
         if lowTimeElapsed > 0.5 then
-            lowTimeElapsed = 0
+            lowTimeElapsed = lowTimeElapsed - 0.5
             updateUnknownAll()
             updateRemainingAll()
             -- updateOverlayedAll()
         end
         superLowTimeElapsed = superLowTimeElapsed + elapsed
         if superLowTimeElapsed > 2 then
-            superLowTimeElapsed = 0
+            superLowTimeElapsed = superLowTimeElapsed - 2
             updateIconAll()
         end
     end)

@@ -40,8 +40,8 @@ After(2, function()
         end
         controller.beginFrame()
         fastTimeElapsed = fastTimeElapsed + elapsed
-        if fastTimeElapsed > 0.2 then
-            fastTimeElapsed = fastTimeElapsed - 0.2
+        if fastTimeElapsed > 0.1 then
+            fastTimeElapsed = fastTimeElapsed - 0.1
             controller.updateRemainingAll()
         end
         lowTimeElapsed = lowTimeElapsed + elapsed
