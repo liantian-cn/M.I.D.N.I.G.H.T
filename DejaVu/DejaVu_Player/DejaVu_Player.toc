@@ -8,3 +8,4 @@
 ## IconTexture: Interface\Icons\Ability_Domination_Rune05
 
 Status.lua
+Absorbs.lua
