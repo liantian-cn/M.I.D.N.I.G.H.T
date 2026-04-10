@@ -30,27 +30,8 @@ After(2, function()
     })
     controller.refreshAll()
 
-    local eventFrame = CreateFrame("eventFrame")
-    local fastTimeElapsed = -random()
-    local lowTimeElapsed = -random()
-    local superLowTimeElapsed = -random()
-    eventFrame:HookScript("OnUpdate", function(frame, elapsed)
-        fastTimeElapsed = fastTimeElapsed + elapsed
-        if fastTimeElapsed > 0.1 then
-            fastTimeElapsed = fastTimeElapsed - 0.1
-            controller.updateRemainingAll()
-        end
-        lowTimeElapsed = lowTimeElapsed + elapsed
-        if lowTimeElapsed > 0.5 then
-            lowTimeElapsed = lowTimeElapsed - 0.5
-        end
-        superLowTimeElapsed = superLowTimeElapsed + elapsed
-        if superLowTimeElapsed > 2 then
-            superLowTimeElapsed = superLowTimeElapsed - 2
-            controller.refreshAll()
-        end
-    end)
 
+    local eventFrame = CreateFrame("eventFrame")
     function eventFrame:UNIT_AURA(unitToken, info)
         -- 因为无法判断isHarmful还是isHelpful，所以只能全量刷新。这个问题在12.0.5修正。等那时候补回来。
         controller.refreshAll()
@@ -75,23 +56,48 @@ After(2, function()
         -- end
     end
 
-    function eventFrame:UPDATE_MOUSEOVER_UNIT()
-        controller.refreshAll()
-    end
+    -- function eventFrame:UPDATE_MOUSEOVER_UNIT()
+    --     -- controller.refreshAll()
+    -- end
 
-    function eventFrame:CURSOR_CHANGED()
-        controller.refreshAll()
-    end
+    -- function eventFrame:CURSOR_CHANGED()
+    --     controller.refreshAll()
+    -- end
 
-    function eventFrame:UNIT_FLAGS(unitToken)
-        controller.refreshAll()
-    end
+    -- function eventFrame:UNIT_FLAGS(unitToken)
+    --     controller.refreshAll()
+    -- end
 
-    eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
-    eventFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
-    eventFrame:RegisterEvent("CURSOR_CHANGED")
-    eventFrame:RegisterUnitEvent("UNIT_FLAGS", UNIT_KEY)
+    -- eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
+    -- eventFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT") -- 当鼠标移开时不会触发UPDATE_MOUSEOVER_UNIT事件，所以只能放弃
+    -- eventFrame:RegisterEvent("CURSOR_CHANGED")
+    -- eventFrame:RegisterUnitEvent("UNIT_FLAGS", UNIT_KEY)
     eventFrame:SetScript("OnEvent", function(self, event, ...)
         self[event](self, ...)
     end)
+
+
+    local fastTimeElapsed = -random()
+    local lowTimeElapsed = -random()
+    local superLowTimeElapsed = -random()
+    eventFrame:HookScript("OnUpdate", function(frame, elapsed)
+        fastTimeElapsed = fastTimeElapsed + elapsed
+        if fastTimeElapsed > 0.1 then
+            fastTimeElapsed = fastTimeElapsed - 0.1
+            -- controller.updateRemainingAll()
+            -- controller.refreshAll()
+        end
+        lowTimeElapsed = lowTimeElapsed + elapsed
+        if lowTimeElapsed > 0.5 then
+            lowTimeElapsed = lowTimeElapsed - 0.5
+            controller.refreshAll()
+        end
+        superLowTimeElapsed = superLowTimeElapsed + elapsed
+        if superLowTimeElapsed > 2 then
+            superLowTimeElapsed = superLowTimeElapsed - 2
+        end
+    end)
 end)
+
+
+-- 鼠标指向没有事件精准捕获。干脆0.5秒更新一次。而且时间无需更新，毕竟指向老在变。
