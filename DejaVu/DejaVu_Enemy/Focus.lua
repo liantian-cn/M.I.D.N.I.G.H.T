@@ -12,7 +12,6 @@ local CreateColorCurve = C_CurveUtil.CreateColorCurve
 local EvaluateColorFromBoolean = C_CurveUtil.EvaluateColorFromBoolean
 local Enum = Enum
 local CreateFrame = CreateFrame
-local IsSpellInRange = C_Spell.IsSpellInRange
 local UnitAffectingCombat = UnitAffectingCombat
 local UnitCanAttack = UnitCanAttack
 local UnitCastingDuration = UnitCastingDuration
@@ -34,8 +33,15 @@ local DejaVu = _G["DejaVu"]
 local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
 local BadgeCell = DejaVu.BadgeCell
-local MeleeCheckSpellId = DejaVu.MeleeCheckSpellId
-local RangedCheckSpellId = DejaVu.RangedCheckSpellId
+local RangedRange = DejaVu.RangedRange -- 默认的远程检测范围
+local MeleeRange = DejaVu.MeleeRange   -- 默认的近战检测范围
+
+local LibStub = LibStub
+local LRC = LibStub("LibRangeCheck-3.0")
+if not LRC then
+    print("|cffff0000[单位状态]|r LibRangeCheck-3.0 未找到, 模块无法工作。")
+    return
+end
 
 local zeroToOneCurve = CreateColorCurve()
 zeroToOneCurve:SetType(Enum.LuaCurveType.Linear)
@@ -187,26 +193,19 @@ After(2, function()                         -- 延迟加载
         if not unitExists then
             return
         end
+        local maxRange = select(2, LRC:GetRange(UNIT_KEY)) or 99
 
-        if RangedCheckSpellId then
-            cell.isInRangedRange:setCellBoolean(
-                IsSpellInRange(RangedCheckSpellId, UNIT_KEY) == true,
-                COLOR.STATUS_BOOLEAN.IS_IN_RANGED_RANGE,
-                COLOR.BLACK
-            )
-        else
-            cell.isInRangedRange:clearCell()
-        end
+        cell.isInRangedRange:setCellBoolean(
+            maxRange <= RangedRange,
+            COLOR.STATUS_BOOLEAN.IS_IN_RANGED_RANGE,
+            COLOR.BLACK
+        )
 
-        if MeleeCheckSpellId then
-            cell.isInMeleeRange:setCellBoolean(
-                IsSpellInRange(MeleeCheckSpellId, UNIT_KEY) == true,
-                COLOR.STATUS_BOOLEAN.IS_IN_MELEE_RANGE,
-                COLOR.BLACK
-            )
-        else
-            cell.isInMeleeRange:clearCell()
-        end
+        cell.isInMeleeRange:setCellBoolean(
+            maxRange <= MeleeRange,
+            COLOR.STATUS_BOOLEAN.IS_IN_MELEE_RANGE,
+            COLOR.BLACK
+        )
     end
 
     local function getSpellColor()

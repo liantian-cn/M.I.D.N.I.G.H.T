@@ -26,11 +26,11 @@ After(2, function()
         baseY = BASE_Y,
         sortRule = SORT_RULE,
         sortDirection = SORT_DIRECTION,
-        colorMode = "playerHarmful",
+        colorMode = "Harmful",
     })
     controller.refreshAll()
 
-    local eventFrame = CreateFrame("eventFrame")
+    local eventFrame = CreateFrame("Frame")
     local fastTimeElapsed = -random()     -- 随机初始时间，避免所有事件在同一帧更新
     local lowTimeElapsed = -random()      -- 随机初始时间，避免所有事件在同一帧更新
     local superLowTimeElapsed = -random() -- 随机初始时间，避免所有事件在同一帧更新
@@ -47,32 +47,38 @@ After(2, function()
         superLowTimeElapsed = superLowTimeElapsed + elapsed
         if superLowTimeElapsed > 2 then
             superLowTimeElapsed = superLowTimeElapsed - 2
-            controller.refreshAll()
+            -- controller.refreshAll()
         end
     end)
 
     function eventFrame:UNIT_AURA(unitToken, info)
         -- 因为无法判断isHarmful还是isHelpful，所以只能全量刷新。这个问题在12.0.5修正。等那时候补回来。
-        controller.refreshAll()
-        -- if info.isFullUpdate then
-        --     controller.refreshAll()
-        --     return
-        -- end
-        -- if info.removedAuraInstanceIDs then
-        --     for _, instanceID in ipairs(info.removedAuraInstanceIDs) do
-        --         controller.removeAura(instanceID)
-        --     end
-        -- end
-        -- if info.addedAuras then
-        --     for _, aura in ipairs(info.addedAuras) do
-        --         controller.addAura(aura.auraInstanceID)
-        --     end
-        -- end
-        -- if info.updatedAuraInstanceIDs then
-        --     for _, instanceID in ipairs(info.updatedAuraInstanceIDs) do
-        --         controller.updateRemaining(instanceID)
-        --     end
-        -- end
+
+        if info.isFullUpdate then
+            controller.refreshAll()
+            return
+        end
+        if info.removedAuraInstanceIDs then
+            -- for _, instanceID in ipairs(info.removedAuraInstanceIDs) do
+            --     controller.removeAura(instanceID)
+            -- end
+            controller.refreshAll() -- 临时代替，等12.0.5修正API后再改回来
+            return                  -- 因为完全刷新了，所以return就行了
+        end
+        if info.addedAuras then
+            -- for _, aura in ipairs(info.addedAuras) do
+            --     controller.addAura(aura.auraInstanceID)
+            -- end
+            controller.refreshAll() -- 临时代替，等12.0.5修正API后再改回来
+            return                  -- 因为完全刷新了，所以return就行了
+        end
+        if info.updatedAuraInstanceIDs then
+            -- for _, instanceID in ipairs(info.updatedAuraInstanceIDs) do
+            --     controller.updateRemaining(instanceID)
+            -- end
+            -- 暂时什么都不用做 临时代替，等12.0.5修正API后再改回来
+            return -- 因为完全刷新了，所以return就行了
+        end
     end
 
     eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)

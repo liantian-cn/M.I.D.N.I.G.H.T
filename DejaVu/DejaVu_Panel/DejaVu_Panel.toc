@@ -1,5 +1,5 @@
 ## Interface: 120001
-## Title: DéjàVu 面板
+## Title: DéjàVu 设置面板模组
 ## Author: Émile Boirac
 ## Version: 12.0.1.66709
 ## Dependencies: DejaVu_Core

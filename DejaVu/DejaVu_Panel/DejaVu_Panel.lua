@@ -48,7 +48,7 @@ COLOR = {                                                              -- 面板
     DropdownBg      = CreateColor(34 / 255, 34 / 255, 34 / 255, 1),    -- 下拉列表背景色
 }                                                                      -- COLOR 结束
 
-local eventFrame = CreateFrame("eventFrame")
+local eventFrame = CreateFrame("Frame")
 local timeElapsed = 0
 eventFrame:HookScript("OnUpdate", function(self, elapsed)
     timeElapsed = timeElapsed + elapsed

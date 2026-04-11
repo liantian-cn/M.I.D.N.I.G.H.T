@@ -1,5 +1,5 @@
 ## Interface: 120001
-## Title: DéjàVu Matrix
+## Title: DéjàVu 矩阵模组
 ## Author: Émile Boirac
 ## Version: 12.0.1.66709
 ## Dependencies: DejaVu_Core

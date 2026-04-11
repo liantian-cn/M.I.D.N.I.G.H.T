@@ -26,34 +26,39 @@ After(2, function()
         baseY = BASE_Y,
         sortRule = SORT_RULE,
         sortDirection = SORT_DIRECTION,
-        colorMode = "unitHarmful",
+        colorMode = "Harmful",
     })
     controller.refreshAll()
 
-
-    local eventFrame = CreateFrame("eventFrame")
+    local eventFrame = CreateFrame("Frame")
     function eventFrame:UNIT_AURA(unitToken, info)
         -- 因为无法判断isHarmful还是isHelpful，所以只能全量刷新。这个问题在12.0.5修正。等那时候补回来。
-        controller.refreshAll()
-        -- if info.isFullUpdate then
-        --     controller.refreshAll()
-        --     return
-        -- end
-        -- if info.removedAuraInstanceIDs then
-        --     for _, instanceID in ipairs(info.removedAuraInstanceIDs) do
-        --         controller.removeAura(instanceID)
-        --     end
-        -- end
-        -- if info.addedAuras then
-        --     for _, aura in ipairs(info.addedAuras) do
-        --         controller.addAura(aura.auraInstanceID)
-        --     end
-        -- end
-        -- if info.updatedAuraInstanceIDs then
-        --     for _, instanceID in ipairs(info.updatedAuraInstanceIDs) do
-        --         controller.updateRemaining(instanceID)
-        --     end
-        -- end
+
+        if info.isFullUpdate then
+            controller.refreshAll()
+            return
+        end
+        if info.removedAuraInstanceIDs then
+            -- for _, instanceID in ipairs(info.removedAuraInstanceIDs) do
+            --     controller.removeAura(instanceID)
+            -- end
+            controller.refreshAll() -- 临时代替，等12.0.5修正API后再改回来
+            return                  -- 因为完全刷新了，所以return就行了
+        end
+        if info.addedAuras then
+            -- for _, aura in ipairs(info.addedAuras) do
+            --     controller.addAura(aura.auraInstanceID)
+            -- end
+            controller.refreshAll() -- 临时代替，等12.0.5修正API后再改回来
+            return                  -- 因为完全刷新了，所以return就行了
+        end
+        if info.updatedAuraInstanceIDs then
+            -- for _, instanceID in ipairs(info.updatedAuraInstanceIDs) do
+            --     controller.updateRemaining(instanceID)
+            -- end
+            -- 暂时什么都不用做 临时代替，等12.0.5修正API后再改回来
+            return -- 因为完全刷新了，所以return就行了
+        end
     end
 
     -- function eventFrame:UPDATE_MOUSEOVER_UNIT()
@@ -75,7 +80,6 @@ After(2, function()
     eventFrame:SetScript("OnEvent", function(self, event, ...)
         self[event](self, ...)
     end)
-
 
     local fastTimeElapsed = -random()
     local lowTimeElapsed = -random()
@@ -99,5 +103,4 @@ After(2, function()
     end)
 end)
 
-
--- 鼠标指向没有事件精准捕获。干脆0.5秒更新一次。而且时间无需更新，毕竟指向老在变。
+-- 鼠标指向没有事件精准捕获。干脆.5秒更新一次。而且时间无需更新，毕竟指向要在变。

@@ -32,13 +32,19 @@ local IsSpellInRange = C_Spell.IsSpellInRange
 
 local GetItemCooldown = C_Container.GetItemCooldown
 
+local LibStub = LibStub
+local LRC = LibStub("LibRangeCheck-3.0")
+if not LRC then
+    print("|cffff0000[单位状态]|r LibRangeCheck-3.0 未找到, 模块无法工作。")
+    return
+end
 
 -- DejaVu Core
 local DejaVu = _G["DejaVu"]
 local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
 local BadgeCell = DejaVu.BadgeCell
-local MeleeCheckSpellId = DejaVu.MeleeCheckSpellId
+local MeleeRange = DejaVu.MeleeRange -- 默认的近战检测范围
 
 local function itemUsable(itemId)
     if not itemId then
@@ -240,14 +246,17 @@ After(2, function()                                     -- 延迟加载
     -- 中频刷新
     local function updateEnemyCount()
         local count = 0
-        if MeleeCheckSpellId then
-            for i = 1, 8 do
-                local unit = "nameplate" .. i
-                if UnitExists(unit) and UnitCanAttack("player", unit) and IsSpellInRange(MeleeCheckSpellId, unit) then
+
+        for i = 1, 10 do
+            local unit = "nameplate" .. i
+            if UnitExists(unit) and UnitCanAttack("player", unit) then
+                local maxRange = select(2, LRC:GetRange(unit)) or 99
+                if maxRange <= MeleeRange then
                     count = count + 1
                 end
             end
         end
+
         cell.enemyCount:setCellRGBA(min(count / 51, 1))
     end
 

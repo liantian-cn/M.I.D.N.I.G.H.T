@@ -22,6 +22,7 @@ local Cell = DejaVu.Cell
 local BadgeCell = DejaVu.BadgeCell
 local CharCell = DejaVu.CharCell
 
+
 local remainingCurve = CreateColorCurve()
 remainingCurve:SetType(Enum.LuaCurveType.Linear)
 remainingCurve:AddPoint(0.0, COLOR.C0)
@@ -82,15 +83,16 @@ local function CreateAuraController(options)
     local isEnemy = true
 
     local function getSpellTypeColor(instanceID)
-        if colorMode == "playerHelpful" then
-            return COLOR.SPELL_TYPE.BUFF_ON_FRIENDLY
-        end
-        if colorMode == "playerHarmful" then
-            return GetAuraDispelTypeColor(unitKey, instanceID, debuffOnFriendlyCurve)
-        end
         if isEnemy then
             return COLOR.SPELL_TYPE.DEBUFF_ON_ENEMY
         end
+        if colorMode == "Helpful" then
+            return COLOR.SPELL_TYPE.BUFF_ON_FRIENDLY
+        end
+        if colorMode == "Harmful" then
+            return GetAuraDispelTypeColor(unitKey, instanceID, debuffOnFriendlyCurve)
+        end
+
         return GetAuraDispelTypeColor(unitKey, instanceID, debuffOnFriendlyCurve)
     end
 
@@ -190,15 +192,15 @@ local function CreateAuraController(options)
 
     local function refreshAll()
         wipe(instanceIDMap)
-        if colorMode == "unitHarmful" then
-            if not UnitExists(unitKey) then -- 单位不存在时直接清空
-                for i = 1, maxAuraCount do
-                    clearCell(cells[i])
-                end
-                return
+
+        if not UnitExists(unitKey) then -- 单位不存在时直接清空
+            for i = 1, maxAuraCount do
+                clearCell(cells[i])
             end
-            isEnemy = UnitCanAttack("player", unitKey) -- 判断目标是否为敌对
+            return
         end
+        isEnemy = UnitCanAttack("player", unitKey) -- 判断目标是否为敌对
+
 
         local auraInstanceIDs = GetUnitAuraInstanceIDs(unitKey, auraFilter, maxAuraCount, sortRule, sortDirection) or {}
         for i = 1, maxAuraCount do
@@ -253,3 +255,4 @@ local function CreateAuraController(options)
 end
 
 addonTable.CreateAuraController = CreateAuraController
+_G["DejaVu_Aura"] = addonTable

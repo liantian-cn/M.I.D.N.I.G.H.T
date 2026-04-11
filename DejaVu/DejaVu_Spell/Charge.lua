@@ -45,7 +45,7 @@ After(2, function()
     local cellMap = {}
     local validSpellID = {}
     local baseIDToSpellID = {}
-    local eventFrame = CreateFrame("eventFrame")
+    local eventFrame = CreateFrame("Frame")
 
     local function getValidSpellID(spellID)
         if not spellID or not validSpellID[spellID] then

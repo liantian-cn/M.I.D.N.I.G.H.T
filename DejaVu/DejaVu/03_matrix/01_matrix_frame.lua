@@ -26,7 +26,7 @@ local InitUI = addonTable.Listeners.InitUI                -- 初始化 UI 函数
 local GetUIScaleFactor = addonTable.Size.GetUIScaleFactor -- UI 缩放计算
 
 
-local scale = 1
+local scale = 4
 
 local function InitializeSize()              -- 初始化尺寸
     local SIZE = {                           -- 尺寸表主体

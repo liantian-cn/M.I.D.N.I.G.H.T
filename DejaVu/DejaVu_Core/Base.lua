@@ -12,10 +12,8 @@ _G["DejaVu"] = DejaVu_Core
 DejaVu_Core.DEBUG = true             -- 是否开启调试模式
 DejaVu_Core.Enable = true            -- 是否开启插件
 DejaVu_Core.VERSION = "12.0.1.66709" -- 插件版本
-DejaVu_Core.RangedRange = 42         -- 默认的远程检测范围
-DejaVu_Core.RangedCheckSpellId = nil -- 远程检测使用的法术ID，默认为nil表示不检测
-DejaVu_Core.MeleeRange = 5.5         -- 默认的近战检测范围
-DejaVu_Core.MeleeCheckSpellId = nil  -- 近战检测使用的法术ID，默认为nil表示不检测
+DejaVu_Core.RangedRange = 40         -- 默认的远程检测范围
+DejaVu_Core.MeleeRange = 5           -- 默认的近战检测范围
 
 local function logging(msg)
     print("|cFFFFBB66[" .. addonName .. "]|r" .. tostring(msg))
