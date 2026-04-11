@@ -6,6 +6,7 @@ std = "lua51"
 max_line_length = 360
 
 read_globals = {
+    "C_AddOns",
     "C_CurveUtil",
     "C_Container",
     "C_Item",
@@ -19,10 +20,12 @@ read_globals = {
     "Enum",
     "GameFontHighlight",
     "GameTooltip",
+    "GetRuneCooldown",
     "GetCurrentKeyBoardFocus",
     "GetInventoryItemID",
     "GetPhysicalScreenSize",
     "GetScreenHeight",
+    "GetSpecialization",
     "GetTime",
     "GetUnitSpeed",
     "IsInGroup",
@@ -30,6 +33,7 @@ read_globals = {
     "IsMounted",
     "issecretvalue",
     "SetCVar",
+    "SetOverrideBindingClick",
     "SpellIsTargeting",
     "UIParent",
     "UnitAffectingCombat",
@@ -50,6 +54,7 @@ read_globals = {
     "UnitIsDeadOrGhost",
     "UnitIsEnemy",
     "UnitIsUnit",
+    "UnitPower",
     "UnitPowerPercent",
     "UnitPowerType",
     "wipe",

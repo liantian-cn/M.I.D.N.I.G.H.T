@@ -1,6 +1,7 @@
 local addonName, addonTable = ... -- 插件入口固定写法
 
 -- Lua 原生函数
+local insert = table.insert
 local After = C_Timer.After
 local random = math.random
 
@@ -14,7 +15,7 @@ local Cell = DejaVu.Cell
 
 local spell_queue_window = Config("spell_queue_window") -- 滑块配置项
 
-table.insert(ConfigRows, {
+insert(ConfigRows, {
     type = "slider", -- 设置类型
     key = "spell_queue_window", -- 行标识
     name = "延迟窗口", -- 标题文本
