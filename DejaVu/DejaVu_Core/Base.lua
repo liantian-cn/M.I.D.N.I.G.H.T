@@ -1,5 +1,5 @@
 local addonName, DejaVu_Core = ...
-
+local After = C_Timer.After
 local GetTime = GetTime
 local max = math.max
 local min = math.min
@@ -52,9 +52,24 @@ SlashCmdList["BURST"] = function(msg)
     end
 end
 
-SetCVar("secretChallengeModeRestrictionsForced", 1)
-SetCVar("secretCombatRestrictionsForced", 1)
-SetCVar("secretEncounterRestrictionsForced", 1)
-SetCVar("secretMapRestrictionsForced", 1)
-SetCVar("secretPvPMatchRestrictionsForced", 1)
-SetCVar("secretAuraDataRestrictionsForced", 1)
+After(0, function()
+    SetCVar("secretChallengeModeRestrictionsForced", 1)
+    SetCVar("secretCombatRestrictionsForced", 1)
+    SetCVar("secretEncounterRestrictionsForced", 1)
+    SetCVar("secretMapRestrictionsForced", 1)
+    SetCVar("secretPvPMatchRestrictionsForced", 1)
+    SetCVar("secretAuraDataRestrictionsForced", 1)
+    SetCVar("scriptErrors", 1);
+    SetCVar("doNotFlashLowHealthWarning", 1);
+    SetCVar("cameraIndirectVisibility", 1);
+    SetCVar("cameraIndirectOffset", 10);
+    SetCVar("SpellQueueWindow", 150);
+    SetCVar("targetNearestDistance", 5)
+    SetCVar("cameraDistanceMaxZoomFactor", 2.6)
+    SetCVar("CameraReduceUnexpectedMovement", 1)
+    SetCVar("synchronizeSettings", 1)
+    SetCVar("synchronizeConfig", 1)
+    SetCVar("synchronizeBindings", 1)
+    SetCVar("synchronizeMacros", 1)
+    SetCVar("useUiScale", 0)
+end)

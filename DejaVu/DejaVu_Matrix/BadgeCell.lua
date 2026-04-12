@@ -11,6 +11,7 @@ local issecretvalue = issecretvalue -- 判断值是否为秘密值
 local DejaVu = _G["DejaVu"]
 
 local BLACK = CreateColor(0, 0, 0, 1)
+local WHITE_TEXTURE = "Interface\\Buttons\\WHITE8X8"
 
 ---@class BadgeCell
 ---@field Frame Frame BadgeCell底层框架
@@ -60,7 +61,8 @@ function BadgeCell:_initialize(x, y)
     -- 背景色层（+1层）
     local cellTexture = cellFrame:CreateTexture(nil, "BACKGROUND")
     cellTexture:SetAllPoints(cellFrame)
-    cellTexture:SetColorTexture(BLACK:GetRGBA())
+    cellTexture:SetTexture(WHITE_TEXTURE)
+    cellTexture:SetVertexColor(BLACK:GetRGBA())
     cellTexture:Show()
 
     -- 图标层（+2层）
@@ -78,6 +80,7 @@ function BadgeCell:_initialize(x, y)
     -- 脚标层贴图（+4层）
     local badgeTexture = badgeFrame:CreateTexture(nil, "ARTWORK")
     badgeTexture:SetAllPoints(badgeFrame)
+    badgeTexture:SetTexture(WHITE_TEXTURE)
     badgeTexture:Hide()
 
     self.Frame = cellFrame
@@ -163,7 +166,7 @@ function BadgeCell:setCell(icon, color)
     if colorChanged then
         self.lastBadgeColor = color
         self.lastBadgeColorIsSecret = colorIsSecret
-        self.BadgeTexture:SetColorTexture(color:GetRGBA())
+        self.BadgeTexture:SetVertexColor(color:GetRGBA())
         self.BadgeFrame:Show()
         self.BadgeTexture:Show()
     end

@@ -145,7 +145,9 @@ After(2, function()                                     -- 延迟加载
     -- 基于 UNIT_HEALTH 和 UNIT_MAXHEALTH 事件。
     -- 2 秒补正。
     local function updateHealth()
-        cell.healthPercent:setCell(UnitHealthPercent("player", false, zeroToOneCurve)) -- 单位生命值百分比
+        local color = UnitHealthPercent("player", false, zeroToOneCurve)
+        -- print("Health percent:", color.r, color.g, color.b)
+        cell.healthPercent:setCell(color) -- 单位生命值百分比
     end
 
     -- 最大生命值变化时刷新生命值百分比。
@@ -435,4 +437,18 @@ After(2, function()                                     -- 延迟加载
     eventFrame:SetScript("OnEvent", function(self, event, ...)
         self[event](self, ...)
     end)
+
+    updateEnemyCount()
+    updateUnitBasicStatus()
+    updateUnitActionStatus()
+    updateClassAndRole()
+    updateAura()
+    updateHealth()
+    updatePower()
+    updateUnitGroupStatus()
+    updateTrinketUsable()
+    updateHealingItemUsable()
+    updateCastAndChannel()
+    updateCastAndChannelDuration()
+    updateMovement_fix()
 end)

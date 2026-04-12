@@ -11,6 +11,7 @@ local issecretvalue = issecretvalue -- 判断值是否为秘密值
 local DejaVu = _G["DejaVu"]
 
 local BLACK = CreateColor(0, 0, 0, 1)
+local WHITE_TEXTURE = "Interface\\Buttons\\WHITE8X8"
 
 
 ---@class MegaCell
@@ -62,7 +63,8 @@ function MegaCell:_initialize(x, y, backgroundColor)
     -- 中层背景色
     local cellTexture = cellFrame:CreateTexture(nil, "BACKGROUND")
     cellTexture:SetAllPoints(cellFrame)
-    cellTexture:SetColorTexture(backgroundColor:GetRGBA())
+    cellTexture:SetTexture(WHITE_TEXTURE)
+    cellTexture:SetVertexColor(backgroundColor:GetRGBA())
     cellTexture:Show()
 
     -- 顶层图标

@@ -13,6 +13,7 @@ local DejaVu = _G["DejaVu"]
 
 local BLACK = CreateColor(0, 0, 0, 1)
 local WHITE = CreateColor(1, 1, 1, 1)
+local WHITE_TEXTURE = "Interface\\Buttons\\WHITE8X8"
 
 
 
@@ -64,6 +65,7 @@ function Cell:_initialize(x, y, backgroundColor)
 
     local cellTexture = cellFrame:CreateTexture(nil, "BACKGROUND")
     cellTexture:SetAllPoints(cellFrame)
+    cellTexture:SetTexture(WHITE_TEXTURE)
     cellTexture:Show()
 
     self.Texture = cellTexture
@@ -134,7 +136,7 @@ function Cell:setCellRGBA(r, g, b, a)
     self.lastB = b
     self.lastA = a
     self.lastRGBAIsSecret = IsSecretRGBA(r, g, b, a)
-    self.Texture:SetColorTexture(r, g, b, a)
+    self.Texture:SetVertexColor(r, g, b, a)
 end
 
 ---设置颜色方法
