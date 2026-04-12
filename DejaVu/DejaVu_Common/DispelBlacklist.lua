@@ -38,7 +38,7 @@ table.insert(ConfigRows, {
 
 
 
-After(3, function()                 -- 2 秒后执行，确保 DejaVu 核心已加载完成
+After(2, function()                 -- 2 秒后执行，确保 DejaVu 核心已加载完成
     local cells = {}
     for i = 1, MAX_COUNT do         -- 预创建固定数量的槽位
         local x = POS_X - 2 + 2 * i -- 计算当前槽位 x 坐标

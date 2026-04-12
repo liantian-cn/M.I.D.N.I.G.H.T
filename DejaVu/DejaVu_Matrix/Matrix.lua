@@ -47,6 +47,6 @@ local function CreateMatrixFrame() -- 创建矩阵框架
 end
 
 
-C_Timer.After(2, function()
+C_Timer.After(1, function()
     CreateMatrixFrame()
 end)

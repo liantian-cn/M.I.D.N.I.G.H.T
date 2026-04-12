@@ -14,7 +14,7 @@ local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
 -- local BurstRemaining = DejaVu.BurstRemaining
 
-After(3, function()              -- 2 秒后执行，确保 DejaVu 核心已加载完成
+After(2, function()              -- 2 秒后执行，确保 DejaVu 核心已加载完成
     local cell = Cell:New(83, 0) -- 全局开关
 
     local function updateCell()

@@ -22,7 +22,7 @@ local SORT_RULE = Enum.UnitAuraSortRule.Default
 local SORT_DIRECTION = Enum.UnitAuraSortDirection.Reverse
 
 
-After(3, function()
+After(2, function()
     for partyIndex = 1, 4 do
         local UNIT_KEY = format("party%d", partyIndex)
         local BASE_X = 21 * partyIndex - 6

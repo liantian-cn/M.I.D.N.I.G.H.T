@@ -17,7 +17,7 @@ local AURA_FILTER = "HARMFUL|PLAYER"
 local SORT_RULE = Enum.UnitAuraSortRule.Default
 local SORT_DIRECTION = Enum.UnitAuraSortDirection.Normal
 
-After(3, function()
+After(2, function()
     local controller = CreateAuraController({
         unitKey = UNIT_KEY,
         auraFilter = AURA_FILTER,
@@ -64,7 +64,6 @@ After(3, function()
             return -- 因为完全刷新了，所以return就行了
         end
     end
-
     eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
 
     -- 切换焦点单位时重刷整组 debuff 槽位。
@@ -73,7 +72,6 @@ After(3, function()
     function eventFrame:PLAYER_FOCUS_CHANGED()
         controller.refreshAll()
     end
-
     eventFrame:RegisterEvent("PLAYER_FOCUS_CHANGED")
 
     -- 焦点旗标变化时重刷整组 debuff 槽位。
@@ -82,13 +80,12 @@ After(3, function()
     function eventFrame:UNIT_FLAGS(unitToken)
         controller.refreshAll()
     end
-
     eventFrame:RegisterUnitEvent("UNIT_FLAGS", UNIT_KEY)
     eventFrame:SetScript("OnEvent", function(self, event, ...)
         self[event](self, ...)
     end)
 
-    local fastTimeElapsed = -random() -- 随机初始时间，避免所有事件在同一帧更新
+    local fastTimeElapsed = -random()     -- 随机初始时间，避免所有事件在同一帧更新
     -- local lowTimeElapsed = -random()      -- 当前未使用，保留 0.5 秒刷新档位结构
     -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构
     eventFrame:HookScript("OnUpdate", function(frame, elapsed)

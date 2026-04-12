@@ -24,7 +24,7 @@ local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
 
 
-After(3, function()                    -- 2 秒后执行，确保 DejaVu 核心已加载完成
+After(2, function()                    -- 2 秒后执行，确保 DejaVu 核心已加载完成
     local cells = {
         ComboPoints = Cell:New(55, 13) -- 能量点数
     }

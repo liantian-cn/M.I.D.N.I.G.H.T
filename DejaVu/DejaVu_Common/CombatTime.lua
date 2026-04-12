@@ -14,7 +14,7 @@ local UnitAffectingCombat = UnitAffectingCombat
 local DejaVu = _G["DejaVu"]
 local Cell = DejaVu.Cell
 
-After(3, function()              -- 2 秒后执行，确保 DejaVu 核心已加载完成
+After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
     local cell = Cell:New(56, 9) -- combat cell，记录战斗时长
     local nonCombatTimestamp = GetTime()
 

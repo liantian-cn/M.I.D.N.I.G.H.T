@@ -47,7 +47,7 @@ do
         bind_config = restoration_ironbark_hp_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local restoration_ironbark_hp_threshold_cell = Cell:New(55, 12)
         local function set_restoration_ironbark_hp_threshold(value)
             restoration_ironbark_hp_threshold_cell:setCellRGBA(value / 255)
@@ -73,7 +73,7 @@ do
         bind_config = restoration_barkskin_hp_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local restoration_barkskin_hp_threshold_cell = Cell:New(56, 12)
         local function set_restoration_barkskin_hp_threshold(value)
             restoration_barkskin_hp_threshold_cell:setCellRGBA(value / 255)
@@ -100,7 +100,7 @@ do
         bind_config = restoration_convoke_party_hp_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local restoration_convoke_party_hp_threshold_cell = Cell:New(57, 12)
         local function set_restoration_convoke_party_hp_threshold(value)
             restoration_convoke_party_hp_threshold_cell:setCellRGBA(value / 255)
@@ -127,7 +127,7 @@ do
         bind_config = restoration_convoke_single_hp_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local restoration_convoke_single_hp_threshold_cell = Cell:New(58, 12)
         local function set_restoration_convoke_single_hp_threshold(value)
             restoration_convoke_single_hp_threshold_cell:setCellRGBA(value / 255)
@@ -154,7 +154,7 @@ do
         bind_config = restoration_wild_growth_hp_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local restoration_wild_growth_hp_threshold_cell = Cell:New(59, 12)
         local function set_restoration_wild_growth_hp_threshold(value)
             restoration_wild_growth_hp_threshold_cell:setCellRGBA(value / 255)
@@ -181,7 +181,7 @@ do
         bind_config = restoration_tranquility_party_hp_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local restoration_tranquility_party_hp_threshold_cell = Cell:New(60, 12)
         local function set_restoration_tranquility_party_hp_threshold(value)
             restoration_tranquility_party_hp_threshold_cell:setCellRGBA(value / 255)
@@ -208,7 +208,7 @@ do
         bind_config = restoration_nature_swiftness_hp_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local restoration_nature_swiftness_hp_threshold_cell = Cell:New(61, 12)
         local function set_restoration_nature_swiftness_hp_threshold(value)
             restoration_nature_swiftness_hp_threshold_cell:setCellRGBA(value / 255)
@@ -235,7 +235,7 @@ do
         bind_config = restoration_swiftmend_hp_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local restoration_swiftmend_hp_threshold_cell = Cell:New(62, 12)
         local function set_restoration_swiftmend_hp_threshold(value)
             restoration_swiftmend_hp_threshold_cell:setCellRGBA(value / 255)
@@ -262,7 +262,7 @@ do
         bind_config = restoration_swiftmend_count_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local restoration_swiftmend_count_threshold_cell = Cell:New(63, 12)
         local function set_restoration_swiftmend_count_threshold(value)
             restoration_swiftmend_count_threshold_cell:setCellRGBA(value * 20 / 255)
@@ -289,7 +289,7 @@ do
         bind_config = restoration_regrowth_hp_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local restoration_regrowth_hp_threshold_cell = Cell:New(64, 12)
         local function set_restoration_regrowth_hp_threshold(value)
             restoration_regrowth_hp_threshold_cell:setCellRGBA(value / 255)
@@ -316,7 +316,7 @@ do
         bind_config = restoration_rejuvenation_hp_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local restoration_rejuvenation_hp_threshold_cell = Cell:New(65, 12)
         local function set_restoration_rejuvenation_hp_threshold(value)
             restoration_rejuvenation_hp_threshold_cell:setCellRGBA(value / 255)
@@ -343,7 +343,7 @@ do
         bind_config = restoration_abundance_stack_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local restoration_abundance_stack_threshold_cell = Cell:New(66, 12)
         local function set_restoration_abundance_stack_threshold(value)
             restoration_abundance_stack_threshold_cell:setCellRGBA(value * 20 / 255)
@@ -370,7 +370,7 @@ do
         bind_config = restoration_tank_deficit_ignore_percent,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local restoration_tank_deficit_ignore_percent_cell = Cell:New(67, 12)
         local function set_restoration_tank_deficit_ignore_percent(value)
             restoration_tank_deficit_ignore_percent_cell:setCellRGBA(value / 255)
@@ -397,7 +397,7 @@ do
         bind_config = restoration_hot_hp_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local restoration_hot_hp_threshold_cell = Cell:New(68, 12)
         local function set_restoration_hot_hp_threshold(value)
             restoration_hot_hp_threshold_cell:setCellRGBA(value * 20 / 255)

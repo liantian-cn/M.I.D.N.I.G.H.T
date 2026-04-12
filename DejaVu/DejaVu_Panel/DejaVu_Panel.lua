@@ -1040,7 +1040,7 @@ local function CreatePanelRows()                  -- 构建所有设置行
     end                                           -- Rows 遍历结束
 end                                               -- CreatePanelRows 结束
 
-C_Timer.After(2, function()
+C_Timer.After(1, function()
     CreatePanelFrame()
     CreatePanelRows()
 end)

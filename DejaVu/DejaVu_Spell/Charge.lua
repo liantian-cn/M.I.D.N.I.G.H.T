@@ -37,7 +37,7 @@ remainingCurve:AddPoint(375.0, COLOR.C255)
 local CHARGE_LENGTH = 11
 
 
-After(3, function()
+After(2, function()
     if #chargeSpells > CHARGE_LENGTH then
         print("DejaVu_Spell: Charge spells number is greater than CHARGE_LENGTH")
         return

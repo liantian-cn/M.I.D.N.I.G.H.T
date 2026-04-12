@@ -67,7 +67,7 @@ zeroToOneCurve:AddPoint(1.0, CreateColor(1, 1, 1, 1))
 
 local cell = {}                                         -- 状态单元格，提供给外部调用以更新状态显示                                    -- 触发器，提供给外部调用以触发状态更新
 
-After(3, function()                                     -- 延迟加载
+After(2, function()                                     -- 延迟加载
     local eventFrame = CreateFrame("Frame")             -- 事件框架
 
     cell.castIcon = BadgeCell:New(45, 14)               -- 单位施法图标 / updateCastAndChannel

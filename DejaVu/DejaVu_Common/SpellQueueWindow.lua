@@ -35,7 +35,7 @@ end
 spell_queue_window:register_callback(spell_queue_window_updater)
 
 
-After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
     local cell = Cell:New(57, 9)
     cell:setCellRGBA(20 / 255)
     local function Updater(value)

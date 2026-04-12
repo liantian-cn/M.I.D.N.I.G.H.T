@@ -21,7 +21,7 @@ local SORT_RULE = Enum.UnitAuraSortRule.Default
 local SORT_DIRECTION = Enum.UnitAuraSortDirection.Reverse
 
 
-After(3, function()
+After(2, function()
     for partyIndex = 1, 4 do
         local UNIT_KEY = format("party%d", partyIndex)
         local BASE_X = 21 * partyIndex - 20
@@ -71,7 +71,6 @@ After(3, function()
                 return -- 因为完全刷新了，所以return就行了
             end
         end
-
         eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
 
         -- 队友旗标变化时重刷当前 party 槽位的增益显示。
@@ -80,7 +79,6 @@ After(3, function()
         function eventFrame:UNIT_FLAGS(unitToken)
             controller.refreshAll()
         end
-
         eventFrame:RegisterUnitEvent("UNIT_FLAGS", UNIT_KEY)
 
         local GroupChangeOnFrame = false
@@ -95,7 +93,6 @@ After(3, function()
             GroupChangeOnFrame = true
             controller.refreshAll()
         end
-
         eventFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
 
         -- 加入队伍时重刷当前 party 槽位。
@@ -108,7 +105,6 @@ After(3, function()
             GroupChangeOnFrame = true
             controller.refreshAll()
         end
-
         eventFrame:RegisterEvent("GROUP_JOINED")
 
         -- 离开队伍时重刷当前 party 槽位。
@@ -121,7 +117,6 @@ After(3, function()
             GroupChangeOnFrame = true
             controller.refreshAll()
         end
-
         eventFrame:RegisterEvent("GROUP_LEFT")
 
         -- 新队伍形成时重刷当前 party 槽位。
@@ -134,13 +129,12 @@ After(3, function()
             GroupChangeOnFrame = true
             controller.refreshAll()
         end
-
         eventFrame:RegisterEvent("GROUP_FORMED")
         eventFrame:SetScript("OnEvent", function(self, event, ...)
             self[event](self, ...)
         end)
 
-        local fastTimeElapsed = -random() -- 随机初始时间，避免所有事件在同一帧更新
+        local fastTimeElapsed = -random()     -- 随机初始时间，避免所有事件在同一帧更新
         -- local lowTimeElapsed = -random()      -- 当前未使用，保留 0.5 秒刷新档位结构
         -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构
         eventFrame:HookScript("OnUpdate", function(frame, elapsed)

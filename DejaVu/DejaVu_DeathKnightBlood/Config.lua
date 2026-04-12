@@ -41,7 +41,7 @@ do
         bind_config = runic_power_max,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local runic_power_max_cell = Cell:New(55, 12)
         local function set_runic_power_max(value)
             runic_power_max_cell:setCellRGBA(value / 255)
@@ -68,7 +68,7 @@ do
         bind_config = dk_interrupt_mode,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local dk_interrupt_mode_cell = Cell:New(56, 12)
         local function set_dk_interrupt_mode(value)
             if value == "blacklist" then
@@ -99,7 +99,7 @@ do
         bind_config = blood_death_strike_health_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local blood_death_strike_health_threshold_cell = Cell:New(57, 12)
         local function set_blood_death_strike_health_threshold(value)
             blood_death_strike_health_threshold_cell:setCellRGBA(value / 255)
@@ -126,7 +126,7 @@ do
         bind_config = blood_death_strike_runic_power_overflow_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local blood_death_strike_runic_power_overflow_threshold_cell = Cell:New(58, 12)
         local function set_blood_death_strike_runic_power_overflow_threshold(value)
             blood_death_strike_runic_power_overflow_threshold_cell:setCellRGBA(value / 255)
@@ -153,7 +153,7 @@ do
         bind_config = reaper_mark_health_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local reaper_mark_health_threshold_cell = Cell:New(59, 12)
         local function set_reaper_mark_health_threshold(value)
             reaper_mark_health_threshold_cell:setCellRGBA(value / 255)
@@ -182,7 +182,7 @@ do
         bind_config = dancing_rune_mode,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local dancing_rune_mode_cell = Cell:New(60, 12)
         local function set_dancing_rune_mode(value)
             if value == "manual" then

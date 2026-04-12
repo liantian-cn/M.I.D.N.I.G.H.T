@@ -5,7 +5,6 @@ local max = math.max
 local min = math.min
 local print = print
 local tostring = tostring
-local After = C_Timer.After
 local GetPhysicalScreenSize = GetPhysicalScreenSize
 local GetScreenHeight = GetScreenHeight
 
@@ -53,31 +52,9 @@ SlashCmdList["BURST"] = function(msg)
     end
 end
 
-
-
-After(1, function()
-    SetCVar("secretChallengeModeRestrictionsForced", 1)
-    SetCVar("secretCombatRestrictionsForced", 1)
-    SetCVar("secretEncounterRestrictionsForced", 1)
-    SetCVar("secretMapRestrictionsForced", 1)
-    SetCVar("secretPvPMatchRestrictionsForced", 1)
-    SetCVar("secretAuraDataRestrictionsForced", 1)
-    SetCVar("useUiScale", 0)
-    SetCVar("uiScaleMultiplier", -1)
-    SetCVar("Contrast", 50);
-    SetCVar("Brightness", 50);
-    SetCVar("Gamma", 1.0);
-    SetCVar("ffxAntiAliasingMode", 0.0);
-    SetCVar("scriptErrors", 1);
-    SetCVar("doNotFlashLowHealthWarning", 1);
-    SetCVar("cameraIndirectVisibility", 1);
-    SetCVar("cameraIndirectOffset", 10);
-    SetCVar("SpellQueueWindow", 400);
-    SetCVar("targetNearestDistance", 5)
-    SetCVar("cameraDistanceMaxZoomFactor", 2.6)
-    SetCVar("CameraReduceUnexpectedMovement", 1)
-    SetCVar("synchronizeSettings", 0)
-    SetCVar("synchronizeConfig", 0)
-    SetCVar("synchronizeBindings", 0)
-    SetCVar("synchronizeMacros", 0)
-end)
+SetCVar("secretChallengeModeRestrictionsForced", 1)
+SetCVar("secretCombatRestrictionsForced", 1)
+SetCVar("secretEncounterRestrictionsForced", 1)
+SetCVar("secretMapRestrictionsForced", 1)
+SetCVar("secretPvPMatchRestrictionsForced", 1)
+SetCVar("secretAuraDataRestrictionsForced", 1)

@@ -37,7 +37,7 @@ remainingCurve:AddPoint(375.0, COLOR.C255)
 local COOLDOWN_LENGTH = 40
 
 
-After(3, function()
+After(2, function()
     if #cooldownSpells > COOLDOWN_LENGTH then
         print("DejaVu_Spell: Cooldown spells number is greater than COOLDOWN_LENGTH")
         return

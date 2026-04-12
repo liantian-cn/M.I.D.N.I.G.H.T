@@ -15,7 +15,7 @@ local Bar = DejaVu.Bar
 
 
 
-After(3, function()
+After(2, function()
     for partyIndex = 1, 4 do
         local eventFrame = CreateFrame("Frame") -- 事件框架
         local UNIT_KEY = format("party%d", partyIndex)

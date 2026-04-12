@@ -41,7 +41,7 @@ do
         bind_config = guardian_aoe_enemy_count,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local guardian_aoe_enemy_count_cell = Cell:New(55, 12)
         local function set_guardian_aoe_enemy_count(value)
             guardian_aoe_enemy_count_cell:setCellRGBA(value * 10 / 255)
@@ -68,7 +68,7 @@ do
         bind_config = guardian_opener_time,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local guardian_opener_time_cell = Cell:New(56, 12)
         local function set_guardian_opener_time(value)
             guardian_opener_time_cell:setCellRGBA(value / 255)
@@ -95,7 +95,7 @@ do
         bind_config = guardian_frenzied_regeneration_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local guardian_frenzied_regeneration_threshold_cell = Cell:New(57, 12)
         local function set_guardian_frenzied_regeneration_threshold(value)
             guardian_frenzied_regeneration_threshold_cell:setCellRGBA(value / 255)
@@ -122,7 +122,7 @@ do
         bind_config = guardian_barkskin_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local guardian_barkskin_threshold_cell = Cell:New(58, 12)
         local function set_guardian_barkskin_threshold(value)
             guardian_barkskin_threshold_cell:setCellRGBA(value / 255)
@@ -149,7 +149,7 @@ do
         bind_config = guardian_survival_instincts_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local guardian_survival_instincts_threshold_cell = Cell:New(59, 12)
         local function set_guardian_survival_instincts_threshold(value)
             guardian_survival_instincts_threshold_cell:setCellRGBA(value / 255)
@@ -176,7 +176,7 @@ do
         bind_config = guardian_rage_overflow_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local guardian_rage_overflow_threshold_cell = Cell:New(60, 12)
         local function set_guardian_rage_overflow_threshold(value)
             guardian_rage_overflow_threshold_cell:setCellRGBA(value / 255)
@@ -203,7 +203,7 @@ do
         bind_config = guardian_rage_maul_threshold,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local guardian_rage_maul_threshold_cell = Cell:New(61, 12)
         local function set_guardian_rage_maul_threshold(value)
             guardian_rage_maul_threshold_cell:setCellRGBA(value / 255)
@@ -230,7 +230,7 @@ do
         bind_config = guardian_interrupt_logic,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local guardian_interrupt_logic_cell = Cell:New(62, 12)
         local function set_guardian_interrupt_logic(value)
             if value == "blacklist" then
@@ -262,7 +262,7 @@ do
         bind_config = guardian_incarnation_logic,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local guardian_incarnation_logic_cell = Cell:New(63, 12)
         local function set_guardian_incarnation_logic(value)
             if value == "manual" then
@@ -300,7 +300,7 @@ do
         bind_config = guardian_ironfur_logic,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local guardian_ironfur_logic_cell = Cell:New(64, 12)
         local function set_guardian_ironfur_logic(value)
             if value == "one" then
@@ -333,7 +333,7 @@ do
         bind_config = guardian_rage_limit,
     })
 
-    After(3, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         local guardian_rage_limit_cell = Cell:New(65, 12)
         local function set_guardian_rage_limit(value)
             guardian_rage_limit_cell:setCellRGBA(value / 255)

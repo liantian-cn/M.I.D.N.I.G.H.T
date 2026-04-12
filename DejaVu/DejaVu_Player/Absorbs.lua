@@ -16,7 +16,7 @@ local DejaVu = _G["DejaVu"]
 local Bar = DejaVu.Bar
 
 
-After(3, function()
+After(2, function()
     local eventFrame = CreateFrame("Frame") -- 事件框架
     local damageAbsorbsBar = Bar:New(43, 16, 20)
     local healAbsorbsBar = Bar:New(64, 14, 20)
@@ -52,7 +52,6 @@ After(3, function()
         updateDamageAbsorbs()
         updateHealAbsorbs()
     end
-
     eventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", "player")
 
     -- 伤害吸收变化时只刷新伤害吸收条。
@@ -61,7 +60,6 @@ After(3, function()
     function eventFrame:UNIT_ABSORB_AMOUNT_CHANGED(unitToken)
         updateDamageAbsorbs()
     end
-
     eventFrame:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "player")
 
     -- 治疗吸收变化时只刷新治疗吸收条。
@@ -70,7 +68,6 @@ After(3, function()
     function eventFrame:UNIT_HEAL_ABSORB_AMOUNT_CHANGED(unitToken)
         updateHealAbsorbs()
     end
-
     eventFrame:RegisterUnitEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", "player")
 
     -- local fastTimeElapsed = -random()     -- 当前未使用，保留 0.1 秒刷新档位结构

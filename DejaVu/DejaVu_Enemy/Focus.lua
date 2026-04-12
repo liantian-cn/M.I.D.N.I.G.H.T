@@ -53,7 +53,7 @@ local UNIT_KEY = "focus"                    -- 目标单位
 local posX = 70                             -- 起始 x 坐标
 local posY = 10                             -- 起始 y 坐标
 
-After(3, function()                         -- 延迟加载
+After(2, function()                         -- 延迟加载
     local eventFrame = CreateFrame("Frame") -- 事件框架
 
     local unitExists = false
