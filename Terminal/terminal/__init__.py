@@ -1,20 +1,14 @@
 from __future__ import annotations
-from .application import Termnal
 
-import atexit
-import ctypes
 import json
 import os
 import subprocess
 import sys
 from pathlib import Path
 
-from PySide6.QtWidgets import QMessageBox
-
 
 _PYTHON_SIGNATURE_HELP_URL = "https://github.com/liantian-cn/M.I.D.N.I.G.H.T/discussions/4"
 _PYTHON_SIGNATURE_REQUIRED_CN = "CN=Python Software Foundation"
-_ERROR_ALREADY_EXISTS = 183
 
 
 def _read_authenticode_signature(target_path: Path) -> dict[str, str | bool | None]:
@@ -97,32 +91,8 @@ def _ensure_supported_python_signature() -> None:
     )
 
 
-def _acquire_single_instance_mutex(mutex_name: str = "terminal") -> int | None:
-    mutex = ctypes.windll.kernel32.CreateMutexW(None, False, mutex_name)
-    if ctypes.windll.kernel32.GetLastError() == _ERROR_ALREADY_EXISTS:
-        QMessageBox.information(None, "提示", f"{mutex_name}已经在运行。")
-        if mutex:
-            ctypes.windll.kernel32.CloseHandle(mutex)
-        return None
-    return mutex
-
-
-def _release_single_instance_mutex(mutex: int | None) -> None:
-    if not mutex:
-        return
-    ctypes.windll.kernel32.ReleaseMutex(mutex)
-    ctypes.windll.kernel32.CloseHandle(mutex)
-
-
-def _ensure_single_instance_mutex() -> None:
-    mutex = _acquire_single_instance_mutex()
-    if mutex is None:
-        raise SystemExit(0)
-    atexit.register(_release_single_instance_mutex, mutex)
-
-
 _ensure_supported_python_signature()
-_ensure_single_instance_mutex()
 
+from .application import Termnal
 
 __all__ = ["Termnal"]

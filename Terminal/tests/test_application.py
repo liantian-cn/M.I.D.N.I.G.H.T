@@ -1,11 +1,8 @@
-import atexit
-import ctypes
-import importlib
+from terminal import application
 import os
-import subprocess
 import sys
 from pathlib import Path
-from types import ModuleType, SimpleNamespace
+from types import SimpleNamespace
 
 import pytest
 
@@ -13,38 +10,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 
-def _import_application(monkeypatch: pytest.MonkeyPatch):
-    fake_signature = '{"has_signature":true,"status":"Valid","signer_subject":"CN=Python Software Foundation"}'
-    fake_kernel32 = SimpleNamespace(
-        CreateMutexW=lambda *args, **kwargs: 11,
-        GetLastError=lambda: 0,
-        ReleaseMutex=lambda handle: None,
-        CloseHandle=lambda handle: None,
-    )
-    fake_windll = SimpleNamespace(
-        kernel32=fake_kernel32,
-        user32=SimpleNamespace(),
-        gdi32=SimpleNamespace(),
-        shell32=SimpleNamespace(IsUserAnAdmin=lambda: True),
-    )
-    fake_main_window = ModuleType("terminal.ui.main_window")
-    fake_main_window.MainWindow = object
-
-    monkeypatch.setattr(ctypes, "windll", fake_windll, raising=False)
-    monkeypatch.setattr(
-        subprocess,
-        "run",
-        lambda *args, **kwargs: SimpleNamespace(returncode=0, stdout=fake_signature, stderr=""),
-    )
-    monkeypatch.setattr(atexit, "register", lambda *args, **kwargs: None)
-    monkeypatch.setitem(sys.modules, "terminal.ui.main_window", fake_main_window)
-    sys.modules.pop("terminal", None)
-    sys.modules.pop("terminal.application", None)
-    return importlib.import_module("terminal.application")
-
-
 def test_set_windows_app_user_model_id_calls_win32_api(monkeypatch: pytest.MonkeyPatch) -> None:
-    application = _import_application(monkeypatch)
     received_app_ids: list[str] = []
 
     def fake_set_current_process_explicit_app_user_model_id(app_id: str) -> None:
@@ -64,15 +30,12 @@ def test_set_windows_app_user_model_id_calls_win32_api(monkeypatch: pytest.Monke
 
 
 def test_set_windows_app_user_model_id_skips_non_windows(monkeypatch: pytest.MonkeyPatch) -> None:
-    application = _import_application(monkeypatch)
     monkeypatch.setattr(application.sys, "platform", "linux")
 
     application._set_windows_app_user_model_id()
 
 
 def test_set_windows_app_user_model_id_ignores_win32_errors(monkeypatch: pytest.MonkeyPatch) -> None:
-    application = _import_application(monkeypatch)
-
     def fake_set_current_process_explicit_app_user_model_id(app_id: str) -> None:
         raise OSError(app_id)
 
@@ -88,7 +51,6 @@ def test_set_windows_app_user_model_id_ignores_win32_errors(monkeypatch: pytest.
 
 
 def test_termnal_run_sets_application_and_window_icons(monkeypatch: pytest.MonkeyPatch) -> None:
-    application = _import_application(monkeypatch)
     captured: dict[str, object] = {}
 
     class FakeApplication:
