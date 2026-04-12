@@ -1,6 +1,11 @@
+import atexit
+import ctypes
+import importlib
 import os
+import subprocess
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 from PySide6.QtWidgets import QApplication
@@ -8,9 +13,38 @@ from PySide6.QtWidgets import QApplication
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from terminal.pixelcalc.title_manager import TitleManager
-from terminal.ui.main_window import MainWindow
-from terminal.ui.tabs.other import OtherTab
+
+def _import_ui_modules(monkeypatch: pytest.MonkeyPatch):
+    fake_signature = '{"has_signature":true,"status":"Valid","signer_subject":"CN=Python Software Foundation"}'
+    fake_kernel32 = SimpleNamespace(
+        CreateMutexW=lambda *args, **kwargs: 11,
+        GetLastError=lambda: 0,
+        ReleaseMutex=lambda handle: None,
+        CloseHandle=lambda handle: None,
+    )
+    fake_windll = SimpleNamespace(
+        kernel32=fake_kernel32,
+        user32=SimpleNamespace(),
+        gdi32=SimpleNamespace(),
+        shell32=SimpleNamespace(IsUserAnAdmin=lambda: True),
+    )
+
+    monkeypatch.setattr(ctypes, "windll", fake_windll, raising=False)
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda *args, **kwargs: SimpleNamespace(returncode=0, stdout=fake_signature, stderr=""),
+    )
+    monkeypatch.setattr(atexit, "register", lambda *args, **kwargs: None)
+    sys.modules.pop("terminal", None)
+    sys.modules.pop("terminal.ui.main_window", None)
+    sys.modules.pop("terminal.ui.tabs.other", None)
+    sys.modules.pop("terminal.pixelcalc.title_manager", None)
+
+    title_manager_module = importlib.import_module("terminal.pixelcalc.title_manager")
+    main_window_module = importlib.import_module("terminal.ui.main_window")
+    other_tab_module = importlib.import_module("terminal.ui.tabs.other")
+    return title_manager_module.TitleManager, main_window_module, other_tab_module.OtherTab
 
 
 @pytest.fixture(scope="session")
@@ -21,7 +55,11 @@ def qapp() -> QApplication:
     return app
 
 
-def test_other_tab_shows_empty_state_without_decoded_data(qapp: QApplication) -> None:
+def test_other_tab_shows_empty_state_without_decoded_data(
+    monkeypatch: pytest.MonkeyPatch,
+    qapp: QApplication,
+) -> None:
+    _, _, OtherTab = _import_ui_modules(monkeypatch)
     tab = OtherTab()
 
     tab.refresh_from_decode_snapshot(
@@ -44,7 +82,11 @@ def test_other_tab_shows_empty_state_without_decoded_data(qapp: QApplication) ->
     assert tab.blacklist_inputs["interrupt_blacklist"].toPlainText() == ""
 
 
-def test_other_tab_formats_decoded_values(qapp: QApplication) -> None:
+def test_other_tab_formats_decoded_values(
+    monkeypatch: pytest.MonkeyPatch,
+    qapp: QApplication,
+) -> None:
+    _, _, OtherTab = _import_ui_modules(monkeypatch)
     tab = OtherTab()
 
     tab.refresh_from_decode_snapshot(
@@ -80,7 +122,11 @@ def test_other_tab_formats_decoded_values(qapp: QApplication) -> None:
     assert tab.blacklist_inputs["interrupt_blacklist"].toPlainText() == "读条甲;读条乙"
 
 
-def test_other_tab_marks_stale_decode_results(qapp: QApplication) -> None:
+def test_other_tab_marks_stale_decode_results(
+    monkeypatch: pytest.MonkeyPatch,
+    qapp: QApplication,
+) -> None:
+    _, _, OtherTab = _import_ui_modules(monkeypatch)
     tab = OtherTab()
 
     tab.refresh_from_decode_snapshot(
@@ -115,13 +161,14 @@ def test_main_window_inserts_other_tab_between_plugin_and_advanced(
     qapp: QApplication,
     tmp_path: Path,
 ) -> None:
+    TitleManager, main_window_module, _ = _import_ui_modules(monkeypatch)
     title_manager = TitleManager(tmp_path / "test.sqlite")
 
-    monkeypatch.setattr("terminal.ui.main_window.get_monitors", lambda: [])
-    monkeypatch.setattr("terminal.ui.main_window.get_windows_by_title", lambda: [])
-    monkeypatch.setattr("terminal.ui.main_window.get_default_title_manager", lambda: title_manager)
+    monkeypatch.setattr(main_window_module, "get_monitors", lambda: [])
+    monkeypatch.setattr(main_window_module, "get_windows_by_title", lambda: [])
+    monkeypatch.setattr(main_window_module, "get_default_title_manager", lambda: title_manager)
 
-    window = MainWindow()
+    window = main_window_module.MainWindow()
     try:
         tab_names = [window.tab_widget.tabText(index) for index in range(window.tab_widget.count())]
         assert tab_names.index("插件/专精") < tab_names.index("其他") < tab_names.index("高级设置")
