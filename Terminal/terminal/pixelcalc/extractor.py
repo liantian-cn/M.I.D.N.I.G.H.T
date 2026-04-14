@@ -158,8 +158,8 @@ def get_party_all(matrix: MatrixDecoder, y: int = 19) -> dict[str, Any]:
             result[party_key]['status']['unitHasBigDefense'] = matrix.getCell(baseX - 3, statusY).is_not_black  # 有大防御
             result[party_key]['status']['unitHasDispellableDebuff'] = matrix.getCell(baseX - 3, statusY+1).is_not_black  # 有可移除的法术
             # DejaVu\\05_slots\\52_party_bar.lua
-            result[party_key]['status']['damage_absorbs'] = matrix.readBarValue(baseX - 20, statusY, 10)  # 伤害吸收
-            result[party_key]['status']['heal_absorbs'] = matrix.readBarValue(baseX - 20, statusY + 1, 10)  # 治疗吸收
+            result[party_key]['status']['damage_absorbs'] = matrix.readBarValue(baseX - 20, statusY, 10) / 2  # 伤害吸收 # 注意，吸收盾的条最大现在是血量的一半，所以这里除以2映射到百分比。
+            result[party_key]['status']['heal_absorbs'] = matrix.readBarValue(baseX - 20, statusY + 1, 10) / 2  # 治疗吸收# 注意，吸收盾的条最大现在是血量的一半，所以这里除以2映射到百分比。
             # DejaVu\\05_slots\\51_party_aura.lua
             result[party_key]['buff'] = matrix.readAura(x=baseX - 20, y=y, length=7)  # buff
             result[party_key]['debuff'] = matrix.readAura(x=baseX - 6, y=y, length=3)  # debuff
