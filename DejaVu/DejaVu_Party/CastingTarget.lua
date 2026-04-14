@@ -82,10 +82,6 @@ After(2, function()
         -- print("施法结束，清除施法目标")
     end
 
-    eventFrame:SetScript("OnEvent", function(self, event, ...)
-        self[event](self, ...)
-    end)
-
     -- local fastTimeElapsed = -random()     -- 当前未使用，保留 0.1 秒刷新档位结构
     -- local lowTimeElapsed = -random()      -- 当前未使用，保留 0.5 秒刷新档位结构
     local superLowTimeElapsed = -random() -- 随机初始时间，避免所有事件在同一帧更新
@@ -107,5 +103,9 @@ After(2, function()
             -- updateDamageAbsorbs()
             -- updateHealAbsorbs()
         end
+    end)
+
+    eventFrame:SetScript("OnEvent", function(self, event, ...)
+        self[event](self, ...)
     end)
 end)
