@@ -18,6 +18,7 @@ local SORT_RULE = Enum.UnitAuraSortRule.Default
 local SORT_DIRECTION = Enum.UnitAuraSortDirection.Normal
 
 After(2, function()
+    local eventFrame = CreateFrame("Frame")
     local controller = CreateAuraController({
         unitKey = UNIT_KEY,
         auraFilter = AURA_FILTER,
@@ -29,8 +30,6 @@ After(2, function()
         colorMode = "Harmful",
     })
     controller.refreshAll()
-
-    local eventFrame = CreateFrame("Frame")
 
     -- 预留鼠标指向 aura 事件处理骨架。
     -- 事件用途：如果后续找到可靠的 mouseover aura 事件，可复用这里。
@@ -77,13 +76,21 @@ After(2, function()
     --     controller.refreshAll()
     -- end
 
+    -- 鼠标指向 aura 变化时刷新 mouseover 的整组 debuff 槽位。
+    -- 事件用途：预留 UNIT_AURA 的注册位置；当前保持禁用。
     -- eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
+
+    -- 鼠标切换目标时刷新 mouseover 的整组 debuff 槽位。
+    -- 事件用途：预留 UPDATE_MOUSEOVER_UNIT 的注册位置；当前保持禁用。
     -- eventFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT") -- 当鼠标移开时不会触发UPDATE_MOUSEOVER_UNIT事件，所以只能放弃
+
+    -- 鼠标光标变化时刷新 mouseover 的整组 debuff 槽位。
+    -- 事件用途：预留 CURSOR_CHANGED 的注册位置；当前保持禁用。
     -- eventFrame:RegisterEvent("CURSOR_CHANGED")
+
+    -- 鼠标指向单位旗标变化时刷新 mouseover 的整组 debuff 槽位。
+    -- 事件用途：预留 UNIT_FLAGS 的注册位置；当前保持禁用。
     -- eventFrame:RegisterUnitEvent("UNIT_FLAGS", UNIT_KEY)
-    eventFrame:SetScript("OnEvent", function(self, event, ...)
-        self[event](self, ...)
-    end)
 
     -- local fastTimeElapsed = -random()     -- 当前未使用，保留 0.1 秒刷新档位结构
     local lowTimeElapsed = -random()
@@ -104,6 +111,10 @@ After(2, function()
         -- if superLowTimeElapsed > 2 then
         --     superLowTimeElapsed = superLowTimeElapsed - 2
         -- end
+    end)
+
+    eventFrame:SetScript("OnEvent", function(self, event, ...)
+        self[event](self, ...)
     end)
 end)
 

@@ -14,6 +14,7 @@ local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
 
 After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local eventFrame = CreateFrame("Frame")
     local cell = Cell:New(58, 9) -- 记录鼠标正在使用
 
     local function updateCell()
@@ -26,7 +27,6 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         cell:setCellBoolean(useMouse, COLOR.STATUS_BOOLEAN.USE_MOUSE, COLOR.BLACK)
     end
 
-    local eventFrame = CreateFrame("Frame")
     local fastTimeElapsed = -random() -- 随机初始时间，避免所有事件在同一帧更新
     -- local lowTimeElapsed = -random() -- 当前未使用，保留 0.5 秒刷新档位结构
     -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构
@@ -39,8 +39,11 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         updateCell()
     end
 
+    -- 监听转向开始，用事件触发即时刷新鼠标使用状态。
     eventFrame:RegisterEvent("PLAYER_STARTED_TURNING")
+    -- 监听转向结束，用事件触发即时刷新鼠标使用状态。
     eventFrame:RegisterEvent("PLAYER_STOPPED_TURNING")
+    -- 保持周期性轮询，覆盖按键按下等不会触发上述事件的鼠标输入。
     eventFrame:HookScript("OnUpdate", function(frame, elapsed)
         fastTimeElapsed = fastTimeElapsed + elapsed
         if fastTimeElapsed > 0.1 then
