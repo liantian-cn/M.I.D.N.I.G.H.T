@@ -19,6 +19,7 @@ local SORT_RULE = Enum.UnitAuraSortRule.Default
 local SORT_DIRECTION = Enum.UnitAuraSortDirection.Normal
 
 After(2, function()
+    local eventFrame = CreateFrame("Frame")
     local controller = CreateAuraController({
         unitKey = UNIT_KEY,
         auraFilter = AURA_FILTER,
@@ -31,11 +32,10 @@ After(2, function()
     })
     controller.refreshAll()
 
-    local eventFrame = CreateFrame("Frame")
+    -- 玩家减益结构变化时刷新玩家 Aura 列表。
+    -- 刷新对象：当前控制器管理的玩家 Harmful Aura 整组结构。
+    eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
 
-    -- Aura 列表变化时按当前限制做整组刷新。
-    -- 事件用途：处理玩家减益结构变化。
-    -- 当前没有 2 秒全量补正，只有 0.1 秒的剩余时间补正。
     function eventFrame:UNIT_AURA(unitToken, info)
         -- 因为无法判断isHarmful还是isHelpful，所以只能全量刷新。这个问题在12.0.5修正。等那时候补回来。
 
@@ -66,11 +66,6 @@ After(2, function()
         end
     end
 
-    eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
-    eventFrame:SetScript("OnEvent", function(self, event, ...)
-        self[event](self, ...)
-    end)
-
     local fastTimeElapsed = -random() -- 随机初始时间，避免所有事件在同一帧更新
     -- local lowTimeElapsed = -random()      -- 当前未使用，保留 0.5 秒刷新档位结构
     -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构
@@ -89,5 +84,9 @@ After(2, function()
         --     superLowTimeElapsed = superLowTimeElapsed - 2
         --     controller.refreshAll()
         -- end
+    end)
+
+    eventFrame:SetScript("OnEvent", function(self, event, ...)
+        self[event](self, ...)
     end)
 end)
