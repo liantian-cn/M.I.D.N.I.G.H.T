@@ -49,31 +49,31 @@ After(2, function()
     -- 最大生命值变化时同步刻度，并顺手重刷两条吸收条。
     -- 事件用途：处理吸收条刻度变化。
     -- 2 秒补正：在 superLowTimeElapsed 档位里单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", "player")
+
     function eventFrame:UNIT_MAXHEALTH(unitToken)
         updateMaxHealth()
         updateDamageAbsorbs()
         updateHealAbsorbs()
     end
 
-    eventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", "player")
-
     -- 伤害吸收变化时只刷新伤害吸收条。
     -- 事件用途：处理 UNIT_ABSORB_AMOUNT_CHANGED。
     -- 2 秒补正：在 superLowTimeElapsed 档位里单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "player")
+
     function eventFrame:UNIT_ABSORB_AMOUNT_CHANGED(unitToken)
         updateDamageAbsorbs()
     end
 
-    eventFrame:RegisterUnitEvent("UNIT_ABSORB_AMOUNT_CHANGED", "player")
-
     -- 治疗吸收变化时只刷新治疗吸收条。
     -- 事件用途：处理 UNIT_HEAL_ABSORB_AMOUNT_CHANGED。
     -- 2 秒补正：在 superLowTimeElapsed 档位里单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", "player")
+
     function eventFrame:UNIT_HEAL_ABSORB_AMOUNT_CHANGED(unitToken)
         updateHealAbsorbs()
     end
-
-    eventFrame:RegisterUnitEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED", "player")
 
     -- 即将收到的治疗更新时只刷新即将收到的治疗条。
     -- 事件用途：处理 UNIT_HEAL_PREDICTION_CHANGED。

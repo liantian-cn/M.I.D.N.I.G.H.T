@@ -133,13 +133,13 @@ After(2, function()                                     -- 延迟加载
     -- Aura 结构变化时刷新玩家异常状态。
     -- 事件用途：处理增减益列表变化。
     -- 2 秒补正：由 superLowTimeElapsed 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_AURA", "player")
+
     function eventFrame:UNIT_AURA(unitToken, info)
         if info.isFullUpdate or info.removedAuraInstanceIDs or info.addedAuras then
             updateAura()
         end
     end
-
-    eventFrame:RegisterUnitEvent("UNIT_AURA", "player")
 
     -- 更新玩家生命值百分比。
     -- 基于 UNIT_HEALTH 和 UNIT_MAXHEALTH 事件。
@@ -153,6 +153,8 @@ After(2, function()                                     -- 延迟加载
     -- 最大生命值变化时刷新生命值百分比。
     -- 事件用途：处理生命值刻度变化。
     -- 2 秒补正：由 superLowTimeElapsed 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", "player")
+
     function eventFrame:UNIT_MAXHEALTH(unitToken)
         updateHealth()
     end
@@ -160,12 +162,11 @@ After(2, function()                                     -- 延迟加载
     -- 当前生命值变化时刷新生命值百分比。
     -- 事件用途：处理生命值进度变化。
     -- 2 秒补正：由 superLowTimeElapsed 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_HEALTH", "player")
+
     function eventFrame:UNIT_HEALTH(unitToken)
         updateHealth()
     end
-
-    eventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", "player")
-    eventFrame:RegisterUnitEvent("UNIT_HEALTH", "player")
 
 
     -- 更新玩家主能量百分比。
@@ -178,11 +179,11 @@ After(2, function()                                     -- 延迟加载
     -- 主能量变化时刷新能量百分比。
     -- 事件用途：处理能量进度变化。
     -- 2 秒补正：由 superLowTimeElapsed 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_POWER_UPDATE", "player")
+
     function eventFrame:UNIT_POWER_UPDATE(unitToken)
         updatePower()
     end
-
-    eventFrame:RegisterUnitEvent("UNIT_POWER_UPDATE", "player")
 
 
     -- 更新玩家的存活、战斗和目标状态。
@@ -230,6 +231,8 @@ After(2, function()                                     -- 延迟加载
     -- 开始移动时立即点亮移动状态。
     -- 事件用途：处理 PLAYER_STARTED_MOVING。
     -- 2 秒补正：由 updateMovement_fix 单独补正。
+    eventFrame:RegisterEvent("PLAYER_STARTED_MOVING")
+
     function eventFrame:PLAYER_STARTED_MOVING()
         updateMovement_start()
     end
@@ -237,12 +240,11 @@ After(2, function()                                     -- 延迟加载
     -- 停止移动时立即熄灭移动状态。
     -- 事件用途：处理 PLAYER_STOPPED_MOVING。
     -- 2 秒补正：由 updateMovement_fix 单独补正。
+    eventFrame:RegisterEvent("PLAYER_STOPPED_MOVING")
+
     function eventFrame:PLAYER_STOPPED_MOVING()
         updateMovement_stop()
     end
-
-    eventFrame:RegisterEvent("PLAYER_STARTED_MOVING")
-    eventFrame:RegisterEvent("PLAYER_STOPPED_MOVING")
 
     -- 更新玩家是否在队伍或团队中。
     -- 无单独事件，依赖 2 秒轮询。
@@ -323,59 +325,95 @@ After(2, function()                                     -- 延迟加载
             cell.channelDuration:clearCell() -- 通道持续时间
         end
     end
-    -- 施法和通道状态变化时刷新图标、是否可中断和蓄力信息。
-    -- 事件用途：处理 UNIT_SPELLCAST_* 这一组事件。
+    -- 施法被打断时刷新施法、通道和蓄力状态。
+    -- 事件用途：处理 UNIT_SPELLCAST_INTERRUPTED。
     -- 2 秒补正：由 superLowTimeElapsed 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", "player")
+
     function eventFrame:UNIT_SPELLCAST_INTERRUPTED(unitToken)
         updateCastAndChannel()
     end
+
+    -- 开始施法时刷新施法、通道和蓄力状态。
+    -- 事件用途：处理 UNIT_SPELLCAST_START。
+    -- 2 秒补正：由 superLowTimeElapsed 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_START", "player")
 
     function eventFrame:UNIT_SPELLCAST_START(unitToken)
         updateCastAndChannel()
     end
 
+    -- 施法结束时刷新施法、通道和蓄力状态。
+    -- 事件用途：处理 UNIT_SPELLCAST_STOP。
+    -- 2 秒补正：由 superLowTimeElapsed 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_STOP", "player")
+
     function eventFrame:UNIT_SPELLCAST_STOP(unitToken)
         updateCastAndChannel()
     end
+
+    -- 施法成功时刷新施法、通道和蓄力状态。
+    -- 事件用途：处理 UNIT_SPELLCAST_SUCCEEDED。
+    -- 2 秒补正：由 superLowTimeElapsed 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
 
     function eventFrame:UNIT_SPELLCAST_SUCCEEDED(unitToken)
         updateCastAndChannel()
     end
 
+    -- 开始通道时刷新施法、通道和蓄力状态。
+    -- 事件用途：处理 UNIT_SPELLCAST_CHANNEL_START。
+    -- 2 秒补正：由 superLowTimeElapsed 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", "player")
+
     function eventFrame:UNIT_SPELLCAST_CHANNEL_START(unitToken)
         updateCastAndChannel()
     end
+
+    -- 通道结束时刷新施法、通道和蓄力状态。
+    -- 事件用途：处理 UNIT_SPELLCAST_CHANNEL_STOP。
+    -- 2 秒补正：由 superLowTimeElapsed 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", "player")
 
     function eventFrame:UNIT_SPELLCAST_CHANNEL_STOP(unitToken)
         updateCastAndChannel()
     end
 
+    -- 施法失败时刷新施法、通道和蓄力状态。
+    -- 事件用途：处理 UNIT_SPELLCAST_FAILED。
+    -- 2 秒补正：由 superLowTimeElapsed 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", "player")
+
     function eventFrame:UNIT_SPELLCAST_FAILED(unitToken)
         updateCastAndChannel()
     end
+
+    -- 通道更新时刷新施法、通道和蓄力状态。
+    -- 事件用途：处理 UNIT_SPELLCAST_CHANNEL_UPDATE。
+    -- 2 秒补正：由 superLowTimeElapsed 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", "player")
 
     function eventFrame:UNIT_SPELLCAST_CHANNEL_UPDATE(unitToken)
         updateCastAndChannel()
     end
 
+    -- 开始蓄力时刷新施法、通道和蓄力状态。
+    -- 事件用途：处理 UNIT_SPELLCAST_EMPOWER_START。
+    -- 2 秒补正：由 superLowTimeElapsed 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", "player")
+
     function eventFrame:UNIT_SPELLCAST_EMPOWER_START(unitToken)
         updateCastAndChannel()
     end
 
+    -- 蓄力结束时刷新施法、通道和蓄力状态。
+    -- 事件用途：处理 UNIT_SPELLCAST_EMPOWER_STOP。
+    -- 2 秒补正：由 superLowTimeElapsed 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", "player")
+
     function eventFrame:UNIT_SPELLCAST_EMPOWER_STOP(unitToken)
         updateCastAndChannel()
     end
-
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", "player")
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_START", "player")
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_STOP", "player")
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", "player")
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", "player")
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", "player")
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", "player")
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", "player")
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", "player")
 
     -- 更新施法和通道的进度条颜色。
     -- 无可靠事件可持续驱动进度。
@@ -430,14 +468,6 @@ After(2, function()                                     -- 延迟加载
         end
     end)
 
-
-
-
-
-    eventFrame:SetScript("OnEvent", function(self, event, ...)
-        self[event](self, ...)
-    end)
-
     updateEnemyCount()
     updateUnitBasicStatus()
     updateUnitActionStatus()
@@ -451,4 +481,8 @@ After(2, function()                                     -- 延迟加载
     updateCastAndChannel()
     updateCastAndChannelDuration()
     updateMovement_fix()
+
+    eventFrame:SetScript("OnEvent", function(self, event, ...)
+        self[event](self, ...)
+    end)
 end)
