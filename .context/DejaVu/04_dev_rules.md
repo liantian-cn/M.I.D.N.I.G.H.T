@@ -54,6 +54,24 @@
 - 如果当前工作区已经脏，先做一次备份提交
 - 小步修改，方便回看
 
+## 事件整改规则
+
+- 事件结构整改只改事件相关部分, 不顺手扩散到业务逻辑、数据结构或显示细节
+- 活动事件统一写成“用途注释 -> 注册 -> 消费函数”, 且注册在前、消费在后
+- 每条注册前都要有用途注释, 说明这个事件是做什么的、会调用哪类刷新
+- 事件 frame 必须命名为 `eventFrame`
+- 单 frame 文件里, `eventFrame` 放在 `After(2, function()` 后尽快创建
+- `DejaVu_Party` 这类循环建 frame 的文件里, `eventFrame` 放在循环开始后立即创建
+- `eventFrame:SetScript("OnEvent", ...)` 必须放在 `After` 容器末尾; 循环模式则放在循环末尾
+- 被注释掉的旧事件代码不主动恢复; 第三方库目录不纳入整改
+
+## 事件整改检查
+
+- 改前先确认当前分支仍在 `draft`
+- 改前先做一次 `backup` 提交, 改完后再做一次本次任务提交
+- 结构整改完成后, 先人工复查事件块顺序, 再跑 `luacheck`
+- 有现成正例时优先对齐正例, 当前可参考 `DejaVu/DejaVu_Spell/Charge.lua` 和 `DejaVu/DejaVu_Spell/Cooldown.lua`
+
 ## 检查与验证
 
 - Shell 默认用 PowerShell
