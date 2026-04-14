@@ -1,40 +1,21 @@
 local addonName, addonTable = ... -- luacheck: ignore addonName -- 插件入口固定写法
 
 -- Lua 原生函数
-local format = string.format
 local pairs = pairs
 local random = math.random
-local select = select
 
 -- WoW 官方 API
 local UnitName = UnitName
 local issecretvalue = issecretvalue
 local After = C_Timer.After
-local CreateColor = CreateColor
-local CreateColorCurve = C_CurveUtil.CreateColorCurve
-local EvaluateColorFromBoolean = C_CurveUtil.EvaluateColorFromBoolean
-local Enum = Enum
 local CreateFrame = CreateFrame
-local UnitAffectingCombat = UnitAffectingCombat
-local UnitCanAttack = UnitCanAttack
-local UnitCastingDuration = UnitCastingDuration
-local UnitCastingInfo = UnitCastingInfo
-local UnitChannelDuration = UnitChannelDuration
-local UnitChannelInfo = UnitChannelInfo
-local UnitClass = UnitClass
 local UnitExists = UnitExists
-local UnitGroupRolesAssigned = UnitGroupRolesAssigned
-local UnitHealthPercent = UnitHealthPercent
-local UnitIsDeadOrGhost = UnitIsDeadOrGhost
-local UnitIsEnemy = UnitIsEnemy
-local UnitIsUnit = UnitIsUnit
-local UnitPowerPercent = UnitPowerPercent
-local UnitPowerType = UnitPowerType
+
 
 local DejaVu = _G["DejaVu"]
 local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
-local BadgeCell = DejaVu.BadgeCell
+
 
 local party_members = {
     "player",
