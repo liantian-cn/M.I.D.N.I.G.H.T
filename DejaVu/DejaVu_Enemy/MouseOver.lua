@@ -433,9 +433,9 @@ After(2, function()                         -- 延迟加载
         -- end
     end)
 
+    updateAll()
+
     eventFrame:SetScript("OnEvent", function(self, event, ...)
         self[event](self, ...)
     end)
-
-    updateAll()
 end)

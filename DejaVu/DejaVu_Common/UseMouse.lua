@@ -31,18 +31,18 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
     -- local lowTimeElapsed = -random() -- 当前未使用，保留 0.5 秒刷新档位结构
     -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构
 
+    -- 监听转向开始，用事件触发即时刷新鼠标使用状态。
+    eventFrame:RegisterEvent("PLAYER_STARTED_TURNING")
     function eventFrame:PLAYER_STARTED_TURNING()
         updateCell()
     end
 
+    -- 监听转向结束，用事件触发即时刷新鼠标使用状态。
+    eventFrame:RegisterEvent("PLAYER_STOPPED_TURNING")
     function eventFrame:PLAYER_STOPPED_TURNING()
         updateCell()
     end
 
-    -- 监听转向开始，用事件触发即时刷新鼠标使用状态。
-    eventFrame:RegisterEvent("PLAYER_STARTED_TURNING")
-    -- 监听转向结束，用事件触发即时刷新鼠标使用状态。
-    eventFrame:RegisterEvent("PLAYER_STOPPED_TURNING")
     -- 保持周期性轮询，覆盖按键按下等不会触发上述事件的鼠标输入。
     eventFrame:HookScript("OnUpdate", function(frame, elapsed)
         fastTimeElapsed = fastTimeElapsed + elapsed
