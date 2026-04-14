@@ -141,16 +141,23 @@ After(2, function()                         -- 延迟加载
         cell.healthPercent:setCell(UnitHealthPercent(UNIT_KEY, false, zeroToOneCurve)) -- 单位生命值百分比
     end
 
+    -- 最大生命值变化时刷新生命值百分比。
+    -- 事件用途：处理 UNIT_MAXHEALTH。
+    -- 当前保留注释骨架，不恢复注册，实际依赖 0.1 秒整组轮询。
+    -- eventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", UNIT_KEY)
+
     -- function eventFrame.UNIT_MAXHEALTH()
     --     updateHealth()
     -- end
 
+    -- 当前生命值变化时刷新生命值百分比。
+    -- 事件用途：处理 UNIT_HEALTH。
+    -- 当前保留注释骨架，不恢复注册，实际依赖 0.1 秒整组轮询。
+    -- eventFrame:RegisterUnitEvent("UNIT_HEALTH", UNIT_KEY)
+
     -- function eventFrame.UNIT_HEALTH()
     --     updateHealth()
     -- end
-
-    -- eventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", UNIT_KEY)
-    -- eventFrame:RegisterUnitEvent("UNIT_HEALTH", UNIT_KEY)
 
     -- 更新鼠标指向单位的能量百分比。
     -- 事件骨架已保留但当前未注册，实际依赖 0.1 秒整组轮询。
@@ -163,11 +170,14 @@ After(2, function()                         -- 延迟加载
         cell.powerPercent:setCell(UnitPowerPercent(UNIT_KEY, UnitPowerType(UNIT_KEY), false, zeroToOneCurve)) -- 单位能量百分比
     end
 
+    -- 能量变化时刷新能量百分比。
+    -- 事件用途：处理 UNIT_POWER_UPDATE。
+    -- 当前保留注释骨架，不恢复注册，实际依赖 0.1 秒整组轮询。
+    -- eventFrame:RegisterUnitEvent("UNIT_POWER_UPDATE", UNIT_KEY)
+
     -- function eventFrame.UNIT_POWER_UPDATE()
     --     updatePower()
     -- end
-
-    -- eventFrame:RegisterUnitEvent("UNIT_POWER_UPDATE", UNIT_KEY)
 
     -- 更新鼠标指向单位的基础状态。
     -- 当前无可靠事件，实际依赖 0.1 秒整组轮询。
@@ -275,56 +285,95 @@ After(2, function()                         -- 延迟加载
         cell.channelIsInterruptible:clearCell() -- 单位通道是否可中断
     end
 
+    -- 施法被打断时刷新鼠标指向单位的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_INTERRUPTED。
+    -- 当前保留注释骨架，不恢复注册，实际依赖 0.1 秒整组轮询。
+    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", UNIT_KEY)
+
     -- function eventFrame.UNIT_SPELLCAST_INTERRUPTED()
     --     updateCastAndChannel()
     -- end
+
+    -- 开始施法时刷新鼠标指向单位的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_START。
+    -- 当前保留注释骨架，不恢复注册，实际依赖 0.1 秒整组轮询。
+    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_START", UNIT_KEY)
 
     -- function eventFrame.UNIT_SPELLCAST_START()
     --     updateCastAndChannel()
     -- end
 
+    -- 施法结束时刷新鼠标指向单位的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_STOP。
+    -- 当前保留注释骨架，不恢复注册，实际依赖 0.1 秒整组轮询。
+    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_STOP", UNIT_KEY)
+
     -- function eventFrame.UNIT_SPELLCAST_STOP()
     --     updateCastAndChannel()
     -- end
+
+    -- 施法成功时刷新鼠标指向单位的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_SUCCEEDED。
+    -- 当前保留注释骨架，不恢复注册，实际依赖 0.1 秒整组轮询。
+    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", UNIT_KEY)
 
     -- function eventFrame.UNIT_SPELLCAST_SUCCEEDED()
     --     updateCastAndChannel()
     -- end
 
+    -- 开始通道时刷新鼠标指向单位的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_CHANNEL_START。
+    -- 当前保留注释骨架，不恢复注册，实际依赖 0.1 秒整组轮询。
+    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", UNIT_KEY)
+
     -- function eventFrame.UNIT_SPELLCAST_CHANNEL_START()
     --     updateCastAndChannel()
     -- end
+
+    -- 通道结束时刷新鼠标指向单位的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_CHANNEL_STOP。
+    -- 当前保留注释骨架，不恢复注册，实际依赖 0.1 秒整组轮询。
+    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", UNIT_KEY)
 
     -- function eventFrame.UNIT_SPELLCAST_CHANNEL_STOP()
     --     updateCastAndChannel()
     -- end
 
+    -- 施法失败时刷新鼠标指向单位的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_FAILED。
+    -- 当前保留注释骨架，不恢复注册，实际依赖 0.1 秒整组轮询。
+    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", UNIT_KEY)
+
     -- function eventFrame.UNIT_SPELLCAST_FAILED()
     --     updateCastAndChannel()
     -- end
+
+    -- 通道进度更新时刷新鼠标指向单位的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_CHANNEL_UPDATE。
+    -- 当前保留注释骨架，不恢复注册，实际依赖 0.1 秒整组轮询。
+    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", UNIT_KEY)
 
     -- function eventFrame.UNIT_SPELLCAST_CHANNEL_UPDATE()
     --     updateCastAndChannel()
     -- end
 
+    -- 引导蓄力开始时刷新鼠标指向单位的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_EMPOWER_START。
+    -- 当前保留注释骨架，不恢复注册，实际依赖 0.1 秒整组轮询。
+    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", UNIT_KEY)
+
     -- function eventFrame.UNIT_SPELLCAST_EMPOWER_START()
     --     updateCastAndChannel()
     -- end
 
+    -- 引导蓄力结束时刷新鼠标指向单位的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_EMPOWER_STOP。
+    -- 当前保留注释骨架，不恢复注册，实际依赖 0.1 秒整组轮询。
+    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", UNIT_KEY)
+
     -- function eventFrame.UNIT_SPELLCAST_EMPOWER_STOP()
     --     updateCastAndChannel()
     -- end
-
-    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", UNIT_KEY)
-    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_START", UNIT_KEY)
-    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_STOP", UNIT_KEY)
-    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", UNIT_KEY)
-    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", UNIT_KEY)
-    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", UNIT_KEY)
-    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", UNIT_KEY)
-    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", UNIT_KEY)
-    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", UNIT_KEY)
-    -- eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", UNIT_KEY)
 
     -- 更新施法和通道的进度颜色。
     -- 当前无可靠事件，实际依赖 0.1 秒整组轮询。

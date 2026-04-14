@@ -120,11 +120,11 @@ After(2, function()                         -- 延迟加载
     -- 目标切换时整组刷新当前目标状态。
     -- 事件用途：处理 PLAYER_TARGET_CHANGED。
     -- 2 秒补正：血量、能量、施法等状态在 superLowTimeElapsed 里分项补正；基础状态和距离只有 0.5 秒轮询。
+    eventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
+
     function eventFrame.PLAYER_TARGET_CHANGED()
         updateAll()
     end
-
-    eventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
 
     -- 更新目标的职业和角色。
     -- 无稳定事件，依赖 2 秒轮询。
@@ -151,6 +151,8 @@ After(2, function()                         -- 延迟加载
     -- 最大生命值变化时刷新生命值百分比。
     -- 事件用途：处理 UNIT_MAXHEALTH。
     -- 2 秒补正：由 updateHealth 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", UNIT_KEY)
+
     function eventFrame.UNIT_MAXHEALTH()
         updateHealth()
     end
@@ -158,12 +160,11 @@ After(2, function()                         -- 延迟加载
     -- 当前生命值变化时刷新生命值百分比。
     -- 事件用途：处理 UNIT_HEALTH。
     -- 2 秒补正：由 updateHealth 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_HEALTH", UNIT_KEY)
+
     function eventFrame.UNIT_HEALTH()
         updateHealth()
     end
-
-    eventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_HEALTH", UNIT_KEY)
 
     -- 更新目标的能量百分比。
     -- 基于 UNIT_POWER_UPDATE 事件。
@@ -179,11 +180,11 @@ After(2, function()                         -- 延迟加载
     -- 能量变化时刷新能量百分比。
     -- 事件用途：处理 UNIT_POWER_UPDATE。
     -- 2 秒补正：由 updatePower 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_POWER_UPDATE", UNIT_KEY)
+
     function eventFrame.UNIT_POWER_UPDATE()
         updatePower()
     end
-
-    eventFrame:RegisterUnitEvent("UNIT_POWER_UPDATE", UNIT_KEY)
 
     -- 更新目标的存活、友敌、可攻击、战斗和目标状态。
     -- 无稳定事件覆盖所有变化。
@@ -291,59 +292,95 @@ After(2, function()                         -- 延迟加载
         cell.channelIsInterruptible:clearCell() -- 单位通道是否可中断
     end
 
-    -- 施法和通道状态变化时刷新目标的施法显示。
-    -- 事件用途：处理 UNIT_SPELLCAST_* 这一组事件。
+    -- 施法被打断时刷新目标的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_INTERRUPTED。
     -- 2 秒补正：由 updateCastAndChannel 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", UNIT_KEY)
+
     function eventFrame.UNIT_SPELLCAST_INTERRUPTED()
         updateCastAndChannel()
     end
+
+    -- 开始施法时刷新目标的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_START。
+    -- 2 秒补正：由 updateCastAndChannel 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_START", UNIT_KEY)
 
     function eventFrame.UNIT_SPELLCAST_START()
         updateCastAndChannel()
     end
 
+    -- 施法结束时刷新目标的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_STOP。
+    -- 2 秒补正：由 updateCastAndChannel 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_STOP", UNIT_KEY)
+
     function eventFrame.UNIT_SPELLCAST_STOP()
         updateCastAndChannel()
     end
+
+    -- 施法成功时刷新目标的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_SUCCEEDED。
+    -- 2 秒补正：由 updateCastAndChannel 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", UNIT_KEY)
 
     function eventFrame.UNIT_SPELLCAST_SUCCEEDED()
         updateCastAndChannel()
     end
 
+    -- 开始通道时刷新目标的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_CHANNEL_START。
+    -- 2 秒补正：由 updateCastAndChannel 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", UNIT_KEY)
+
     function eventFrame.UNIT_SPELLCAST_CHANNEL_START()
         updateCastAndChannel()
     end
+
+    -- 通道结束时刷新目标的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_CHANNEL_STOP。
+    -- 2 秒补正：由 updateCastAndChannel 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", UNIT_KEY)
 
     function eventFrame.UNIT_SPELLCAST_CHANNEL_STOP()
         updateCastAndChannel()
     end
 
+    -- 施法失败时刷新目标的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_FAILED。
+    -- 2 秒补正：由 updateCastAndChannel 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", UNIT_KEY)
+
     function eventFrame.UNIT_SPELLCAST_FAILED()
         updateCastAndChannel()
     end
+
+    -- 通道进度更新时刷新目标的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_CHANNEL_UPDATE。
+    -- 2 秒补正：由 updateCastAndChannel 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", UNIT_KEY)
 
     function eventFrame.UNIT_SPELLCAST_CHANNEL_UPDATE()
         updateCastAndChannel()
     end
 
+    -- 引导蓄力开始时刷新目标的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_EMPOWER_START。
+    -- 2 秒补正：由 updateCastAndChannel 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", UNIT_KEY)
+
     function eventFrame.UNIT_SPELLCAST_EMPOWER_START()
         updateCastAndChannel()
     end
 
+    -- 引导蓄力结束时刷新目标的施法显示。
+    -- 事件用途：处理 UNIT_SPELLCAST_EMPOWER_STOP。
+    -- 2 秒补正：由 updateCastAndChannel 单独补正。
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", UNIT_KEY)
+
     function eventFrame.UNIT_SPELLCAST_EMPOWER_STOP()
         updateCastAndChannel()
     end
-
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_START", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_STOP", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", UNIT_KEY)
 
     -- 更新施法和通道的进度颜色。
     -- 无可靠事件可持续驱动进度。
