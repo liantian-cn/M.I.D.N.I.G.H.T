@@ -117,6 +117,7 @@ class DruidRestoration(BaseRotation):
                 # if unit.exists and unit.alive:
                 party_members.append(cast(RestorationPartyMember, unit))
         party_members.append(cast(RestorationPartyMember, ctx.player))
+        # print(f"{ctx.player.castIcon=}")
 
         for member in party_members:
             unit_role = member.unitRole
@@ -147,6 +148,11 @@ class DruidRestoration(BaseRotation):
                 hot_count += 1
             if lifebloom_remaining > spell_queue_window:
                 hot_count += 1
+
+            if member.isPlayerCastingTarget:
+                if ctx.player.castIcon == "愈合":
+                    # print(f"{member.unitToken}正在被施法选中{health_base}")
+                    health_base = health_base + 15  # 假设玩家正在施放的愈合会被打断，那么就把这个愈合提供的血量加回基线里，数值越低说明越危险。
 
             # 先找出单位身上可驱散的 debuff，再按黑名单过滤。
             dispel_list = [debuff.title for debuff in member.debuff if (debuff.type in self.dispel_types)]
