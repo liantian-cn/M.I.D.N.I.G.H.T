@@ -24,6 +24,7 @@ local SORT_DIRECTION = Enum.UnitAuraSortDirection.Reverse
 
 After(2, function()
     for partyIndex = 1, 4 do
+        local eventFrame = CreateFrame("Frame")
         local UNIT_KEY = format("party%d", partyIndex)
         local BASE_X = 21 * partyIndex - 6
         local controller = CreateAuraController({
@@ -38,11 +39,10 @@ After(2, function()
         })
         controller.refreshAll()
 
-        local eventFrame = CreateFrame("Frame")
-
-        -- Aura 列表变化时按当前限制做整组刷新。
+        -- Aura 列表变化时按当前限制做整组刷新当前 party 槽位的减益显示。
         -- 事件用途：处理当前 party 槽位的减益结构变化。
         -- 当前没有 2 秒全量补正，只有 0.1 秒的剩余时间补正。
+        eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
         function eventFrame:UNIT_AURA(unitToken, info)
             -- 因为无法判断isHarmful还是isHelpful，所以只能全量刷新。这个问题在12.0.5修正。等那时候补回来。
 
@@ -73,22 +73,20 @@ After(2, function()
             end
         end
 
-        eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
-
         -- 队友旗标变化时重刷当前 party 槽位的减益显示。
         -- 事件用途：处理上下线和可交互状态变化。
         -- 当前没有单独 2 秒补正。
+        eventFrame:RegisterUnitEvent("UNIT_FLAGS", UNIT_KEY)
         function eventFrame:UNIT_FLAGS(unitToken)
             controller.refreshAll()
         end
-
-        eventFrame:RegisterUnitEvent("UNIT_FLAGS", UNIT_KEY)
 
         local GroupChangeOnFrame = false
 
         -- 队伍名单变化时重刷当前 party 槽位。
         -- 事件用途：处理 party 槽位整体换人。
         -- 当前没有单独 2 秒补正。
+        eventFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
         function eventFrame:GROUP_ROSTER_UPDATE()
             if GroupChangeOnFrame then
                 return
@@ -97,11 +95,10 @@ After(2, function()
             controller.refreshAll()
         end
 
-        eventFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
-
         -- 加入队伍时重刷当前 party 槽位。
         -- 事件用途：处理新 party 结构建立。
         -- 当前没有单独 2 秒补正。
+        eventFrame:RegisterEvent("GROUP_JOINED")
         function eventFrame:GROUP_JOINED()
             if GroupChangeOnFrame then
                 return
@@ -110,11 +107,10 @@ After(2, function()
             controller.refreshAll()
         end
 
-        eventFrame:RegisterEvent("GROUP_JOINED")
-
         -- 离开队伍时重刷当前 party 槽位。
         -- 事件用途：处理 party 槽位清空或前移。
         -- 当前没有单独 2 秒补正。
+        eventFrame:RegisterEvent("GROUP_LEFT")
         function eventFrame:GROUP_LEFT()
             if GroupChangeOnFrame then
                 return
@@ -123,11 +119,10 @@ After(2, function()
             controller.refreshAll()
         end
 
-        eventFrame:RegisterEvent("GROUP_LEFT")
-
         -- 新队伍形成时重刷当前 party 槽位。
         -- 事件用途：处理 party 槽位整体重建。
         -- 当前没有单独 2 秒补正。
+        eventFrame:RegisterEvent("GROUP_FORMED")
         function eventFrame:GROUP_FORMED()
             if GroupChangeOnFrame then
                 return
@@ -135,11 +130,6 @@ After(2, function()
             GroupChangeOnFrame = true
             controller.refreshAll()
         end
-
-        eventFrame:RegisterEvent("GROUP_FORMED")
-        eventFrame:SetScript("OnEvent", function(self, event, ...)
-            self[event](self, ...)
-        end)
 
         local fastTimeElapsed = -random() -- 随机初始时间，避免所有事件在同一帧更新
         -- local lowTimeElapsed = -random()      -- 当前未使用，保留 0.5 秒刷新档位结构
@@ -160,6 +150,10 @@ After(2, function()
             --     superLowTimeElapsed = superLowTimeElapsed - 2
             --     controller.refreshAll()
             -- end
+        end)
+
+        eventFrame:SetScript("OnEvent", function(self, event, ...)
+            self[event](self, ...)
         end)
     end
 end)

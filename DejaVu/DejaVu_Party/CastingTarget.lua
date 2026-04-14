@@ -26,6 +26,7 @@ local party_members = {
 }
 
 After(2, function()
+    local eventFrame = CreateFrame("Frame") -- 事件框架
     local cell = {
         player = Cell:New(61, 14),
         party1 = Cell:New(19, 24),
@@ -33,8 +34,6 @@ After(2, function()
         party3 = Cell:New(61, 24),
         party4 = Cell:New(82, 24),
     }
-    local eventFrame = CreateFrame("Frame") -- 事件框架
-
 
     local function setUnitCasting(unitToken)
         for k, c in pairs(cell) do
@@ -52,7 +51,8 @@ After(2, function()
 
     local currentCastingTarget = nil
 
-    -- 某个队友断线、离开可交互状态时刷新当前槽位
+    -- 玩家开始施法并发送目标名时，刷新被点名队友槽位。
+    -- 事件用途：记录当前施法目标并更新点名显示。
     eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_SENT", "player")
     function eventFrame:UNIT_SPELLCAST_SENT(unitTarget, targetName, castGUID, spellID)
         if not issecretvalue(targetName) then
@@ -68,6 +68,8 @@ After(2, function()
         end
     end
 
+    -- 玩家施法被打断时，清空当前点名队友槽位。
+    -- 事件用途：移除已记录的施法目标显示。
     eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", "player")
     function eventFrame:UNIT_SPELLCAST_INTERRUPTED()
         clearUnitCasting(currentCastingTarget)
@@ -75,6 +77,8 @@ After(2, function()
         -- print("施法被打断，清除施法目标")
     end
 
+    -- 玩家施法自然结束时，清空当前点名队友槽位。
+    -- 事件用途：移除已记录的施法目标显示。
     eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_STOP", "player")
     function eventFrame:UNIT_SPELLCAST_STOP()
         clearUnitCasting(currentCastingTarget)
