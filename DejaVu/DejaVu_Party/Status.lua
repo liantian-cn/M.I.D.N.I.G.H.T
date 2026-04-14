@@ -46,9 +46,9 @@ end
 
 After(2, function()
     for partyIndex = 1, 4 do
+        local eventFrame = CreateFrame("Frame")
         local UNIT_KEY = format("party%d", partyIndex)
         local BASE_X = 21 * partyIndex
-        local eventFrame = CreateFrame("Frame")
         local cell = {}
         local GetUnitAuraInstanceIDs = C_UnitAuras.GetUnitAuraInstanceIDs
         local zeroToOneCurve = CreateColorCurve()
@@ -212,6 +212,7 @@ After(2, function()
         -- 队伍成员变化时当前 party 槽位可能整体换人，直接全刷。
         -- 事件用途：处理 GROUP_ROSTER_UPDATE。
         -- 2 秒补正：除距离状态外，其余状态在 superLowTimeElapsed 里分项补正。
+        eventFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
         function eventFrame:GROUP_ROSTER_UPDATE()
             if GroupChangeOnFrame then
                 return
@@ -223,6 +224,7 @@ After(2, function()
         -- 玩家加入队伍后当前 party 槽位可能重排，直接全刷。
         -- 事件用途：处理 GROUP_JOINED。
         -- 2 秒补正：除距离状态外，其余状态在 superLowTimeElapsed 里分项补正。
+        eventFrame:RegisterEvent("GROUP_JOINED")
         function eventFrame:GROUP_JOINED()
             if GroupChangeOnFrame then
                 return
@@ -234,6 +236,7 @@ After(2, function()
         -- 玩家离队后当前 party 槽位可能清空或前移，直接全刷。
         -- 事件用途：处理 GROUP_LEFT。
         -- 2 秒补正：除距离状态外，其余状态在 superLowTimeElapsed 里分项补正。
+        eventFrame:RegisterEvent("GROUP_LEFT")
         function eventFrame:GROUP_LEFT()
             if GroupChangeOnFrame then
                 return
@@ -245,6 +248,7 @@ After(2, function()
         -- 新队伍形成时当前 party 槽位整体重建，直接全刷。
         -- 事件用途：处理 GROUP_FORMED。
         -- 2 秒补正：除距离状态外，其余状态在 superLowTimeElapsed 里分项补正。
+        eventFrame:RegisterEvent("GROUP_FORMED")
         function eventFrame:GROUP_FORMED()
             if GroupChangeOnFrame then
                 return
@@ -256,6 +260,7 @@ After(2, function()
         -- 职责指派变化时刷新职业和职责显示。
         -- 事件用途：处理 PLAYER_ROLES_ASSIGNED。
         -- 2 秒补正：由 updateClassAndRole 单独补正。
+        eventFrame:RegisterEvent("PLAYER_ROLES_ASSIGNED")
         function eventFrame:PLAYER_ROLES_ASSIGNED()
             updateClassAndRole()
         end
@@ -263,6 +268,7 @@ After(2, function()
         -- 某个队友重新上线或恢复可交互时刷新当前槽位。
         -- 事件用途：处理 PARTY_MEMBER_ENABLE。
         -- 2 秒补正：除距离状态外，其余状态在 superLowTimeElapsed 里分项补正。
+        eventFrame:RegisterEvent("PARTY_MEMBER_ENABLE")
         function eventFrame:PARTY_MEMBER_ENABLE(unitToken)
             if unitToken == UNIT_KEY then
                 updateAll()
@@ -272,6 +278,7 @@ After(2, function()
         -- 某个队友断线或失去可交互时刷新当前槽位。
         -- 事件用途：处理 PARTY_MEMBER_DISABLE。
         -- 2 秒补正：除距离状态外，其余状态在 superLowTimeElapsed 里分项补正。
+        eventFrame:RegisterEvent("PARTY_MEMBER_DISABLE")
         function eventFrame:PARTY_MEMBER_DISABLE(unitToken)
             if unitToken == UNIT_KEY then
                 updateAll()
@@ -281,6 +288,7 @@ After(2, function()
         -- Aura 变化时刷新友方异常状态。
         -- 事件用途：处理 UNIT_AURA。
         -- 2 秒补正：由 updateAura 单独补正。
+        eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
         function eventFrame:UNIT_AURA(unitToken, info)
             if info.isFullUpdate or info.removedAuraInstanceIDs or info.addedAuras then
                 updateAura()
@@ -290,6 +298,7 @@ After(2, function()
         -- 最大生命值变化时刷新血量百分比。
         -- 事件用途：处理 UNIT_MAXHEALTH。
         -- 2 秒补正：由 updateHealth 单独补正。
+        eventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", UNIT_KEY)
         function eventFrame:UNIT_MAXHEALTH(unitToken)
             updateHealth()
         end
@@ -297,6 +306,7 @@ After(2, function()
         -- 当前生命值变化时刷新血量百分比。
         -- 事件用途：处理 UNIT_HEALTH。
         -- 2 秒补正：由 updateHealth 单独补正。
+        eventFrame:RegisterUnitEvent("UNIT_HEALTH", UNIT_KEY)
         function eventFrame:UNIT_HEALTH(unitToken)
             updateHealth()
         end
@@ -304,6 +314,9 @@ After(2, function()
         -- 能量和能量制式变化时刷新能量百分比。
         -- 事件用途：处理 UNIT_POWER_UPDATE、UNIT_MAXPOWER、UNIT_DISPLAYPOWER。
         -- 2 秒补正：由 updatePower 单独补正。
+        eventFrame:RegisterUnitEvent("UNIT_POWER_UPDATE", UNIT_KEY)
+        eventFrame:RegisterUnitEvent("UNIT_MAXPOWER", UNIT_KEY)
+        eventFrame:RegisterUnitEvent("UNIT_DISPLAYPOWER", UNIT_KEY)
         function eventFrame:UNIT_POWER_UPDATE(unitToken)
             updatePower()
         end
@@ -319,6 +332,7 @@ After(2, function()
         -- 队友旗标变化时刷新存在、基础状态和距离。
         -- 事件用途：处理 UNIT_FLAGS。
         -- 2 秒补正：存在和基础状态有 2 秒补正，距离状态当前只有 0.5 秒轮询。
+        eventFrame:RegisterUnitEvent("UNIT_FLAGS", UNIT_KEY)
         function eventFrame:UNIT_FLAGS(unitToken)
             updateUnitExists()
             updateUnitBasicStatus()
@@ -328,6 +342,7 @@ After(2, function()
         -- 阵营可攻击性变化时刷新友敌和可攻击状态。
         -- 事件用途：处理 UNIT_FACTION。
         -- 2 秒补正：由 updateUnitBasicStatus 单独补正。
+        eventFrame:RegisterUnitEvent("UNIT_FACTION", UNIT_KEY)
         function eventFrame:UNIT_FACTION(unitToken)
             updateUnitBasicStatus()
         end
@@ -335,6 +350,7 @@ After(2, function()
         -- 当前目标变化时更新是否为目标，并顺手刷新一次距离。
         -- 事件用途：处理 PLAYER_TARGET_CHANGED。
         -- 2 秒补正：isTarget 有 2 秒补正，距离状态当前只有 0.5 秒轮询。
+        eventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
         function eventFrame:PLAYER_TARGET_CHANGED()
             updateUnitBasicStatus()
             updateRangeStatus()
@@ -343,32 +359,12 @@ After(2, function()
         -- 可交互性变化时刷新存在、基础状态和距离。
         -- 事件用途：处理 UNIT_TARGETABLE_CHANGED。
         -- 2 秒补正：存在和基础状态有 2 秒补正，距离状态当前只有 0.5 秒轮询。
+        eventFrame:RegisterUnitEvent("UNIT_TARGETABLE_CHANGED", UNIT_KEY)
         function eventFrame:UNIT_TARGETABLE_CHANGED(unitToken)
             updateUnitExists()
             updateUnitBasicStatus()
             updateRangeStatus()
         end
-
-        eventFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
-        eventFrame:RegisterEvent("GROUP_JOINED")
-        eventFrame:RegisterEvent("GROUP_LEFT")
-        eventFrame:RegisterEvent("GROUP_FORMED")
-        eventFrame:RegisterEvent("PLAYER_ROLES_ASSIGNED")
-        eventFrame:RegisterEvent("PARTY_MEMBER_ENABLE")
-        eventFrame:RegisterEvent("PARTY_MEMBER_DISABLE")
-        eventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
-        eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
-        eventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", UNIT_KEY)
-        eventFrame:RegisterUnitEvent("UNIT_HEALTH", UNIT_KEY)
-        eventFrame:RegisterUnitEvent("UNIT_POWER_UPDATE", UNIT_KEY)
-        eventFrame:RegisterUnitEvent("UNIT_MAXPOWER", UNIT_KEY)
-        eventFrame:RegisterUnitEvent("UNIT_DISPLAYPOWER", UNIT_KEY)
-        eventFrame:RegisterUnitEvent("UNIT_FLAGS", UNIT_KEY)
-        eventFrame:RegisterUnitEvent("UNIT_FACTION", UNIT_KEY)
-        eventFrame:RegisterUnitEvent("UNIT_TARGETABLE_CHANGED", UNIT_KEY)
-        eventFrame:SetScript("OnEvent", function(self, event, ...)
-            self[event](self, ...)
-        end)
 
         -- local fastTimeElapsed = -random()     -- 当前未使用，保留 0.1 秒刷新档位结构
         local lowTimeElapsed = -random()      -- 随机初始时间，避免所有队友格子在同一帧中速刷新
@@ -397,5 +393,9 @@ After(2, function()
         end)
 
         updateAll()
+
+        eventFrame:SetScript("OnEvent", function(self, event, ...)
+            self[event](self, ...)
+        end)
     end
 end)
