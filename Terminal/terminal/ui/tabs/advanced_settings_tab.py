@@ -48,11 +48,11 @@ class AdvancedSettingsTab(QWidget):
 
         self.fps_slider = QSlider(Qt.Orientation.Horizontal)
         self.fps_slider.setMinimum(1)
-        self.fps_slider.setMaximum(30)
-        self.fps_slider.setValue(15)
+        self.fps_slider.setMaximum(40)
+        self.fps_slider.setValue(20)
         self.fps_slider.valueChanged.connect(self._handle_fps_slider_changed)
 
-        self.fps_value_label = QLabel('15 FPS')
+        self.fps_value_label = QLabel('20 FPS')
 
         self.fps_row.addWidget(self.fps_slider, 1)
         self.fps_row.addWidget(self.fps_value_label)

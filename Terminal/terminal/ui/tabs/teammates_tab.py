@@ -47,6 +47,7 @@ class TeammatesTab(QWidget):
         ("unitIsInMeleeRange", "近战范围"),
         ("unitIsInCombat", "战斗中"),
         ("unitIsTarget", "当前目标"),
+        ("isPlayerCastingTarget", "是玩家当前施法目标"),
         ("unitHasBigDefense", "有大防御"),
         ("unitHasDispellableDebuff", "可驱散减益"),
         ("damage_absorbs", "伤害吸收"),

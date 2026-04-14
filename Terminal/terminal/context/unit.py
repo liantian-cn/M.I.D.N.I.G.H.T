@@ -188,6 +188,14 @@ class Unit:
         raise ContextError("field is not available for this unit type")
 
     @property
+    def isPlayerCastingTarget(self) -> bool:
+        if not self.exists:
+            return False
+        if self.unitType in ["player", "party"]:
+            return bool(self.status["isPlayerCastingTarget"])
+        raise ContextError("field is not available for this unit type")
+
+    @property
     def castIcon(self) -> str | None:
         if not self.exists:
             raise ContextError("unit does not exist")

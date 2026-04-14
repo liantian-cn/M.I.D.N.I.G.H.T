@@ -45,7 +45,7 @@ class MainWindow(QMainWindow):
         self.decode_state = 'idle'
         self.decode_error = '尚未解析'
         self.decode_result_is_stale = False
-        self.fps = 15
+        self.fps = 20
 
         self._capture_worker: CaptureWorker | None = None
         self._capture_worker_thread: QThread | None = None
