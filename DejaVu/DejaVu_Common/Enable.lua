@@ -51,6 +51,4 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         -- end
     end)
 
-    -- 首次刷新
-    updateCell()
 end)

@@ -101,25 +101,17 @@ After(2, function()
     -- 对应函数：updateCastingTarget
     eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_SENT", "player")
     function eventFrame:UNIT_SPELLCAST_SENT(unitTarget, targetName, castGUID, spellID)
-        local previousCastingTarget = currentCastingTarget
-        currentCastingTarget = nil
-
-        if not targetName or issecretvalue(targetName) then
-            updateClearCastingTarget(previousCastingTarget)
-            return
-        end
-
-        for _, partyUnit in pairs(party_members) do
-            if UnitExists(partyUnit) and (UnitName(partyUnit) == targetName) then
-                currentCastingTarget = partyUnit
-                -- print("当前施法目标:", partyUnit, targetName)
-                updateCastingTarget(partyUnit)
-                return
+        if not issecretvalue(targetName) then
+            for _, partyUnit in pairs(party_members) do
+                if UnitExists(partyUnit) and (UnitName(partyUnit) == targetName) then
+                    currentCastingTarget = partyUnit
+                    -- print("当前施法目标:", partyUnit, targetName)
+                    updateCastingTarget(partyUnit)
+                    break
+                end
             end
+            -- print(state.castTargetUnit, state.castTargetName, state.castTargetIndex)
         end
-
-        updateClearCastingTarget(previousCastingTarget)
-        -- print(state.castTargetUnit, state.castTargetName, state.castTargetIndex)
     end
 
     -- UNIT_SPELLCAST_INTERRUPTED
