@@ -74,6 +74,10 @@ After(2, function()
     -- 依赖事件更新：UNIT_SPELLCAST_INTERRUPTED、UNIT_SPELLCAST_STOP。
     -- 依赖定时刷新：无。
     local function updateClearCastingTarget(unitToken)
+        if not unitToken or not cell[unitToken] then
+            return
+        end
+
         cell[unitToken]:setCell(COLOR.BLACK)
     end
 
@@ -97,17 +101,25 @@ After(2, function()
     -- 对应函数：updateCastingTarget
     eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_SENT", "player")
     function eventFrame:UNIT_SPELLCAST_SENT(unitTarget, targetName, castGUID, spellID)
-        if not issecretvalue(targetName) then
-            for _, partyUnit in pairs(party_members) do
-                if UnitExists(partyUnit) and (UnitName(partyUnit) == targetName) then
-                    currentCastingTarget = partyUnit
-                    -- print("当前施法目标:", partyUnit, targetName)
-                    updateCastingTarget(partyUnit)
-                    break
-                end
-            end
-            -- print(state.castTargetUnit, state.castTargetName, state.castTargetIndex)
+        local previousCastingTarget = currentCastingTarget
+        currentCastingTarget = nil
+
+        if not targetName or issecretvalue(targetName) then
+            updateClearCastingTarget(previousCastingTarget)
+            return
         end
+
+        for _, partyUnit in pairs(party_members) do
+            if UnitExists(partyUnit) and (UnitName(partyUnit) == targetName) then
+                currentCastingTarget = partyUnit
+                -- print("当前施法目标:", partyUnit, targetName)
+                updateCastingTarget(partyUnit)
+                return
+            end
+        end
+
+        updateClearCastingTarget(previousCastingTarget)
+        -- print(state.castTargetUnit, state.castTargetName, state.castTargetIndex)
     end
 
     -- UNIT_SPELLCAST_INTERRUPTED
