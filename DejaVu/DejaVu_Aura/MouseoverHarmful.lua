@@ -75,8 +75,8 @@ After(2, function()
     -- UNIT_AURA
     -- 事件说明：预留 mouseover aura 变化时刷新整组 debuff 槽位的处理骨架，当前保持禁用。
     -- 对应函数：updateMouseoverHarmfulAuras
-    function eventFrame.UNIT_AURA(_, info)
-        updateMouseoverHarmfulAuras(info)
+    function eventFrame.UNIT_AURA(unitTarget, updateInfo)
+        updateMouseoverHarmfulAuras(updateInfo)
     end
     -- eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
 
@@ -99,7 +99,7 @@ After(2, function()
     -- UNIT_FLAGS
     -- 事件说明：预留鼠标指向单位旗标变化时刷新 mouseover debuff 槽位的处理骨架，当前保持禁用。
     -- 对应函数：pollMouseoverHarmfulAuras
-    function eventFrame.UNIT_FLAGS(_, _)
+    function eventFrame.UNIT_FLAGS(unitTarget)
         pollMouseoverHarmfulAuras()
     end
     -- eventFrame:RegisterUnitEvent("UNIT_FLAGS", UNIT_KEY)
@@ -126,8 +126,8 @@ After(2, function()
         -- end
     end)
 
-    eventFrame:SetScript("OnEvent", function(frame, event, ...)
-        frame[event](frame, ...)
+    eventFrame:SetScript("OnEvent", function(self, event, ...)
+        self[event](...)
     end)
 
     -- 首次刷新

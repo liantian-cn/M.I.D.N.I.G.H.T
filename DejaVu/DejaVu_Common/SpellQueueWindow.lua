@@ -39,6 +39,7 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
     -- 用途：显示延迟窗口配置值。
     -- 更新函数：updateSpellQueueWindow
     local cell = Cell:New(57, 9)
+    cell:setCellRGBA(20 / 255)
 
     -- 说明：根据延迟窗口配置值更新延迟窗口显示强度。
     -- 依赖事件更新：无
@@ -49,6 +50,4 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
     end
 
     spell_queue_window:register_callback(updateSpellQueueWindow)
-
-    updateSpellQueueWindow(spell_queue_window:get_value())
 end)

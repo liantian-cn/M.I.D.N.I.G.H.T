@@ -77,8 +77,8 @@ After(2, function()
     -- 事件说明：玩家减益结构变化时刷新玩家 Harmful Aura 列表。
     -- 对应函数：updateHarmfulAuras
     eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
-    function eventFrame.UNIT_AURA(_, _, info)
-        updateHarmfulAuras(info)
+    function eventFrame.UNIT_AURA(unitTarget, updateInfo)
+        updateHarmfulAuras(updateInfo)
     end
 
     -- 路由
@@ -102,8 +102,8 @@ After(2, function()
         -- end
     end)
 
-    eventFrame:SetScript("OnEvent", function(frame, event, ...)
-        frame[event](frame, ...)
+    eventFrame:SetScript("OnEvent", function(self, event, ...)
+        self[event](...)
     end)
 
     -- 首次刷新

@@ -47,6 +47,24 @@
 - 一个事件里如果直接调用多个刷新函数，第三行把实际调用的函数名写全。
 - 注释掉的旧事件代码也补同样格式，但保持注释。
 
+## 事件路由风格
+
+- 默认优先写 `function eventFrame.EVENT_NAME(payload...)`。
+- 这种点语法处理器，对应的 `OnEvent` 路由固定写成 `self[event](...)`。
+- 只有处理器明确写成 `function eventFrame:EVENT_NAME(...)` 时，才传 `self[event](self, ...)`。
+- 禁止为了省 unused warning 把 WoW 事件 payload 写成 `_`。
+- `UNIT_AURA` 这类事件，就算前一个参数暂时没用，也保留真实名字，例如：
+
+```lua
+eventFrame:SetScript("OnEvent", function(self, event, ...)
+    self[event](...)
+end)
+
+function eventFrame.UNIT_AURA(unitTarget, updateInfo)
+    updateAuras(updateInfo)
+end
+```
+
 ## 事件模块顺序
 
 - 标准事件模块顺序固定为：
