@@ -25,6 +25,9 @@ insert(ConfigRows, {
     bind_config = spell_queue_window, -- 绑定的配置对象
 })
 
+-- 说明：配置变更时打印当前延迟窗口值。
+-- 依赖事件更新：无
+-- 依赖定时刷新：无
 local function spell_queue_window_updater(value)
     print("延迟窗口设置为：" .. value)
 end

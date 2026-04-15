@@ -23,6 +23,7 @@
 - 想学会怎么查 WoW 12.x API：看 `06_wow_api_query_playbook.md`
 - 想快速避开高风险 secret API：看 `07_secret_values_api_checklist.md`
 - 想看“少计算、多显示”的界面模式：看 `08_display_first_patterns.md`
+- 想对齐当前个人的 cell / update / event 注释与结构风格：看 `09_personal_style_cell_event_comments.md`
 
 ## 推荐查询流程
 
