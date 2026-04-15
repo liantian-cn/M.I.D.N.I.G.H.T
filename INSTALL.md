@@ -25,23 +25,24 @@
 - 下载`https://github.com/git-for-windows/git/releases/download/v2.53.0.windows.2/Git-2.53.0.2-64-bit.exe`
 - 安装
 
-
-## 安装 M.I.D.N.I.G.H.T
+## 安装 MIDNIGHT
 
 ### 从github克隆 M.I.D.N.I.G.H.T repo
-- `git clone https://github.com/liantian-cn/M.I.D.N.I.G.H.T.git D:\MIDNIGHT`
+
+- 最好clone到和魔兽世界相同的盘符，便于后续更新。
+- `git clone https://github.com/liantian-cn/M.I.D.N.I.G.H.T.git X:\MIDNIGHT`
 
 ### 安装Terminal组件的依赖
 
-- `cd D:\MIDNIGHT\Terminal`
+- `cd X:\MIDNIGHT\Terminal`
 - `pip install -r requirements.txt`
 - 验证，执行`python main.py`
 
 ### 复制DejaVu组件到游戏插件目录
 
 - 安装：若《魔兽世界》正式服客户端的安装路径是`X:\Path_to_WOW\_retail_\`，则插件路径是`X:\Path_to_WOW\_retail_\Interface\AddOns\`。
-- 验证：将D:\MIDNIGHT\DejaVu目录复制到插件路径后，检测`X:\Path_to_WOW\_retail_\Interface\AddOns\DejaVu\DejaVu.toc`文件是否存在。
-
+- 如果魔兽世界目录和相同盘符，则创建`DejaVu`目录下每个`DejaVu_`开头的子目录，符号链接到``X:\Path_to_WOW\_retail_\Interface\AddOns\`，比如 `New-Item -ItemType SymbolicLink -Path "X:\World of Warcraft\_retail_\Interface\AddOns\DejaVu_DruidGuardian" -Target "X:\MIDNIGHT\DejaVu\DejaVu_DruidGuardian"`
+- 验证：检测`X:\Path_to_WOW\_retail_\Interface\AddOns\DejaVu_Core\DejaVu_Core.toc`文件是否存在。
 
 ## 升级
 
