@@ -29,63 +29,78 @@ After(2, function()
         sortDirection = SORT_DIRECTION,
         colorMode = "Harmful",
     })
-    controller.refreshAll()
 
-    -- Aura 列表变化时刷新 focus 的整组 debuff 槽位。
-    -- 事件用途：处理 focus 的 debuff 结构变化。
+    -- 说明：全量刷新 focus 的减益显示。
+    -- 依赖事件更新：UNIT_AURA、PLAYER_FOCUS_CHANGED、UNIT_FLAGS。
+    -- 依赖定时刷新：无。
+    local function refreshAll()
+        controller.refreshAll()
+    end
+
+    -- 说明：更新 focus 所有减益的剩余时间文本。
+    -- 依赖事件更新：无。
+    -- 依赖定时刷新：0.1 秒。
+    local function updateRemainingAll()
+        controller.updateRemainingAll()
+    end
+
+    -- UNIT_AURA
+    -- 事件说明：focus 的 Aura 列表变化时，按当前 API 限制刷新减益显示。
+    -- 对应函数：refreshAll
     eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
     function eventFrame:UNIT_AURA(unitToken, info)
-        -- 因为无法判断isHarmful还是isHelpful，所以只能全量刷新。这个问题在12.0.5修正。等那时候补回来。
-
+        -- 因为无法判断 isHarmful 还是 isHelpful，所以只能全量刷新。这个问题在 12.0.5 修正。等那时补回来。
         if info.isFullUpdate then
-            controller.refreshAll()
+            refreshAll()
             return
         end
         if info.removedAuraInstanceIDs then
             -- for _, instanceID in ipairs(info.removedAuraInstanceIDs) do
             --     controller.removeAura(instanceID)
             -- end
-            controller.refreshAll() -- 临时代替，等12.0.5修正API后再改回来
-            return                  -- 因为完全刷新了，所以return就行了
+            refreshAll() -- 临时代替，等 12.0.5 修正 API 后再改回。
+            return       -- 因为完全刷新了，所以 return 就行了。
         end
         if info.addedAuras then
             -- for _, aura in ipairs(info.addedAuras) do
             --     controller.addAura(aura.auraInstanceID)
             -- end
-            controller.refreshAll() -- 临时代替，等12.0.5修正API后再改回来
-            return                  -- 因为完全刷新了，所以return就行了
+            refreshAll() -- 临时代替，等 12.0.5 修正 API 后再改回。
+            return       -- 因为完全刷新了，所以 return 就行了。
         end
         if info.updatedAuraInstanceIDs then
             -- for _, instanceID in ipairs(info.updatedAuraInstanceIDs) do
             --     controller.updateRemaining(instanceID)
             -- end
-            -- 暂时什么都不用做 临时代替，等12.0.5修正API后再改回来
-            return -- 因为完全刷新了，所以return就行了
+            -- 暂时什么都不用做，等 12.0.5 修正 API 后再改回来。
+            return -- 因为完全刷新了，所以 return 就行了。
         end
     end
 
-    -- 切换焦点单位时刷新 focus 的整组 debuff 槽位。
-    -- 事件用途：处理 focus 槽位整体换人。
+    -- PLAYER_FOCUS_CHANGED
+    -- 事件说明：切换 focus 时刷新整组减益显示。
+    -- 对应函数：refreshAll
     eventFrame:RegisterEvent("PLAYER_FOCUS_CHANGED")
     function eventFrame:PLAYER_FOCUS_CHANGED()
-        controller.refreshAll()
+        refreshAll()
     end
 
-    -- 焦点旗标变化时刷新 focus 的整组 debuff 槽位。
-    -- 事件用途：处理 focus 可交互状态变化。
+    -- UNIT_FLAGS
+    -- 事件说明：focus 标记状态变化时刷新整组减益显示。
+    -- 对应函数：refreshAll
     eventFrame:RegisterUnitEvent("UNIT_FLAGS", UNIT_KEY)
     function eventFrame:UNIT_FLAGS(unitToken)
-        controller.refreshAll()
+        refreshAll()
     end
 
-    local fastTimeElapsed = -random()     -- 随机初始时间，避免所有事件在同一帧更新
-    -- local lowTimeElapsed = -random()      -- 当前未使用，保留 0.5 秒刷新档位结构
-    -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构
+    local fastTimeElapsed = -random()     -- 随机初始时间，避免所有事件在同一帧更新。
+    -- local lowTimeElapsed = -random()      -- 当前未使用，保留 0.5 秒刷新档位结构。
+    -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构。
     eventFrame:HookScript("OnUpdate", function(frame, elapsed)
         fastTimeElapsed = fastTimeElapsed + elapsed
         if fastTimeElapsed > 0.1 then
             fastTimeElapsed = fastTimeElapsed - 0.1
-            controller.updateRemainingAll()
+            updateRemainingAll()
         end
         -- lowTimeElapsed = lowTimeElapsed + elapsed
         -- if lowTimeElapsed > 0.5 then
@@ -94,11 +109,13 @@ After(2, function()
         -- superLowTimeElapsed = superLowTimeElapsed + elapsed
         -- if superLowTimeElapsed > 2 then
         --     superLowTimeElapsed = superLowTimeElapsed - 2
-        --     controller.refreshAll()
+        --     refreshAll()
         -- end
     end)
 
     eventFrame:SetScript("OnEvent", function(self, event, ...)
         self[event](self, ...)
     end)
+
+    refreshAll()
 end)
