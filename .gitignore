@@ -2,4 +2,5 @@
 /Terminal/.context
 DejaVu/AGENTS.md
 Terminal/AGENTS.md
-.codex
+.codex/*
+!.codex/config.toml
