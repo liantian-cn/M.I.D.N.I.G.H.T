@@ -11,7 +11,7 @@ addonTable.FontPath = "Interface\\Addons\\" .. addonName .. "\\PixNum.ttf"
 
 local SIZE = {}
 
-local scale = 1
+local scale = 4
 
 local function InitializeSize()              -- 初始化尺寸
     SIZE = {                                 -- 尺寸表主体
