@@ -1,7 +1,6 @@
 local addonName, addonTable = ... -- 插件入口固定写法
 
 -- Lua 原生函数
-local ipairs = ipairs
 local After = C_Timer.After
 local random = math.random
 local CreateFrame = CreateFrame
@@ -18,7 +17,10 @@ local SORT_RULE = Enum.UnitAuraSortRule.Default
 local SORT_DIRECTION = Enum.UnitAuraSortDirection.Normal
 
 After(2, function()
+    -- 先构建 eventFrame
     local eventFrame = CreateFrame("Frame")
+
+    -- 构建 aura 控制器
     local controller = CreateAuraController({
         unitKey = UNIT_KEY,
         auraFilter = AURA_FILTER,
@@ -29,14 +31,12 @@ After(2, function()
         sortDirection = SORT_DIRECTION,
         colorMode = "Harmful",
     })
-    controller.refreshAll()
 
-    -- 预留鼠标指向 aura 事件处理骨架。
-    -- 事件用途：如果后续找到可靠的 mouseover aura 事件，可复用这里。
-    -- 当前没有注册，也没有 2 秒补正；实际刷新靠 0.5 秒轮询。
-    function eventFrame:UNIT_AURA(unitToken, info)
-        -- 因为无法判断isHarmful还是isHelpful，所以只能全量刷新。这个问题在12.0.5修正。等那时候补回来。
-
+    -- 构建 update 函数
+    -- 说明：处理鼠标指向 Harmful Aura 的结构变化，必要时全量刷新整组槽位。
+    -- 依赖事件更新：UNIT_AURA。
+    -- 依赖定时刷新：无。
+    local function updateMouseoverHarmfulAuras(info)
         if info.isFullUpdate then
             controller.refreshAll()
             return
@@ -64,38 +64,51 @@ After(2, function()
         end
     end
 
-    -- function eventFrame:UPDATE_MOUSEOVER_UNIT()
-    --     -- controller.refreshAll()
-    -- end
+    -- 说明：按当前 mouseover 单位做轮询全量刷新，补足没有稳定事件时的显示更新。
+    -- 依赖事件更新：无。
+    -- 依赖定时刷新：0.5 秒。
+    local function pollMouseoverHarmfulAuras()
+        controller.refreshAll()
+    end
 
-    -- function eventFrame:CURSOR_CHANGED()
-    --     controller.refreshAll()
-    -- end
-
-    -- function eventFrame:UNIT_FLAGS(unitToken)
-    --     controller.refreshAll()
-    -- end
-
-    -- 鼠标指向 aura 变化时刷新 mouseover 的整组 debuff 槽位。
-    -- 事件用途：预留 UNIT_AURA 的注册位置；当前保持禁用。
+    -- 事件注册和事件函数
+    -- UNIT_AURA
+    -- 事件说明：预留 mouseover aura 变化时刷新整组 debuff 槽位的处理骨架，当前保持禁用。
+    -- 对应函数：updateMouseoverHarmfulAuras
+    function eventFrame.UNIT_AURA(_, info)
+        updateMouseoverHarmfulAuras(info)
+    end
     -- eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
 
-    -- 鼠标切换目标时刷新 mouseover 的整组 debuff 槽位。
-    -- 事件用途：预留 UPDATE_MOUSEOVER_UNIT 的注册位置；当前保持禁用。
-    -- eventFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT") -- 当鼠标移开时不会触发UPDATE_MOUSEOVER_UNIT事件，所以只能放弃
+    -- UPDATE_MOUSEOVER_UNIT
+    -- 事件说明：预留鼠标切换目标时刷新 mouseover debuff 槽位的处理骨架，当前保持禁用。
+    -- 对应函数：pollMouseoverHarmfulAuras
+    function eventFrame.UPDATE_MOUSEOVER_UNIT()
+        pollMouseoverHarmfulAuras()
+    end
+    -- eventFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT") -- 当鼠标移开时不会触发 UPDATE_MOUSEOVER_UNIT 事件，所以只能放弃
 
-    -- 鼠标光标变化时刷新 mouseover 的整组 debuff 槽位。
-    -- 事件用途：预留 CURSOR_CHANGED 的注册位置；当前保持禁用。
+    -- CURSOR_CHANGED
+    -- 事件说明：预留鼠标光标变化时刷新 mouseover debuff 槽位的处理骨架，当前保持禁用。
+    -- 对应函数：pollMouseoverHarmfulAuras
+    function eventFrame.CURSOR_CHANGED()
+        pollMouseoverHarmfulAuras()
+    end
     -- eventFrame:RegisterEvent("CURSOR_CHANGED")
 
-    -- 鼠标指向单位旗标变化时刷新 mouseover 的整组 debuff 槽位。
-    -- 事件用途：预留 UNIT_FLAGS 的注册位置；当前保持禁用。
+    -- UNIT_FLAGS
+    -- 事件说明：预留鼠标指向单位旗标变化时刷新 mouseover debuff 槽位的处理骨架，当前保持禁用。
+    -- 对应函数：pollMouseoverHarmfulAuras
+    function eventFrame.UNIT_FLAGS(_, _)
+        pollMouseoverHarmfulAuras()
+    end
     -- eventFrame:RegisterUnitEvent("UNIT_FLAGS", UNIT_KEY)
 
+    -- 路由
     -- local fastTimeElapsed = -random()     -- 当前未使用，保留 0.1 秒刷新档位结构
     local lowTimeElapsed = -random()
     -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构
-    eventFrame:HookScript("OnUpdate", function(frame, elapsed)
+    eventFrame:HookScript("OnUpdate", function(_, elapsed)
         -- fastTimeElapsed = fastTimeElapsed + elapsed
         -- if fastTimeElapsed > 0.1 then
         --     fastTimeElapsed = fastTimeElapsed - 0.1
@@ -105,7 +118,7 @@ After(2, function()
         lowTimeElapsed = lowTimeElapsed + elapsed
         if lowTimeElapsed > 0.5 then
             lowTimeElapsed = lowTimeElapsed - 0.5
-            controller.refreshAll()
+            pollMouseoverHarmfulAuras()
         end
         -- superLowTimeElapsed = superLowTimeElapsed + elapsed
         -- if superLowTimeElapsed > 2 then
@@ -113,9 +126,12 @@ After(2, function()
         -- end
     end)
 
-    eventFrame:SetScript("OnEvent", function(self, event, ...)
-        self[event](self, ...)
+    eventFrame:SetScript("OnEvent", function(frame, event, ...)
+        frame[event](frame, ...)
     end)
+
+    -- 首次刷新
+    controller.refreshAll()
 end)
 
 -- 鼠标指向没有事件精准捕获。干脆.5秒更新一次。而且时间无需更新，毕竟指向要在变。

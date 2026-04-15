@@ -1,7 +1,6 @@
 local addonName, addonTable = ... -- 插件入口固定写法
 
 -- Lua 原生函数
-local ipairs = ipairs
 local After = C_Timer.After
 local random = math.random
 local CreateFrame = CreateFrame
@@ -18,7 +17,10 @@ local SORT_RULE = Enum.UnitAuraSortRule.Default
 local SORT_DIRECTION = Enum.UnitAuraSortDirection.Reverse
 
 After(2, function()
+    -- 先构建 eventFrame
     local eventFrame = CreateFrame("Frame")
+
+    -- 构建 aura 控制器
     local controller = CreateAuraController({
         unitKey = UNIT_KEY,
         auraFilter = AURA_FILTER,
@@ -29,15 +31,12 @@ After(2, function()
         sortDirection = SORT_DIRECTION,
         colorMode = "Helpful",
     })
-    controller.refreshAll()
 
-    -- 玩家增益结构变化时刷新玩家 Aura 列表。
-    -- 刷新对象：当前控制器管理的玩家 Helpful Aura 整组结构。
-    eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
-
-    function eventFrame:UNIT_AURA(unitToken, info)
-        -- 因为无法判断isHarmful还是isHelpful，所以只能全量刷新。这个问题在12.0.5修正。等那时候补回来。
-
+    -- 构建 update 函数
+    -- 说明：处理玩家 Helpful Aura 的结构变化，必要时全量刷新整组槽位。
+    -- 依赖事件更新：UNIT_AURA。
+    -- 依赖定时刷新：无。
+    local function updateHelpfulAuras(info)
         if info.isFullUpdate then
             controller.refreshAll()
             return
@@ -65,14 +64,31 @@ After(2, function()
         end
     end
 
+    -- 说明：批量更新时间相关显示，不重排 aura 结构。
+    -- 依赖事件更新：无。
+    -- 依赖定时刷新：0.1 秒。
+    local function updateHelpfulAuraRemaining()
+        controller.updateRemainingAll()
+    end
+
+    -- 事件注册和事件函数
+    -- UNIT_AURA
+    -- 事件说明：玩家增益结构变化时刷新玩家 Helpful Aura 列表。
+    -- 对应函数：updateHelpfulAuras
+    eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
+    function eventFrame.UNIT_AURA(_, info)
+        updateHelpfulAuras(info)
+    end
+
+    -- 路由
     local fastTimeElapsed = -random()     -- 随机初始时间，避免所有事件在同一帧更新
     -- local lowTimeElapsed = -random()      -- 当前未使用，保留 0.5 秒刷新档位结构
     -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构
-    eventFrame:HookScript("OnUpdate", function(frame, elapsed)
+    eventFrame:HookScript("OnUpdate", function(_, elapsed)
         fastTimeElapsed = fastTimeElapsed + elapsed
         if fastTimeElapsed > 0.1 then
             fastTimeElapsed = fastTimeElapsed - 0.1
-            controller.updateRemainingAll()
+            updateHelpfulAuraRemaining()
         end
         -- lowTimeElapsed = lowTimeElapsed + elapsed
         -- if lowTimeElapsed > 0.5 then
@@ -85,7 +101,10 @@ After(2, function()
         -- end
     end)
 
-    eventFrame:SetScript("OnEvent", function(self, event, ...)
-        self[event](self, ...)
+    eventFrame:SetScript("OnEvent", function(frame, event, ...)
+        frame[event](frame, ...)
     end)
+
+    -- 首次刷新
+    controller.refreshAll()
 end)
