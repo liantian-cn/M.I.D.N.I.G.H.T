@@ -77,7 +77,7 @@ After(2, function()
     -- 事件说明：玩家减益结构变化时刷新玩家 Harmful Aura 列表。
     -- 对应函数：updateHarmfulAuras
     eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
-    function eventFrame.UNIT_AURA(_, info)
+    function eventFrame.UNIT_AURA(_, _, info)
         updateHarmfulAuras(info)
     end
 

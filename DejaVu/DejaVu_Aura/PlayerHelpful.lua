@@ -76,7 +76,7 @@ After(2, function()
     -- 事件说明：玩家增益结构变化时刷新玩家 Helpful Aura 列表。
     -- 对应函数：updateHelpfulAuras
     eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
-    function eventFrame.UNIT_AURA(_, info)
+    function eventFrame.UNIT_AURA(_, _, info)
         updateHelpfulAuras(info)
     end
 
