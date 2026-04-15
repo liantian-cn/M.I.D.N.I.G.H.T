@@ -12,19 +12,27 @@ local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
 
 After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
-    local cell = Cell:New(54, 9) -- 闪烁 cell，用于判断插帧
+    local eventFrame = CreateFrame("Frame")
+
+    -- x:54 y:9
+    -- 用途：闪烁测试指示。
+    -- 更新函数：updateCell
+    local cell = Cell:New(54, 9)
     local flashValue = true
 
+    -- 说明：交替显示白色与黑色，用于闪烁测试。
+    -- 依赖事件更新：无。
+    -- 依赖定时刷新：0.1 秒。
     local function updateCell()
         cell:setCellBoolean(flashValue, COLOR.WHITE, COLOR.BLACK)
         flashValue = not flashValue
     end
 
-    local eventFrame = CreateFrame("Frame")
-    local fastTimeElapsed = -random() -- 随机初始时间，避免所有事件在同一帧更新
-    -- local lowTimeElapsed = -random() -- 当前未使用，保留 0.5 秒刷新档位结构
-    -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构
-    eventFrame:HookScript("OnUpdate", function(frame, elapsed)
+    -- 定时路由：每 0.1 秒刷新一次闪烁状态。
+    local fastTimeElapsed = -random()
+    -- local lowTimeElapsed = -random() -- 当前未使用，保留 0.5 秒刷新档位结构。
+    -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构。
+    eventFrame:HookScript("OnUpdate", function(_, elapsed)
         fastTimeElapsed = fastTimeElapsed + elapsed
         if fastTimeElapsed > 0.1 then
             fastTimeElapsed = fastTimeElapsed - 0.1
@@ -41,4 +49,7 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         --     updateCell()
         -- end
     end)
+
+    -- 首次刷新
+    updateCell()
 end)

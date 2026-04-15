@@ -15,8 +15,15 @@ local Cell = DejaVu.Cell
 
 After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
     local eventFrame = CreateFrame("Frame")
-    local cell = Cell:New(58, 9) -- 记录鼠标正在使用
 
+    -- x:58 y:9
+    -- 用途：显示玩家当前是否正在使用鼠标。
+    -- 更新函数：updateCell
+    local cell = Cell:New(58, 9)
+
+    -- 说明：根据鼠标转向和鼠标按键状态刷新鼠标使用标记。
+    -- 依赖事件更新：PLAYER_STARTED_TURNING、PLAYER_STOPPED_TURNING。
+    -- 依赖定时刷新：0.1 秒。
     local function updateCell()
         local useMouse = IsMouselooking()
             or IsMouseButtonDown("LeftButton")
@@ -27,24 +34,27 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         cell:setCellBoolean(useMouse, COLOR.STATUS_BOOLEAN.USE_MOUSE, COLOR.BLACK)
     end
 
-    local fastTimeElapsed = -random() -- 随机初始时间，避免所有事件在同一帧更新
-    -- local lowTimeElapsed = -random() -- 当前未使用，保留 0.5 秒刷新档位结构
-    -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构
-
-    -- 监听转向开始，用事件触发即时刷新鼠标使用状态。
+    -- PLAYER_STARTED_TURNING
+    -- 事件说明：玩家开始转向时立即刷新鼠标使用状态。
+    -- 对应函数：updateCell
     eventFrame:RegisterEvent("PLAYER_STARTED_TURNING")
     function eventFrame:PLAYER_STARTED_TURNING()
         updateCell()
     end
 
-    -- 监听转向结束，用事件触发即时刷新鼠标使用状态。
+    -- PLAYER_STOPPED_TURNING
+    -- 事件说明：玩家停止转向时立即刷新鼠标使用状态。
+    -- 对应函数：updateCell
     eventFrame:RegisterEvent("PLAYER_STOPPED_TURNING")
     function eventFrame:PLAYER_STOPPED_TURNING()
         updateCell()
     end
 
-    -- 保持周期性轮询，覆盖按键按下等不会触发上述事件的鼠标输入。
-    eventFrame:HookScript("OnUpdate", function(frame, elapsed)
+    -- 定时路由：每 0.1 秒轮询鼠标按键状态，补足事件无法覆盖的输入。
+    local fastTimeElapsed = -random()
+    -- local lowTimeElapsed = -random() -- 当前未使用，保留 0.5 秒刷新档位结构。
+    -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构。
+    eventFrame:HookScript("OnUpdate", function(_, elapsed)
         fastTimeElapsed = fastTimeElapsed + elapsed
         if fastTimeElapsed > 0.1 then
             fastTimeElapsed = fastTimeElapsed - 0.1
@@ -61,7 +71,11 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         --     updateCell()
         -- end
     end)
+
     eventFrame:SetScript("OnEvent", function(self, event, ...)
         self[event](self, ...)
     end)
+
+    -- 首次刷新
+    updateCell()
 end)
