@@ -48,12 +48,20 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:55 y:12
+        -- 用途：显示铁木树皮血量阈值配置。
+        -- 更新函数：set_restoration_ironbark_hp_threshold
         local restoration_ironbark_hp_threshold_cell = Cell:New(55, 12)
+
+        -- 说明：根据铁木树皮血量阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_restoration_ironbark_hp_threshold(value)
             restoration_ironbark_hp_threshold_cell:setCellRGBA(value / 255)
         end
-        set_restoration_ironbark_hp_threshold(restoration_ironbark_hp_threshold:get_value())
+
         restoration_ironbark_hp_threshold:register_callback(set_restoration_ironbark_hp_threshold)
+        set_restoration_ironbark_hp_threshold(restoration_ironbark_hp_threshold:get_value())
     end)
 end
 do
@@ -74,12 +82,20 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:56 y:12
+        -- 用途：显示树皮术血量阈值配置。
+        -- 更新函数：set_restoration_barkskin_hp_threshold
         local restoration_barkskin_hp_threshold_cell = Cell:New(56, 12)
+
+        -- 说明：根据树皮术血量阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_restoration_barkskin_hp_threshold(value)
             restoration_barkskin_hp_threshold_cell:setCellRGBA(value / 255)
         end
-        set_restoration_barkskin_hp_threshold(restoration_barkskin_hp_threshold:get_value())
+
         restoration_barkskin_hp_threshold:register_callback(set_restoration_barkskin_hp_threshold)
+        set_restoration_barkskin_hp_threshold(restoration_barkskin_hp_threshold:get_value())
     end)
 end
 
@@ -101,12 +117,20 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:57 y:12
+        -- 用途：显示万灵队伍血量阈值配置。
+        -- 更新函数：set_restoration_convoke_party_hp_threshold
         local restoration_convoke_party_hp_threshold_cell = Cell:New(57, 12)
+
+        -- 说明：根据万灵队伍血量阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_restoration_convoke_party_hp_threshold(value)
             restoration_convoke_party_hp_threshold_cell:setCellRGBA(value / 255)
         end
-        set_restoration_convoke_party_hp_threshold(restoration_convoke_party_hp_threshold:get_value())
+
         restoration_convoke_party_hp_threshold:register_callback(set_restoration_convoke_party_hp_threshold)
+        set_restoration_convoke_party_hp_threshold(restoration_convoke_party_hp_threshold:get_value())
     end)
 end
 
@@ -128,12 +152,20 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:58 y:12
+        -- 用途：显示万灵单体血量阈值配置。
+        -- 更新函数：set_restoration_convoke_single_hp_threshold
         local restoration_convoke_single_hp_threshold_cell = Cell:New(58, 12)
+
+        -- 说明：根据万灵单体血量阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_restoration_convoke_single_hp_threshold(value)
             restoration_convoke_single_hp_threshold_cell:setCellRGBA(value / 255)
         end
-        set_restoration_convoke_single_hp_threshold(restoration_convoke_single_hp_threshold:get_value())
+
         restoration_convoke_single_hp_threshold:register_callback(set_restoration_convoke_single_hp_threshold)
+        set_restoration_convoke_single_hp_threshold(restoration_convoke_single_hp_threshold:get_value())
     end)
 end
 
@@ -155,12 +187,20 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:59 y:12
+        -- 用途：显示野性成长血量阈值配置。
+        -- 更新函数：set_restoration_wild_growth_hp_threshold
         local restoration_wild_growth_hp_threshold_cell = Cell:New(59, 12)
+
+        -- 说明：根据野性成长血量阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_restoration_wild_growth_hp_threshold(value)
             restoration_wild_growth_hp_threshold_cell:setCellRGBA(value / 255)
         end
-        set_restoration_wild_growth_hp_threshold(restoration_wild_growth_hp_threshold:get_value())
+
         restoration_wild_growth_hp_threshold:register_callback(set_restoration_wild_growth_hp_threshold)
+        set_restoration_wild_growth_hp_threshold(restoration_wild_growth_hp_threshold:get_value())
     end)
 end
 
@@ -182,12 +222,20 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:60 y:12
+        -- 用途：显示宁静队伍血量阈值配置。
+        -- 更新函数：set_restoration_tranquility_party_hp_threshold
         local restoration_tranquility_party_hp_threshold_cell = Cell:New(60, 12)
+
+        -- 说明：根据宁静队伍血量阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_restoration_tranquility_party_hp_threshold(value)
             restoration_tranquility_party_hp_threshold_cell:setCellRGBA(value / 255)
         end
-        set_restoration_tranquility_party_hp_threshold(restoration_tranquility_party_hp_threshold:get_value())
+
         restoration_tranquility_party_hp_threshold:register_callback(set_restoration_tranquility_party_hp_threshold)
+        set_restoration_tranquility_party_hp_threshold(restoration_tranquility_party_hp_threshold:get_value())
     end)
 end
 
@@ -209,12 +257,20 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:61 y:12
+        -- 用途：显示自然迅捷血量阈值配置。
+        -- 更新函数：set_restoration_nature_swiftness_hp_threshold
         local restoration_nature_swiftness_hp_threshold_cell = Cell:New(61, 12)
+
+        -- 说明：根据自然迅捷血量阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_restoration_nature_swiftness_hp_threshold(value)
             restoration_nature_swiftness_hp_threshold_cell:setCellRGBA(value / 255)
         end
-        set_restoration_nature_swiftness_hp_threshold(restoration_nature_swiftness_hp_threshold:get_value())
+
         restoration_nature_swiftness_hp_threshold:register_callback(set_restoration_nature_swiftness_hp_threshold)
+        set_restoration_nature_swiftness_hp_threshold(restoration_nature_swiftness_hp_threshold:get_value())
     end)
 end
 
@@ -236,12 +292,20 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:62 y:12
+        -- 用途：显示迅捷治愈血量阈值配置。
+        -- 更新函数：set_restoration_swiftmend_hp_threshold
         local restoration_swiftmend_hp_threshold_cell = Cell:New(62, 12)
+
+        -- 说明：根据迅捷治愈血量阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_restoration_swiftmend_hp_threshold(value)
             restoration_swiftmend_hp_threshold_cell:setCellRGBA(value / 255)
         end
-        set_restoration_swiftmend_hp_threshold(restoration_swiftmend_hp_threshold:get_value())
+
         restoration_swiftmend_hp_threshold:register_callback(set_restoration_swiftmend_hp_threshold)
+        set_restoration_swiftmend_hp_threshold(restoration_swiftmend_hp_threshold:get_value())
     end)
 end
 
@@ -263,12 +327,20 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:63 y:12
+        -- 用途：显示迅捷治愈人数阈值配置。
+        -- 更新函数：set_restoration_swiftmend_count_threshold
         local restoration_swiftmend_count_threshold_cell = Cell:New(63, 12)
+
+        -- 说明：根据迅捷治愈人数阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_restoration_swiftmend_count_threshold(value)
             restoration_swiftmend_count_threshold_cell:setCellRGBA(value * 20 / 255)
         end
-        set_restoration_swiftmend_count_threshold(restoration_swiftmend_count_threshold:get_value())
+
         restoration_swiftmend_count_threshold:register_callback(set_restoration_swiftmend_count_threshold)
+        set_restoration_swiftmend_count_threshold(restoration_swiftmend_count_threshold:get_value())
     end)
 end
 
@@ -290,12 +362,20 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:64 y:12
+        -- 用途：显示愈合血量阈值配置。
+        -- 更新函数：set_restoration_regrowth_hp_threshold
         local restoration_regrowth_hp_threshold_cell = Cell:New(64, 12)
+
+        -- 说明：根据愈合血量阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_restoration_regrowth_hp_threshold(value)
             restoration_regrowth_hp_threshold_cell:setCellRGBA(value / 255)
         end
-        set_restoration_regrowth_hp_threshold(restoration_regrowth_hp_threshold:get_value())
+
         restoration_regrowth_hp_threshold:register_callback(set_restoration_regrowth_hp_threshold)
+        set_restoration_regrowth_hp_threshold(restoration_regrowth_hp_threshold:get_value())
     end)
 end
 
@@ -317,12 +397,20 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:65 y:12
+        -- 用途：显示回春血量阈值配置。
+        -- 更新函数：set_restoration_rejuvenation_hp_threshold
         local restoration_rejuvenation_hp_threshold_cell = Cell:New(65, 12)
+
+        -- 说明：根据回春血量阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_restoration_rejuvenation_hp_threshold(value)
             restoration_rejuvenation_hp_threshold_cell:setCellRGBA(value / 255)
         end
-        set_restoration_rejuvenation_hp_threshold(restoration_rejuvenation_hp_threshold:get_value())
+
         restoration_rejuvenation_hp_threshold:register_callback(set_restoration_rejuvenation_hp_threshold)
+        set_restoration_rejuvenation_hp_threshold(restoration_rejuvenation_hp_threshold:get_value())
     end)
 end
 
@@ -344,12 +432,20 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:66 y:12
+        -- 用途：显示丰饶层数阈值配置。
+        -- 更新函数：set_restoration_abundance_stack_threshold
         local restoration_abundance_stack_threshold_cell = Cell:New(66, 12)
+
+        -- 说明：根据丰饶层数阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_restoration_abundance_stack_threshold(value)
             restoration_abundance_stack_threshold_cell:setCellRGBA(value * 20 / 255)
         end
-        set_restoration_abundance_stack_threshold(restoration_abundance_stack_threshold:get_value())
+
         restoration_abundance_stack_threshold:register_callback(set_restoration_abundance_stack_threshold)
+        set_restoration_abundance_stack_threshold(restoration_abundance_stack_threshold:get_value())
     end)
 end
 
@@ -372,12 +468,18 @@ do
     -- })
 
     -- After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    --     -- x:67 y:12
+    --     -- 用途：显示坦克缺口忽略百分比配置。
+    --     -- 更新函数：set_restoration_tank_deficit_ignore_percent
     --     local restoration_tank_deficit_ignore_percent_cell = Cell:New(67, 12)
+    --     -- 说明：根据坦克缺口忽略百分比配置更新显示强度。
+    --     -- 依赖事件更新：无
+    --     -- 依赖定时刷新：无
     --     local function set_restoration_tank_deficit_ignore_percent(value)
     --         restoration_tank_deficit_ignore_percent_cell:setCellRGBA(value / 255)
     --     end
-    --     set_restoration_tank_deficit_ignore_percent(restoration_tank_deficit_ignore_percent:get_value())
     --     restoration_tank_deficit_ignore_percent:register_callback(set_restoration_tank_deficit_ignore_percent)
+    --     set_restoration_tank_deficit_ignore_percent(restoration_tank_deficit_ignore_percent:get_value())
     -- end)
 end
 
@@ -399,11 +501,19 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:68 y:12
+        -- 用途：显示 hot 等效生命值配置。
+        -- 更新函数：set_restoration_hot_hp_threshold
         local restoration_hot_hp_threshold_cell = Cell:New(68, 12)
+
+        -- 说明：根据 hot 等效生命值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_restoration_hot_hp_threshold(value)
             restoration_hot_hp_threshold_cell:setCellRGBA(value * 20 / 255)
         end
-        set_restoration_hot_hp_threshold(restoration_hot_hp_threshold:get_value())
+
         restoration_hot_hp_threshold:register_callback(set_restoration_hot_hp_threshold)
+        set_restoration_hot_hp_threshold(restoration_hot_hp_threshold:get_value())
     end)
 end
