@@ -3,11 +3,11 @@ local addonName, addonTable             = ... -- 插件入口固定写法
 -- Lua 原生函数
 local insert                            = table.insert
 local After                             = C_Timer.After
-local random                            = math.random
 
 -- WoW 官方 API
 local UnitClass                         = UnitClass
 local GetSpecialization                 = GetSpecialization
+
 -- 专精错误则停止
 local className, classFilename, classId = UnitClass("player")
 local currentSpec                       = GetSpecialization()
@@ -20,14 +20,9 @@ if currentSpec ~= 1 then return end -- 不是鲜血专精则停止
 local DejaVu = _G["DejaVu"]
 local Config = DejaVu.Config
 local ConfigRows = DejaVu.ConfigRows
-local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
 
-
 do
-    -- x:55 y:12
-    -- 最大符文能量 min:100 max:140 default:125 step:5
-    -- 设置最大符文能量值
     local runic_power_max = Config("runic_power_max")
     insert(ConfigRows, {
         type = "slider",
@@ -42,18 +37,25 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:55 y:12
+        -- 用途：显示最大符文能量配置。
+        -- 更新函数：set_runic_power_max
         local runic_power_max_cell = Cell:New(55, 12)
+
+        -- 说明：根据最大符文能量配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_runic_power_max(value)
             runic_power_max_cell:setCellRGBA(value / 255)
         end
-        set_runic_power_max(runic_power_max:get_value())
+
         runic_power_max:register_callback(set_runic_power_max)
+
+        set_runic_power_max(runic_power_max:get_value())
     end)
 end
 
 do
-    -- x:56 y:12
-    -- 打断模式 blacklist=使用黑名单 all=任意打断, default:blacklist
     local dk_interrupt_mode = Config("dk_interrupt_mode")
     insert(ConfigRows, {
         type = "combo",
@@ -69,7 +71,14 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:56 y:12
+        -- 用途：显示鲜血死亡骑士打断模式配置。
+        -- 更新函数：set_dk_interrupt_mode
         local dk_interrupt_mode_cell = Cell:New(56, 12)
+
+        -- 说明：根据打断模式配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_dk_interrupt_mode(value)
             if value == "blacklist" then
                 dk_interrupt_mode_cell:setCellRGBA(255 / 255)
@@ -77,15 +86,14 @@ do
                 dk_interrupt_mode_cell:setCellRGBA(127 / 255)
             end
         end
-        set_dk_interrupt_mode(dk_interrupt_mode:get_value())
+
         dk_interrupt_mode:register_callback(set_dk_interrupt_mode)
+
+        set_dk_interrupt_mode(dk_interrupt_mode:get_value())
     end)
 end
 
 do
-    -- x:57 y:12
-    -- 死亡打击生命值阈值 min:40 max:70 default:55 step:5
-    -- 当前生命值低于该百分比时, 使用死亡打击
     local blood_death_strike_health_threshold = Config("blood_death_strike_health_threshold")
     insert(ConfigRows, {
         type = "slider",
@@ -100,19 +108,25 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:57 y:12
+        -- 用途：显示死亡打击生命值阈值配置。
+        -- 更新函数：set_blood_death_strike_health_threshold
         local blood_death_strike_health_threshold_cell = Cell:New(57, 12)
+
+        -- 说明：根据死亡打击生命值阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_blood_death_strike_health_threshold(value)
             blood_death_strike_health_threshold_cell:setCellRGBA(value / 255)
         end
-        set_blood_death_strike_health_threshold(blood_death_strike_health_threshold:get_value())
+
         blood_death_strike_health_threshold:register_callback(set_blood_death_strike_health_threshold)
+
+        set_blood_death_strike_health_threshold(blood_death_strike_health_threshold:get_value())
     end)
 end
 
 do
-    -- x:58 y:12
-    -- 死亡打击泄能阈值 min:80 max:120 default:100 step:10
-    -- 当前符文能量高于该值时, 使用死亡打击避免浪费
     local blood_death_strike_runic_power_overflow_threshold = Config("blood_death_strike_runic_power_overflow_threshold")
     insert(ConfigRows, {
         type = "slider",
@@ -127,19 +141,25 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:58 y:12
+        -- 用途：显示死亡打击泄能阈值配置。
+        -- 更新函数：set_blood_death_strike_runic_power_overflow_threshold
         local blood_death_strike_runic_power_overflow_threshold_cell = Cell:New(58, 12)
+
+        -- 说明：根据死亡打击泄能阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_blood_death_strike_runic_power_overflow_threshold(value)
             blood_death_strike_runic_power_overflow_threshold_cell:setCellRGBA(value / 255)
         end
-        set_blood_death_strike_runic_power_overflow_threshold(blood_death_strike_runic_power_overflow_threshold:get_value())
+
         blood_death_strike_runic_power_overflow_threshold:register_callback(set_blood_death_strike_runic_power_overflow_threshold)
+
+        set_blood_death_strike_runic_power_overflow_threshold(blood_death_strike_runic_power_overflow_threshold:get_value())
     end)
 end
 
 do
-    -- x:59 y:12
-    -- 死神印记血量阈值 min:10 max:60 default:30 step:10
-    -- 当敌人生命值低于此值时, 就不会再使用死神印记
     local reaper_mark_health_threshold = Config("reaper_mark_health_threshold")
     insert(ConfigRows, {
         type = "slider",
@@ -154,19 +174,25 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:59 y:12
+        -- 用途：显示死神印记血量阈值配置。
+        -- 更新函数：set_reaper_mark_health_threshold
         local reaper_mark_health_threshold_cell = Cell:New(59, 12)
+
+        -- 说明：根据死神印记血量阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_reaper_mark_health_threshold(value)
             reaper_mark_health_threshold_cell:setCellRGBA(value / 255)
         end
-        set_reaper_mark_health_threshold(reaper_mark_health_threshold:get_value())
+
         reaper_mark_health_threshold:register_callback(set_reaper_mark_health_threshold)
+
+        set_reaper_mark_health_threshold(reaper_mark_health_threshold:get_value())
     end)
 end
 
 do
-    -- x:60 y:12
-    -- 符文刃舞模式 manual=手动 burst_mode=爆发模式 combat_mode=战斗时间模式 default:manual
-    -- 手动模式: 完全不施放符文刃舞\n爆发模式: 仅在爆发阶段施放符文刃舞\n战斗时间模式: 根据战斗时间，开开怪期间自动施放符文刃舞。
     local dancing_rune_mode = Config("dancing_rune_mode")
     insert(ConfigRows, {
         type = "combo",
@@ -183,7 +209,14 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:60 y:12
+        -- 用途：显示符文刃舞模式配置。
+        -- 更新函数：set_dancing_rune_mode
         local dancing_rune_mode_cell = Cell:New(60, 12)
+
+        -- 说明：根据符文刃舞模式配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_dancing_rune_mode(value)
             if value == "manual" then
                 dancing_rune_mode_cell:setCellRGBA(255 / 255)
@@ -193,7 +226,9 @@ do
                 dancing_rune_mode_cell:setCellRGBA(0 / 255)
             end
         end
-        set_dancing_rune_mode(dancing_rune_mode:get_value())
+
         dancing_rune_mode:register_callback(set_dancing_rune_mode)
+
+        set_dancing_rune_mode(dancing_rune_mode:get_value())
     end)
 end

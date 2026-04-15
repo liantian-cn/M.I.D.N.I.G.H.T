@@ -3,11 +3,11 @@ local addonName, addonTable             = ... -- 插件入口固定写法
 -- Lua 原生函数
 local insert                            = table.insert
 local After                             = C_Timer.After
-local random                            = math.random
 
 -- WoW 官方 API
 local UnitClass                         = UnitClass
 local GetSpecialization                 = GetSpecialization
+
 -- 专精错误则停止
 local className, classFilename, classId = UnitClass("player")
 local currentSpec                       = GetSpecialization()
@@ -20,14 +20,9 @@ if currentSpec ~= 3 then return end -- 不是守护专精则停止
 local DejaVu = _G["DejaVu"]
 local Config = DejaVu.Config
 local ConfigRows = DejaVu.ConfigRows
-local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
 
-
 do
-    -- x:55 y:12
-    -- AOE敌人数量 min:2 max:10 default:4 step:1
-    -- 设置判定为AOE条件的敌人数量
     local guardian_aoe_enemy_count = Config("guardian_aoe_enemy_count")
     insert(ConfigRows, {
         type = "slider",
@@ -42,19 +37,25 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:55 y:12
+        -- 用途：显示守护德鲁伊 AOE 敌人数量阈值配置。
+        -- 更新函数：set_guardian_aoe_enemy_count
         local guardian_aoe_enemy_count_cell = Cell:New(55, 12)
+
+        -- 说明：根据 AOE 敌人数量阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_guardian_aoe_enemy_count(value)
             guardian_aoe_enemy_count_cell:setCellRGBA(value * 10 / 255)
         end
-        set_guardian_aoe_enemy_count(guardian_aoe_enemy_count:get_value())
+
         guardian_aoe_enemy_count:register_callback(set_guardian_aoe_enemy_count)
+
+        set_guardian_aoe_enemy_count(guardian_aoe_enemy_count:get_value())
     end)
 end
 
 do
-    -- x:56 y:12
-    -- 起手时间判定 min:5 max:45 default:10 step:5
-    -- 即脱离战斗后多长时间内再次进入战斗时认为是起手阶段
     local guardian_opener_time = Config("guardian_opener_time")
     insert(ConfigRows, {
         type = "slider",
@@ -69,19 +70,25 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:56 y:12
+        -- 用途：显示守护德鲁伊起手时间判定配置。
+        -- 更新函数：set_guardian_opener_time
         local guardian_opener_time_cell = Cell:New(56, 12)
+
+        -- 说明：根据起手时间判定配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_guardian_opener_time(value)
             guardian_opener_time_cell:setCellRGBA(value / 255)
         end
-        set_guardian_opener_time(guardian_opener_time:get_value())
+
         guardian_opener_time:register_callback(set_guardian_opener_time)
+
+        set_guardian_opener_time(guardian_opener_time:get_value())
     end)
 end
 
 do
-    -- x:57 y:12
-    -- 狂暴回复阈值 min:30 max:70 default:50 step:2
-    -- 当玩家生命值低于该值时优先使用狂暴回复
     local guardian_frenzied_regeneration_threshold = Config("guardian_frenzied_regeneration_threshold")
     insert(ConfigRows, {
         type = "slider",
@@ -96,19 +103,25 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:57 y:12
+        -- 用途：显示狂暴回复生命值阈值配置。
+        -- 更新函数：set_guardian_frenzied_regeneration_threshold
         local guardian_frenzied_regeneration_threshold_cell = Cell:New(57, 12)
+
+        -- 说明：根据狂暴回复生命值阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_guardian_frenzied_regeneration_threshold(value)
             guardian_frenzied_regeneration_threshold_cell:setCellRGBA(value / 255)
         end
-        set_guardian_frenzied_regeneration_threshold(guardian_frenzied_regeneration_threshold:get_value())
+
         guardian_frenzied_regeneration_threshold:register_callback(set_guardian_frenzied_regeneration_threshold)
+
+        set_guardian_frenzied_regeneration_threshold(guardian_frenzied_regeneration_threshold:get_value())
     end)
 end
 
 do
-    -- x:58 y:12
-    -- 树皮阈值 min:20 max:60 default:40 step:2
-    -- 当玩家生命值低于该值时优先使用树皮术
     local guardian_barkskin_threshold = Config("guardian_barkskin_threshold")
     insert(ConfigRows, {
         type = "slider",
@@ -123,19 +136,25 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:58 y:12
+        -- 用途：显示树皮术生命值阈值配置。
+        -- 更新函数：set_guardian_barkskin_threshold
         local guardian_barkskin_threshold_cell = Cell:New(58, 12)
+
+        -- 说明：根据树皮术生命值阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_guardian_barkskin_threshold(value)
             guardian_barkskin_threshold_cell:setCellRGBA(value / 255)
         end
-        set_guardian_barkskin_threshold(guardian_barkskin_threshold:get_value())
+
         guardian_barkskin_threshold:register_callback(set_guardian_barkskin_threshold)
+
+        set_guardian_barkskin_threshold(guardian_barkskin_threshold:get_value())
     end)
 end
 
 do
-    -- x:59 y:12
-    -- 生存本能阈值 min:10 max:50 default:30 step:2
-    -- 当玩家生命值低于该值时优先使用生存本能
     local guardian_survival_instincts_threshold = Config("guardian_survival_instincts_threshold")
     insert(ConfigRows, {
         type = "slider",
@@ -150,19 +169,25 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:59 y:12
+        -- 用途：显示生存本能生命值阈值配置。
+        -- 更新函数：set_guardian_survival_instincts_threshold
         local guardian_survival_instincts_threshold_cell = Cell:New(59, 12)
+
+        -- 说明：根据生存本能生命值阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_guardian_survival_instincts_threshold(value)
             guardian_survival_instincts_threshold_cell:setCellRGBA(value / 255)
         end
-        set_guardian_survival_instincts_threshold(guardian_survival_instincts_threshold:get_value())
+
         guardian_survival_instincts_threshold:register_callback(set_guardian_survival_instincts_threshold)
+
+        set_guardian_survival_instincts_threshold(guardian_survival_instincts_threshold:get_value())
     end)
 end
 
 do
-    -- x:60 y:12
-    -- 怒气溢出阈值 min:60 max:120 default:100 step:5
-    -- 高于该怒气时，不再使用攒怒技能。
     local guardian_rage_overflow_threshold = Config("guardian_rage_overflow_threshold")
     insert(ConfigRows, {
         type = "slider",
@@ -177,19 +202,25 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:60 y:12
+        -- 用途：显示怒气溢出阈值配置。
+        -- 更新函数：set_guardian_rage_overflow_threshold
         local guardian_rage_overflow_threshold_cell = Cell:New(60, 12)
+
+        -- 说明：根据怒气溢出阈值配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_guardian_rage_overflow_threshold(value)
             guardian_rage_overflow_threshold_cell:setCellRGBA(value / 255)
         end
-        set_guardian_rage_overflow_threshold(guardian_rage_overflow_threshold:get_value())
+
         guardian_rage_overflow_threshold:register_callback(set_guardian_rage_overflow_threshold)
+
+        set_guardian_rage_overflow_threshold(guardian_rage_overflow_threshold:get_value())
     end)
 end
 
 do
-    -- x:61 y:12
-    -- 重殴怒气下限 min:90 max:130 default:120 step:5
-    -- 当玩家怒气高于该值时，才会使用重殴泄怒
     local guardian_rage_maul_threshold = Config("guardian_rage_maul_threshold")
     insert(ConfigRows, {
         type = "slider",
@@ -204,18 +235,25 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:61 y:12
+        -- 用途：显示重殴怒气下限配置。
+        -- 更新函数：set_guardian_rage_maul_threshold
         local guardian_rage_maul_threshold_cell = Cell:New(61, 12)
+
+        -- 说明：根据重殴怒气下限配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_guardian_rage_maul_threshold(value)
             guardian_rage_maul_threshold_cell:setCellRGBA(value / 255)
         end
-        set_guardian_rage_maul_threshold(guardian_rage_maul_threshold:get_value())
+
         guardian_rage_maul_threshold:register_callback(set_guardian_rage_maul_threshold)
+
+        set_guardian_rage_maul_threshold(guardian_rage_maul_threshold:get_value())
     end)
 end
 
 do
-    -- x:62 y:12
-    -- 打断逻辑 blacklist=使用黑名单 all=任意打断, default:blacklist
     local guardian_interrupt_logic = Config("guardian_interrupt_logic")
     insert(ConfigRows, {
         type = "combo",
@@ -231,7 +269,14 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:62 y:12
+        -- 用途：显示守护德鲁伊打断逻辑配置。
+        -- 更新函数：set_guardian_interrupt_logic
         local guardian_interrupt_logic_cell = Cell:New(62, 12)
+
+        -- 说明：根据打断逻辑配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_guardian_interrupt_logic(value)
             if value == "blacklist" then
                 guardian_interrupt_logic_cell:setCellRGBA(255 / 255)
@@ -239,14 +284,14 @@ do
                 guardian_interrupt_logic_cell:setCellRGBA(127 / 255)
             end
         end
-        set_guardian_interrupt_logic(guardian_interrupt_logic:get_value())
+
         guardian_interrupt_logic:register_callback(set_guardian_interrupt_logic)
+
+        set_guardian_interrupt_logic(guardian_interrupt_logic:get_value())
     end)
 end
 
 do
-    -- x:63 y:12
-    -- 化身逻辑 manual=手动 burst_mode=爆发模式 combat_mode = 战斗时间模式 default:burst_mode
     local guardian_incarnation_logic = Config("guardian_incarnation_logic")
     insert(ConfigRows, {
         type = "combo",
@@ -263,7 +308,14 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:63 y:12
+        -- 用途：显示化身逻辑配置。
+        -- 更新函数：set_guardian_incarnation_logic
         local guardian_incarnation_logic_cell = Cell:New(63, 12)
+
+        -- 说明：根据化身逻辑配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_guardian_incarnation_logic(value)
             if value == "manual" then
                 guardian_incarnation_logic_cell:setCellRGBA(255 / 255)
@@ -273,18 +325,14 @@ do
                 guardian_incarnation_logic_cell:setCellRGBA(0 / 255)
             end
         end
-        set_guardian_incarnation_logic(guardian_incarnation_logic:get_value())
+
         guardian_incarnation_logic:register_callback(set_guardian_incarnation_logic)
+
+        set_guardian_incarnation_logic(guardian_incarnation_logic:get_value())
     end)
 end
 
 do
-    -- x:64 y:12
-    -- 铁鬃逻辑 one=保持1层 two=保持2层 more=无线堆叠 default:two
-    -- 会在铁宗持续时间过低时间使用铁宗。
-    -- 保持1层时，实际铁鬃覆盖1-2层。
-    -- 保持2层时，实际铁鬃覆盖1-3层。
-    -- 无限堆叠，除了保留狂暴恢复德怒气外，全部打铁鬃。
     local guardian_ironfur_logic = Config("guardian_ironfur_logic")
     insert(ConfigRows, {
         type = "combo",
@@ -301,7 +349,14 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:64 y:12
+        -- 用途：显示铁鬃逻辑配置。
+        -- 更新函数：set_guardian_ironfur_logic
         local guardian_ironfur_logic_cell = Cell:New(64, 12)
+
+        -- 说明：根据铁鬃逻辑配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_guardian_ironfur_logic(value)
             if value == "one" then
                 guardian_ironfur_logic_cell:setCellRGBA(255 / 255)
@@ -311,15 +366,14 @@ do
                 guardian_ironfur_logic_cell:setCellRGBA(0 / 255)
             end
         end
-        set_guardian_ironfur_logic(guardian_ironfur_logic:get_value())
+
         guardian_ironfur_logic:register_callback(set_guardian_ironfur_logic)
+
+        set_guardian_ironfur_logic(guardian_ironfur_logic:get_value())
     end)
 end
 
 do
-    -- x:65 y:12
-    -- 怒气上限 min:100 max:140 default:120 step:5
-    -- 当前的怒气上限, 这点将影响Terminal的计算
     local guardian_rage_limit = Config("guardian_rage_limit")
     insert(ConfigRows, {
         type = "slider",
@@ -334,11 +388,20 @@ do
     })
 
     After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+        -- x:65 y:12
+        -- 用途：显示怒气上限配置。
+        -- 更新函数：set_guardian_rage_limit
         local guardian_rage_limit_cell = Cell:New(65, 12)
+
+        -- 说明：根据怒气上限配置更新显示强度。
+        -- 依赖事件更新：无
+        -- 依赖定时刷新：无
         local function set_guardian_rage_limit(value)
             guardian_rage_limit_cell:setCellRGBA(value / 255)
         end
-        set_guardian_rage_limit(guardian_rage_limit:get_value())
+
         guardian_rage_limit:register_callback(set_guardian_rage_limit)
+
+        set_guardian_rage_limit(guardian_rage_limit:get_value())
     end)
 end

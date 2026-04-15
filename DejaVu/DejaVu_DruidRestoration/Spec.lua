@@ -3,12 +3,13 @@ local addonName, addonTable             = ... -- luacheck: ignore addonName
 -- Lua 原生函数
 local After                             = C_Timer.After
 local random                            = math.random
-local insert                            = table.insert -- 表插入
 
 -- WoW 官方 API
 local CreateFrame                       = CreateFrame
+local UnitPower                         = UnitPower
 local UnitClass                         = UnitClass
 local GetSpecialization                 = GetSpecialization
+
 -- 专精错误则停止
 local className, classFilename, classId = UnitClass("player")
 local currentSpec                       = GetSpecialization()
@@ -17,45 +18,38 @@ if classFilename ~= "DRUID" then
     return
 end                                 -- 不是德鲁伊则停止
 if currentSpec ~= 4 then return end -- 不是恢复专精则停止
+
 -- DejaVu Core
 local DejaVu = _G["DejaVu"]
-local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
 
+After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local eventFrame = CreateFrame("Frame") -- 事件框架
 
-After(2, function()                    -- 2 秒后执行，确保 DejaVu 核心已加载完成
     local cells = {
-        ComboPoints = Cell:New(55, 13) -- 能量点数
+        -- x:55 y:13
+        -- 用途：显示恢复德鲁伊的连击点数量。
+        -- 更新函数：UpdateComboPoints
+        ComboPoints = Cell:New(55, 13)
     }
 
-
+    -- 说明：更新恢复德鲁伊当前的连击点显示。
+    -- 依赖事件更新：无
+    -- 依赖定时刷新：0.1 秒
     local function UpdateComboPoints()
         local power = UnitPower("player", Enum.PowerType.ComboPoints)
         local mean = power * 51 / 255
         cells.ComboPoints:setCellRGBA(mean)
     end
 
-
-
-    local eventFrame = CreateFrame("Frame")
-    local fastTimeElapsed = -random() -- 随机初始时间，避免所有事件在同一帧更新
-    -- local lowTimeElapsed = -random() -- 当前未使用，保留 0.5 秒刷新档位结构
-    -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构
-    eventFrame:HookScript("OnUpdate", function(frame, elapsed)
+    local fastTimeElapsed = -random() -- 0.1 秒刷新连击点数量
+    eventFrame:HookScript("OnUpdate", function(frame, elapsed) -- luacheck: ignore frame
         fastTimeElapsed = fastTimeElapsed + elapsed
         if fastTimeElapsed > 0.1 then
             fastTimeElapsed = fastTimeElapsed - 0.1
             UpdateComboPoints()
         end
-        -- lowTimeElapsed = lowTimeElapsed + elapsed
-        -- if lowTimeElapsed > 0.5 then
-        --     lowTimeElapsed = lowTimeElapsed - 0.5
-        --     UpdateComboPoints()
-        -- end
-        -- superLowTimeElapsed = superLowTimeElapsed + elapsed
-        -- if superLowTimeElapsed > 2 then
-        --     superLowTimeElapsed = superLowTimeElapsed - 2
-        --     UpdateComboPoints()
-        -- end
     end)
+
+    UpdateComboPoints()
 end)

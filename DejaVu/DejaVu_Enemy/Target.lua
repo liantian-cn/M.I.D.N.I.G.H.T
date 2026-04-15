@@ -61,24 +61,95 @@ After(2, function()                         -- 延迟加载
     local inChanneling = false
     local updateAll
 
-    cell.exists = Cell:New(posX + 0, posY + 0)                  -- 单位存在状态 / updateUnitExists
-    cell.isAlive = Cell:New(posX + 0, posY + 1)                 -- 单位是否存活 / updateUnitBasicStatus
-    cell.unitClass = Cell:New(posX + 1, posY + 0)               -- 单位职业 / updateClassAndRole
-    cell.unitRole = Cell:New(posX + 1, posY + 1)                -- 单位角色 / updateClassAndRole
-    cell.healthPercent = Cell:New(posX + 2, posY + 0)           -- 单位生命值百分比 / updateHealth
-    cell.powerPercent = Cell:New(posX + 2, posY + 1)            -- 单位能量百分比 / updatePower
-    cell.isEnemy = Cell:New(posX + 3, posY + 0)                 -- 单位是否敌对 / updateUnitBasicStatus
-    cell.canAttack = Cell:New(posX + 3, posY + 1)               -- 单位是否可攻击 / updateUnitBasicStatus
-    cell.isInRangedRange = Cell:New(posX + 4, posY + 0)         -- 单位是否在远程范围内 / updateRangeStatus
-    cell.isInMeleeRange = Cell:New(posX + 4, posY + 1)          -- 单位是否在近战范围内 / updateRangeStatus
-    cell.isInCombat = Cell:New(posX + 5, posY + 0)              -- 单位是否在战斗中 / updateUnitBasicStatus
-    cell.isTarget = Cell:New(posX + 5, posY + 1)                -- 单位是否为目标 / updateUnitBasicStatus
-    cell.castIcon = BadgeCell:New(posX + 6, posY + 0)           -- 单位施法图标 / updateCastAndChannel
-    cell.channelIcon = BadgeCell:New(posX + 8, posY + 0)        -- 单位通道图标 / updateCastAndChannel
-    cell.castDuration = Cell:New(posX + 10, posY + 0)           -- 单位施法持续时间 / updateCastAndChannelDuration
-    cell.channelDuration = Cell:New(posX + 10, posY + 1)        -- 单位通道持续时间 / updateCastAndChannelDuration
-    cell.castIsInterruptible = Cell:New(posX + 11, posY + 0)    -- 单位施法是否可中断 / updateCastAndChannel
-    cell.channelIsInterruptible = Cell:New(posX + 11, posY + 1) -- 单位通道是否可中断 / updateCastAndChannel
+    -- x:posX + 0 y:posY + 0
+    -- 用途：目标单位存在状态
+    -- 更新函数：updateUnitExists
+    cell.exists = Cell:New(posX + 0, posY + 0)
+
+    -- x:posX + 0 y:posY + 1
+    -- 用途：目标单位是否存活
+    -- 更新函数：updateUnitBasicStatus
+    cell.isAlive = Cell:New(posX + 0, posY + 1)
+
+    -- x:posX + 1 y:posY + 0
+    -- 用途：目标单位职业
+    -- 更新函数：updateClassAndRole
+    cell.unitClass = Cell:New(posX + 1, posY + 0)
+
+    -- x:posX + 1 y:posY + 1
+    -- 用途：目标单位角色
+    -- 更新函数：updateClassAndRole
+    cell.unitRole = Cell:New(posX + 1, posY + 1)
+
+    -- x:posX + 2 y:posY + 0
+    -- 用途：目标单位生命值百分比
+    -- 更新函数：updateHealth
+    cell.healthPercent = Cell:New(posX + 2, posY + 0)
+
+    -- x:posX + 2 y:posY + 1
+    -- 用途：目标单位能量百分比
+    -- 更新函数：updatePower
+    cell.powerPercent = Cell:New(posX + 2, posY + 1)
+
+    -- x:posX + 3 y:posY + 0
+    -- 用途：目标单位是否敌对
+    -- 更新函数：updateUnitBasicStatus
+    cell.isEnemy = Cell:New(posX + 3, posY + 0)
+
+    -- x:posX + 3 y:posY + 1
+    -- 用途：目标单位是否可攻击
+    -- 更新函数：updateUnitBasicStatus
+    cell.canAttack = Cell:New(posX + 3, posY + 1)
+
+    -- x:posX + 4 y:posY + 0
+    -- 用途：目标单位是否在远程范围内
+    -- 更新函数：updateRangeStatus
+    cell.isInRangedRange = Cell:New(posX + 4, posY + 0)
+
+    -- x:posX + 4 y:posY + 1
+    -- 用途：目标单位是否在近战范围内
+    -- 更新函数：updateRangeStatus
+    cell.isInMeleeRange = Cell:New(posX + 4, posY + 1)
+
+    -- x:posX + 5 y:posY + 0
+    -- 用途：目标单位是否在战斗中
+    -- 更新函数：updateUnitBasicStatus
+    cell.isInCombat = Cell:New(posX + 5, posY + 0)
+
+    -- x:posX + 5 y:posY + 1
+    -- 用途：目标单位是否为当前目标
+    -- 更新函数：updateUnitBasicStatus
+    cell.isTarget = Cell:New(posX + 5, posY + 1)
+
+    -- x:posX + 6 y:posY + 0
+    -- 用途：目标单位施法图标
+    -- 更新函数：updateCastAndChannel
+    cell.castIcon = BadgeCell:New(posX + 6, posY + 0)
+
+    -- x:posX + 8 y:posY + 0
+    -- 用途：目标单位通道图标
+    -- 更新函数：updateCastAndChannel
+    cell.channelIcon = BadgeCell:New(posX + 8, posY + 0)
+
+    -- x:posX + 10 y:posY + 0
+    -- 用途：目标单位施法持续时间
+    -- 更新函数：updateCastAndChannelDuration
+    cell.castDuration = Cell:New(posX + 10, posY + 0)
+
+    -- x:posX + 10 y:posY + 1
+    -- 用途：目标单位通道持续时间
+    -- 更新函数：updateCastAndChannelDuration
+    cell.channelDuration = Cell:New(posX + 10, posY + 1)
+
+    -- x:posX + 11 y:posY + 0
+    -- 用途：目标单位施法是否可中断
+    -- 更新函数：updateCastAndChannel
+    cell.castIsInterruptible = Cell:New(posX + 11, posY + 0)
+
+    -- x:posX + 11 y:posY + 1
+    -- 用途：目标单位通道是否可中断
+    -- 更新函数：updateCastAndChannel
+    cell.channelIsInterruptible = Cell:New(posX + 11, posY + 1)
 
     local function clearAll()
         cell.exists:clearCell()                 -- 单位存在状态 / updateUnitExists
@@ -101,9 +172,9 @@ After(2, function()                         -- 延迟加载
         cell.channelIsInterruptible:clearCell() -- 单位通道是否可中断 / updateCastAndChannel
     end
 
-    -- 检测目标单位是否存在，更新存在状态。
-    -- 基于 PLAYER_TARGET_CHANGED 事件。
-    -- 2 秒补正。
+    -- 说明：检测目标单位是否存在并维护存在状态。
+    -- 依赖事件更新：PLAYER_TARGET_CHANGED。
+    -- 依赖定时刷新：2 秒。
     local function updateUnitExists()
         unitExists = UnitExists(UNIT_KEY)
 
@@ -117,17 +188,9 @@ After(2, function()                         -- 延迟加载
         cell.exists:setCell(COLOR.STATUS_BOOLEAN.EXISTS) -- 单位存在状态
     end
 
-    -- 目标切换时整组刷新当前目标状态。
-    -- 事件用途：处理 PLAYER_TARGET_CHANGED。
-    -- 2 秒补正：血量、能量、施法等状态在 superLowTimeElapsed 里分项补正；基础状态和距离只有 0.5 秒轮询。
-    function eventFrame.PLAYER_TARGET_CHANGED()
-        updateAll()
-    end
-
-    eventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
-
-    -- 更新目标的职业和角色。
-    -- 无稳定事件，依赖 2 秒轮询。
+    -- 说明：更新目标单位的职业和角色。
+    -- 依赖事件更新：无。
+    -- 依赖定时刷新：2 秒。
     local function updateClassAndRole()
         if not unitExists then
             return
@@ -137,9 +200,9 @@ After(2, function()                         -- 延迟加载
         cell.unitRole:setCell(COLOR.ROLE[UnitGroupRolesAssigned(UNIT_KEY)] or COLOR.ROLE.NONE) -- 单位角色
     end
 
-    -- 更新目标的生命值百分比。
-    -- 基于 UNIT_HEALTH 和 UNIT_MAXHEALTH 事件。
-    -- 2 秒补正。
+    -- 说明：更新目标单位的生命值百分比。
+    -- 依赖事件更新：UNIT_HEALTH、UNIT_MAXHEALTH。
+    -- 依赖定时刷新：2 秒。
     local function updateHealth()
         if not unitExists then
             return
@@ -148,26 +211,9 @@ After(2, function()                         -- 延迟加载
         cell.healthPercent:setCell(UnitHealthPercent(UNIT_KEY, false, zeroToOneCurve)) -- 单位生命值百分比
     end
 
-    -- 最大生命值变化时刷新生命值百分比。
-    -- 事件用途：处理 UNIT_MAXHEALTH。
-    -- 2 秒补正：由 updateHealth 单独补正。
-    function eventFrame.UNIT_MAXHEALTH()
-        updateHealth()
-    end
-
-    -- 当前生命值变化时刷新生命值百分比。
-    -- 事件用途：处理 UNIT_HEALTH。
-    -- 2 秒补正：由 updateHealth 单独补正。
-    function eventFrame.UNIT_HEALTH()
-        updateHealth()
-    end
-
-    eventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_HEALTH", UNIT_KEY)
-
-    -- 更新目标的能量百分比。
-    -- 基于 UNIT_POWER_UPDATE 事件。
-    -- 2 秒补正。
+    -- 说明：更新目标单位的能量百分比。
+    -- 依赖事件更新：UNIT_POWER_UPDATE。
+    -- 依赖定时刷新：2 秒。
     local function updatePower()
         if not unitExists then
             return
@@ -176,18 +222,9 @@ After(2, function()                         -- 延迟加载
         cell.powerPercent:setCell(UnitPowerPercent(UNIT_KEY, UnitPowerType(UNIT_KEY), false, zeroToOneCurve)) -- 单位能量百分比
     end
 
-    -- 能量变化时刷新能量百分比。
-    -- 事件用途：处理 UNIT_POWER_UPDATE。
-    -- 2 秒补正：由 updatePower 单独补正。
-    function eventFrame.UNIT_POWER_UPDATE()
-        updatePower()
-    end
-
-    eventFrame:RegisterUnitEvent("UNIT_POWER_UPDATE", UNIT_KEY)
-
-    -- 更新目标的存活、友敌、可攻击、战斗和目标状态。
-    -- 无稳定事件覆盖所有变化。
-    -- 0.5 秒轮询，当前无 2 秒补正。
+    -- 说明：更新目标单位的基础状态。
+    -- 依赖事件更新：无。
+    -- 依赖定时刷新：0.5 秒。
     local function updateUnitBasicStatus()
         if not unitExists then
             return
@@ -200,9 +237,9 @@ After(2, function()                         -- 延迟加载
         cell.isTarget:setCellBoolean(UnitIsUnit(UNIT_KEY, "target"), COLOR.STATUS_BOOLEAN.IS_TARGET, COLOR.BLACK)
     end
 
-    -- 更新目标的远程和近战距离状态。
-    -- 无稳定事件，依赖 0.5 秒轮询。
-    -- 当前无 2 秒补正。
+    -- 说明：更新目标单位的远程和近战距离状态。
+    -- 依赖事件更新：无。
+    -- 依赖定时刷新：0.5 秒。
     local function updateRangeStatus()
         if not unitExists then
             return
@@ -234,9 +271,9 @@ After(2, function()                         -- 延迟加载
         return spellInterruptibleColor, spellNotInterruptibleColor
     end
 
-    -- 更新目标的施法和通道状态。
-    -- 基于 UNIT_SPELLCAST_* 事件。
-    -- 2 秒补正。
+    -- 说明：更新目标单位的施法、通道和可打断状态。
+    -- 依赖事件更新：UNIT_SPELLCAST_*。
+    -- 依赖定时刷新：2 秒。
     local function updateCastAndChannel()
         if not unitExists then
             return
@@ -291,63 +328,9 @@ After(2, function()                         -- 延迟加载
         cell.channelIsInterruptible:clearCell() -- 单位通道是否可中断
     end
 
-    -- 施法和通道状态变化时刷新目标的施法显示。
-    -- 事件用途：处理 UNIT_SPELLCAST_* 这一组事件。
-    -- 2 秒补正：由 updateCastAndChannel 单独补正。
-    function eventFrame.UNIT_SPELLCAST_INTERRUPTED()
-        updateCastAndChannel()
-    end
-
-    function eventFrame.UNIT_SPELLCAST_START()
-        updateCastAndChannel()
-    end
-
-    function eventFrame.UNIT_SPELLCAST_STOP()
-        updateCastAndChannel()
-    end
-
-    function eventFrame.UNIT_SPELLCAST_SUCCEEDED()
-        updateCastAndChannel()
-    end
-
-    function eventFrame.UNIT_SPELLCAST_CHANNEL_START()
-        updateCastAndChannel()
-    end
-
-    function eventFrame.UNIT_SPELLCAST_CHANNEL_STOP()
-        updateCastAndChannel()
-    end
-
-    function eventFrame.UNIT_SPELLCAST_FAILED()
-        updateCastAndChannel()
-    end
-
-    function eventFrame.UNIT_SPELLCAST_CHANNEL_UPDATE()
-        updateCastAndChannel()
-    end
-
-    function eventFrame.UNIT_SPELLCAST_EMPOWER_START()
-        updateCastAndChannel()
-    end
-
-    function eventFrame.UNIT_SPELLCAST_EMPOWER_STOP()
-        updateCastAndChannel()
-    end
-
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_START", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_STOP", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", UNIT_KEY)
-    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", UNIT_KEY)
-
-    -- 更新施法和通道的进度颜色。
-    -- 无可靠事件可持续驱动进度。
-    -- 0.1 秒轮询，当前无 2 秒单独补正。
+    -- 说明：更新目标单位施法和通道的进度显示。
+    -- 依赖事件更新：无。
+    -- 依赖定时刷新：0.1 秒。
     local function updateCastAndChannelDuration()
         if not unitExists then
             return
@@ -368,9 +351,9 @@ After(2, function()                         -- 延迟加载
         end
     end
 
-    -- 当前目标格子的整组刷新。
-    -- 用于目标切换和初始化。
-    -- 2 秒补正不走 updateAll，而是按状态分项补正。
+    -- 说明：整组刷新目标单位所有显示状态。
+    -- 依赖事件更新：PLAYER_TARGET_CHANGED。
+    -- 依赖定时刷新：首次刷新。
     updateAll = function()
         updateUnitExists()
         updateClassAndRole()
@@ -380,6 +363,132 @@ After(2, function()                         -- 延迟加载
         updateRangeStatus()
         updateCastAndChannel()
         updateCastAndChannelDuration()
+    end
+
+    -- PLAYER_TARGET_CHANGED
+    -- 事件说明：目标切换时整组刷新当前目标状态。
+    -- 对应函数：updateAll
+    eventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
+
+    function eventFrame.PLAYER_TARGET_CHANGED()
+        updateAll()
+    end
+
+    -- UNIT_MAXHEALTH
+    -- 事件说明：目标最大生命值变化时刷新生命值百分比。
+    -- 对应函数：updateHealth
+    eventFrame:RegisterUnitEvent("UNIT_MAXHEALTH", UNIT_KEY)
+
+    function eventFrame.UNIT_MAXHEALTH()
+        updateHealth()
+    end
+
+    -- UNIT_HEALTH
+    -- 事件说明：目标当前生命值变化时刷新生命值百分比。
+    -- 对应函数：updateHealth
+    eventFrame:RegisterUnitEvent("UNIT_HEALTH", UNIT_KEY)
+
+    function eventFrame.UNIT_HEALTH()
+        updateHealth()
+    end
+
+    -- UNIT_POWER_UPDATE
+    -- 事件说明：目标能量变化时刷新能量百分比。
+    -- 对应函数：updatePower
+    eventFrame:RegisterUnitEvent("UNIT_POWER_UPDATE", UNIT_KEY)
+
+    function eventFrame.UNIT_POWER_UPDATE()
+        updatePower()
+    end
+
+    -- UNIT_SPELLCAST_INTERRUPTED
+    -- 事件说明：目标施法被打断时刷新施法和通道状态。
+    -- 对应函数：updateCastAndChannel
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", UNIT_KEY)
+
+    function eventFrame.UNIT_SPELLCAST_INTERRUPTED()
+        updateCastAndChannel()
+    end
+
+    -- UNIT_SPELLCAST_START
+    -- 事件说明：目标开始施法时刷新施法和通道状态。
+    -- 对应函数：updateCastAndChannel
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_START", UNIT_KEY)
+
+    function eventFrame.UNIT_SPELLCAST_START()
+        updateCastAndChannel()
+    end
+
+    -- UNIT_SPELLCAST_STOP
+    -- 事件说明：目标施法结束时刷新施法和通道状态。
+    -- 对应函数：updateCastAndChannel
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_STOP", UNIT_KEY)
+
+    function eventFrame.UNIT_SPELLCAST_STOP()
+        updateCastAndChannel()
+    end
+
+    -- UNIT_SPELLCAST_SUCCEEDED
+    -- 事件说明：目标施法成功时刷新施法和通道状态。
+    -- 对应函数：updateCastAndChannel
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", UNIT_KEY)
+
+    function eventFrame.UNIT_SPELLCAST_SUCCEEDED()
+        updateCastAndChannel()
+    end
+
+    -- UNIT_SPELLCAST_CHANNEL_START
+    -- 事件说明：目标开始通道时刷新施法和通道状态。
+    -- 对应函数：updateCastAndChannel
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", UNIT_KEY)
+
+    function eventFrame.UNIT_SPELLCAST_CHANNEL_START()
+        updateCastAndChannel()
+    end
+
+    -- UNIT_SPELLCAST_CHANNEL_STOP
+    -- 事件说明：目标通道结束时刷新施法和通道状态。
+    -- 对应函数：updateCastAndChannel
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", UNIT_KEY)
+
+    function eventFrame.UNIT_SPELLCAST_CHANNEL_STOP()
+        updateCastAndChannel()
+    end
+
+    -- UNIT_SPELLCAST_FAILED
+    -- 事件说明：目标施法失败时刷新施法和通道状态。
+    -- 对应函数：updateCastAndChannel
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", UNIT_KEY)
+
+    function eventFrame.UNIT_SPELLCAST_FAILED()
+        updateCastAndChannel()
+    end
+
+    -- UNIT_SPELLCAST_CHANNEL_UPDATE
+    -- 事件说明：目标通道进度变化时刷新施法和通道状态。
+    -- 对应函数：updateCastAndChannel
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", UNIT_KEY)
+
+    function eventFrame.UNIT_SPELLCAST_CHANNEL_UPDATE()
+        updateCastAndChannel()
+    end
+
+    -- UNIT_SPELLCAST_EMPOWER_START
+    -- 事件说明：目标引导蓄力开始时刷新施法和通道状态。
+    -- 对应函数：updateCastAndChannel
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", UNIT_KEY)
+
+    function eventFrame.UNIT_SPELLCAST_EMPOWER_START()
+        updateCastAndChannel()
+    end
+
+    -- UNIT_SPELLCAST_EMPOWER_STOP
+    -- 事件说明：目标引导蓄力结束时刷新施法和通道状态。
+    -- 对应函数：updateCastAndChannel
+    eventFrame:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", UNIT_KEY)
+
+    function eventFrame.UNIT_SPELLCAST_EMPOWER_STOP()
+        updateCastAndChannel()
     end
 
     local fastTimeElapsed = -random()     -- 随机初始时间，避免所有事件在同一帧更新

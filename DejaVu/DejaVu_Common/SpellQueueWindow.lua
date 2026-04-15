@@ -3,14 +3,12 @@ local addonName, addonTable = ... -- 插件入口固定写法
 -- Lua 原生函数
 local insert = table.insert
 local After = C_Timer.After
-local random = math.random
 
 -- WoW 官方 API
 
 local DejaVu = _G["DejaVu"]
 local Config = DejaVu.Config
 local ConfigRows = DejaVu.ConfigRows
-local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
 
 local spell_queue_window = Config("spell_queue_window") -- 滑块配置项
@@ -27,21 +25,30 @@ insert(ConfigRows, {
     bind_config = spell_queue_window, -- 绑定的配置对象
 })
 
-
-
+-- 说明：配置变更时打印当前延迟窗口值。
+-- 依赖事件更新：无
+-- 依赖定时刷新：无
 local function spell_queue_window_updater(value)
     print("延迟窗口设置为：" .. value)
 end
+
 spell_queue_window:register_callback(spell_queue_window_updater)
 
-
 After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    -- x:57 y:9
+    -- 用途：显示延迟窗口配置值。
+    -- 更新函数：updateSpellQueueWindow
     local cell = Cell:New(57, 9)
-    cell:setCellRGBA(20 / 255)
-    local function Updater(value)
+
+    -- 说明：根据延迟窗口配置值更新延迟窗口显示强度。
+    -- 依赖事件更新：无
+    -- 依赖定时刷新：无
+    local function updateSpellQueueWindow(value)
         local mean = (value / 10) / 255
-        -- print(mean)
         cell:setCellRGBA(mean)
     end
-    spell_queue_window:register_callback(Updater)
+
+    spell_queue_window:register_callback(updateSpellQueueWindow)
+
+    updateSpellQueueWindow(spell_queue_window:get_value())
 end)

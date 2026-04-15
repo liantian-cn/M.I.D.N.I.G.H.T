@@ -3,13 +3,13 @@ local addonName, addonTable             = ... -- luacheck: ignore addonName
 -- Lua 原生函数
 local After                             = C_Timer.After
 local random                            = math.random
-local insert                            = table.insert -- 表插入
 
 -- WoW 官方 API
 local CreateFrame                       = CreateFrame
 local GetRuneCooldown                   = GetRuneCooldown
 local UnitClass                         = UnitClass
 local GetSpecialization                 = GetSpecialization
+
 -- 专精错误则停止
 local className, classFilename, classId = UnitClass("player")
 local currentSpec                       = GetSpecialization()
@@ -18,17 +18,24 @@ if classFilename ~= "DEATHKNIGHT" then
     return
 end                                 -- 不是死亡骑士则停止
 if currentSpec ~= 1 then return end -- 不是鲜血专精则停止
+
 -- DejaVu Core
 local DejaVu = _G["DejaVu"]
 local Cell = DejaVu.Cell
 
+After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local eventFrame = CreateFrame("Frame") -- 事件框架
 
-After(2, function()                    -- 2 秒后执行，确保 DejaVu 核心已加载完成
     local cells = {
-        ReadyRunes = Cell:New(55, 13) -- 可用符文数量
+        -- x:55 y:13
+        -- 用途：显示鲜血死亡骑士当前可用符文数量。
+        -- 更新函数：UpdateReadyRunes
+        ReadyRunes = Cell:New(55, 13)
     }
 
-
+    -- 说明：更新鲜血死亡骑士当前可用符文数量。
+    -- 依赖事件更新：无
+    -- 依赖定时刷新：0.1 秒
     local function UpdateReadyRunes()
         local readyRunes = 0
         for runeIndex = 1, 6 do
@@ -40,27 +47,14 @@ After(2, function()                    -- 2 秒后执行，确保 DejaVu 核心�
         cells.ReadyRunes:setCellRGBA(readyRunes * 10 / 255)
     end
 
-
-
-    local eventFrame = CreateFrame("Frame")
-    local fastTimeElapsed = -random() -- 随机初始时间，避免所有事件在同一帧更新
-    -- local lowTimeElapsed = -random() -- 当前未使用，保留 0.5 秒刷新档位结构
-    -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构
-    eventFrame:HookScript("OnUpdate", function(frame, elapsed)
+    local fastTimeElapsed = -random() -- 0.1 秒刷新可用符文数量
+    eventFrame:HookScript("OnUpdate", function(frame, elapsed) -- luacheck: ignore frame
         fastTimeElapsed = fastTimeElapsed + elapsed
         if fastTimeElapsed > 0.1 then
             fastTimeElapsed = fastTimeElapsed - 0.1
             UpdateReadyRunes()
         end
-        -- lowTimeElapsed = lowTimeElapsed + elapsed
-        -- if lowTimeElapsed > 0.5 then
-        --     lowTimeElapsed = lowTimeElapsed - 0.5
-        --     UpdateReadyRunes()
-        -- end
-        -- superLowTimeElapsed = superLowTimeElapsed + elapsed
-        -- if superLowTimeElapsed > 2 then
-        --     superLowTimeElapsed = superLowTimeElapsed - 2
-        --     UpdateReadyRunes()
-        -- end
     end)
+
+    UpdateReadyRunes()
 end)

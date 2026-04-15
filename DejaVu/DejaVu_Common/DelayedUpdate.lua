@@ -15,9 +15,17 @@ local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
 
 After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
-    local cell = Cell:New(55, 9) -- delay cell，给延迟宏设计
+    local eventFrame = CreateFrame("Frame")
+
+    -- x:55 y:9
+    -- 用途：显示延迟更新等待状态。
+    -- 更新函数：updateCell
+    local cell = Cell:New(55, 9)
     local delayTimestamp = GetTime()
 
+    -- 说明：根据当前延迟截止时间刷新等待状态。
+    -- 依赖事件更新：无。
+    -- 依赖定时刷新：0.1 秒。
     local function updateCell()
         cell:setCellBoolean(
             delayTimestamp > GetTime(),
@@ -26,6 +34,9 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         )
     end
 
+    -- 说明：处理 /delay 命令并更新延迟截止时间。
+    -- 依赖事件更新：无。
+    -- 依赖定时刷新：无。
     _G.SLASH_DELAY1 = "/delay"
     SlashCmdList["DELAY"] = function(msg)
         local delaySeconds = tonumber(msg)
@@ -35,11 +46,11 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         end
     end
 
-    local eventFrame = CreateFrame("Frame")
-    local fastTimeElapsed = -random() -- 随机初始时间，避免所有事件在同一帧更新
-    -- local lowTimeElapsed = -random() -- 当前未使用，保留 0.5 秒刷新档位结构
-    -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构
-    eventFrame:HookScript("OnUpdate", function(frame, elapsed)
+    -- 定时路由：每 0.1 秒刷新延迟等待状态。
+    local fastTimeElapsed = -random()
+    -- local lowTimeElapsed = -random() -- 当前未使用，保留 0.5 秒刷新档位结构。
+    -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构。
+    eventFrame:HookScript("OnUpdate", function(_, elapsed)
         fastTimeElapsed = fastTimeElapsed + elapsed
         if fastTimeElapsed > 0.1 then
             fastTimeElapsed = fastTimeElapsed - 0.1
@@ -56,4 +67,7 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         --     updateCell()
         -- end
     end)
+
+    -- 首次刷新
+    updateCell()
 end)

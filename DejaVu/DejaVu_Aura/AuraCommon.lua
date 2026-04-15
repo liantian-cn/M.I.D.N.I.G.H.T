@@ -1,6 +1,7 @@
 local addonName, addonTable = ... -- 插件入口固定写法
 
 -- Lua 原生函数
+local pairs = pairs
 local wipe = wipe
 
 -- WoW 官方 API
@@ -43,12 +44,29 @@ debuffOnFriendlyCurve:AddPoint(11, COLOR.SPELL_TYPE.BLEED)
 local function InitCells(maxAuraCount, baseX, baseY)
     local cells = {}
     for i = 1, maxAuraCount do
-        local x = baseX - 2 + 2 * i                  -- 计算当前槽位 x 坐标
-        local y = baseY                              -- 当前槽位 y 坐标
-        local iconCell = BadgeCell:New(x, y)         -- aura 图标
-        local remainingCell = Cell:New(x, y + 2)     -- 剩余时间颜色
-        local spellTypeCell = Cell:New(x + 1, y + 2) -- aura 类型颜色
-        local countCell = CharCell:New(x, y + 3)     -- aura 层数文本
+        local x = baseX - 2 + 2 * i -- 计算当前槽位 x 坐标
+        local y = baseY             -- 当前槽位 y 坐标
+
+        -- x:baseX - 2 + 2 * i y:baseY
+        -- 用途：aura 图标
+        -- 更新函数：drawCell、refreshAll
+        local iconCell = BadgeCell:New(x, y)
+
+        -- x:baseX - 2 + 2 * i y:baseY + 2
+        -- 用途：aura 剩余时间颜色
+        -- 更新函数：drawCell、refreshAll、updateRemaining、updateRemainingAll
+        local remainingCell = Cell:New(x, y + 2)
+
+        -- x:baseX - 1 + 2 * i y:baseY + 2
+        -- 用途：aura 类型颜色
+        -- 更新函数：drawCell、refreshAll
+        local spellTypeCell = Cell:New(x + 1, y + 2)
+
+        -- x:baseX - 2 + 2 * i y:baseY + 3
+        -- 用途：aura 层数字符串
+        -- 更新函数：drawCell、refreshAll、updateRemaining、updateRemainingAll
+        local countCell = CharCell:New(x, y + 3)
+
         cells[i] = {
             icon = iconCell,
             remaining = remainingCell,
@@ -96,6 +114,9 @@ local function CreateAuraController(options)
         return GetAuraDispelTypeColor(unitKey, instanceID, debuffOnFriendlyCurve)
     end
 
+    -- 说明：把指定 aura 的图标、剩余时间、类型和层数写入单个槽位。
+    -- 依赖事件更新：addAura、removeAura、refreshAll 等结构刷新流程调用。
+    -- 依赖定时刷新：无。
     local function drawCell(cell, instanceID)
         local aura = GetAuraDataByAuraInstanceID(unitKey, instanceID) -- 取当前 aura 数据
         if aura == nil then
@@ -190,6 +211,9 @@ local function CreateAuraController(options)
         end
     end
 
+    -- 说明：按当前单位的 aura 列表全量重建所有显示槽位和实例映射。
+    -- 依赖事件更新：UNIT_AURA、目标切换、单位变化等结构刷新事件。
+    -- 依赖定时刷新：MouseoverHarmful.lua 的 0.5 秒轮询补刷。
     local function refreshAll()
         wipe(instanceIDMap)
 
@@ -200,7 +224,6 @@ local function CreateAuraController(options)
             return
         end
         isEnemy = UnitCanAttack("player", unitKey) -- 判断目标是否为敌对
-
 
         local auraInstanceIDs = GetUnitAuraInstanceIDs(unitKey, auraFilter, maxAuraCount, sortRule, sortDirection) or {}
         for i = 1, maxAuraCount do
@@ -216,6 +239,9 @@ local function CreateAuraController(options)
         end
     end
 
+    -- 说明：只更新指定 aura 的剩余时间颜色和层数，不重排槽位。
+    -- 依赖事件更新：UNIT_AURA 的 updatedAuraInstanceIDs 精细更新。
+    -- 依赖定时刷新：PlayerHelpful.lua 和 PlayerHarmful.lua 的 0.1 秒轮询。
     local function updateRemaining(instanceID)
         local index = instanceIDMap[instanceID]
         if index == nil then
@@ -234,11 +260,13 @@ local function CreateAuraController(options)
             cell.remaining:setCell(COLOR.WHITE)
         end
 
-
         local count = GetAuraApplicationDisplayCount(unitKey, instanceID, 1, 9) -- 取层数字符串
         cell.count:setCell(count)
     end
 
+    -- 说明：遍历当前所有已映射 aura，批量更新时间颜色和层数。
+    -- 依赖事件更新：无。
+    -- 依赖定时刷新：PlayerHelpful.lua 和 PlayerHarmful.lua 的 0.1 秒轮询。
     local function updateRemainingAll()
         for instanceID in pairs(instanceIDMap) do
             updateRemaining(instanceID)
