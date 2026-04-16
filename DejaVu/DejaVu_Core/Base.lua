@@ -14,6 +14,8 @@ DejaVu_Core.Enable = true            -- 是否开启插件
 DejaVu_Core.VERSION = "12.0.1.66709" -- 插件版本
 DejaVu_Core.RangedRange = 40         -- 默认的远程检测范围
 DejaVu_Core.MeleeRange = 5           -- 默认的近战检测范围
+DejaVu_Core.BadgeTitleTable = {}     -- 脚标提示表（key格式: icon_r_g_b, value格式: {icon=图标路径或ID, color=脚标颜色, title=提示文本}）
+-- /dump DejaVu.BadgeTitleTable
 
 local function logging(msg)
     print("|cFFFFBB66[" .. addonName .. "]|r" .. tostring(msg))
@@ -72,4 +74,5 @@ After(0, function()
     SetCVar("synchronizeBindings", 1)
     SetCVar("synchronizeMacros", 1)
     SetCVar("useUiScale", 0)
+    SetCVar("ffxAntiAliasingMode", 0)
 end)

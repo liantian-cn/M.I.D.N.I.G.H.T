@@ -6,6 +6,7 @@ local After = C_Timer.After
 
 -- WoW 官方 API
 local GetSpellTexture = C_Spell.GetSpellTexture
+local GetSpellName = C_Spell.GetSpellName
 
 -- DejaVu Core
 local DejaVu = _G["DejaVu"]
@@ -32,9 +33,9 @@ table.insert(ConfigRows, {
     bind_config = interrupt_blacklist -- 绑定的配置对象
 })
 
-After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+After(2, function()                 -- 2 秒后执行，确保 DejaVu 核心已加载完成
     local cells = {}
-    for i = 1, MAX_COUNT do -- 预创建固定数量的槽位
+    for i = 1, MAX_COUNT do         -- 预创建固定数量的槽位
         local x = POS_X - 2 + 2 * i -- 计算当前槽位 x 坐标
         local y = POS_Y             -- 当前槽位 y 坐标
 
@@ -56,7 +57,7 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
             end
 
             local cell = cells[i]
-            cell:setCell(GetSpellTexture(spellID), BADGE_COLOR)
+            cell:setCell(GetSpellTexture(spellID), BADGE_COLOR, GetSpellName(spellID))
             i = i + 1
         end
 

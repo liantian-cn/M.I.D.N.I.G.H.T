@@ -16,6 +16,7 @@ local EvaluateColorFromBoolean = C_CurveUtil.EvaluateColorFromBoolean
 local CreateColorCurve = C_CurveUtil.CreateColorCurve
 local FindBaseSpellByID = C_SpellBook.FindBaseSpellByID
 local GetSpellCharges = C_Spell.GetSpellCharges
+local GetSpellName = C_Spell.GetSpellName
 
 -- DejaVu Core
 local DejaVu = _G["DejaVu"]
@@ -98,13 +99,14 @@ After(2, function()
             -- 更新函数：updateCount
             local countCell = CharCell:New(x, y + 4)
             local iconID = GetSpellTexture(spellID)
+            local spellName = GetSpellName(spellID)
 
             validSpellID[spellID] = true
             if baseID then
                 baseIDToSpellID[baseID] = spellID
             end
 
-            iconCell:setCell(iconID, COLOR.SPELL_TYPE.PLAYER_SPELL)
+            iconCell:setCell(iconID, COLOR.SPELL_TYPE.PLAYER_SPELL, spellName)
             cellMap[spellID] = {
                 icon = iconCell,
                 remaining = remainingCell,
@@ -123,7 +125,8 @@ After(2, function()
     -- 依赖定时刷新：2 秒。
     local function updateIcon(spellID)
         local iconID = GetSpellTexture(spellID)
-        cellMap[spellID].icon:setCell(iconID, COLOR.SPELL_TYPE.PLAYER_SPELL)
+        local spellName = GetSpellName(spellID)
+        cellMap[spellID].icon:setCell(iconID, COLOR.SPELL_TYPE.PLAYER_SPELL, spellName)
     end
 
     -- 说明：刷新全部技能图标。

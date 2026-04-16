@@ -129,7 +129,7 @@ local function CreateAuraController(options)
         local count = GetAuraApplicationDisplayCount(unitKey, instanceID, 1, 9) -- 取层数字符串
         local spellTypeColor = getSpellTypeColor(instanceID)                    -- 本次 aura 的边框 / 类型颜色
 
-        cell.icon:setCell(aura.icon, spellTypeColor)
+        cell.icon:setCell(aura.icon, spellTypeColor, aura.name)
         cell.remaining:setCell(
             EvaluateColorFromBoolean(
                 DoesAuraHaveExpirationTime(unitKey, instanceID),

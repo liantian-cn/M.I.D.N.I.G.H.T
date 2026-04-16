@@ -3,6 +3,9 @@ local addonName, addonTable = ... -- 插件名称与共享表
 
 -- Lua 原生函数
 local setmetatable = setmetatable
+local format = string.format
+local tostring = tostring
+local insert = table.insert
 
 -- WoW 官方 API
 local CreateFrame = CreateFrame     -- 创建框体
@@ -12,6 +15,9 @@ local DejaVu = _G["DejaVu"]
 
 local BLACK = CreateColor(0, 0, 0, 1)
 local WHITE_TEXTURE = "Interface\\Buttons\\WHITE8X8"
+local BadgeTitleTable = DejaVu.BadgeTitleTable
+local BadgeTitleKey = {}
+
 
 ---@class BadgeCell
 ---@field Frame Frame BadgeCell底层框架
@@ -147,7 +153,8 @@ end
 ---设置单元格方法（设置图标和脚标颜色）
 ---@param icon string|number 图标路径或纹理ID
 ---@param color colorRGBA 脚标颜色
-function BadgeCell:setCell(icon, color)
+---@param title? string 脚标提示文本（目前未使用, 预留接口）
+function BadgeCell:setCell(icon, color, title)
     -- 处理图标
     local iconIsSecret = issecretvalue(icon)
     local iconChanged = not self:_isSameIcon(icon)
@@ -169,6 +176,17 @@ function BadgeCell:setCell(icon, color)
         self.BadgeTexture:SetVertexColor(color:GetRGBA())
         self.BadgeFrame:Show()
         self.BadgeTexture:Show()
+    end
+    if (title ~= nil) and (not issecretvalue(title)) and (not issecretvalue(icon)) and (not issecretvalue(color.r)) then
+        local titleKey = format("%s_%s_%s_%s", tostring(icon), tostring(color.r), tostring(color.g), tostring(color.b))
+        if not BadgeTitleKey[titleKey] then
+            BadgeTitleKey[titleKey] = true
+            insert(BadgeTitleTable, {
+                icon = icon,
+                color = color,
+                title = title
+            })
+        end
     end
 end
 
