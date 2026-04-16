@@ -94,7 +94,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.tab_widget)
 
         self._ui_refresh_timer = QTimer(self)
-        self._ui_refresh_timer.setInterval(1000)
+        self._ui_refresh_timer.setInterval(300)
         self._ui_refresh_timer.timeout.connect(self._refresh_visible_data_tab)
         self._ui_refresh_timer.start()
 
