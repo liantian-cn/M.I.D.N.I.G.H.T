@@ -27,6 +27,8 @@ class OtherTab(QWidget):
         ("enable", "全局开关"),
         ("spell_queue_window", "施法队列窗口"),
         ("burst_time", "爆发状态倒计时"),
+        ("UTF_hash", "UTF_hash"),
+        ("UTF_string", "UTF_string"),
     ]
     BLACKLIST_FIELD_DEFINITIONS = [
         ("dispel_blacklist", "驱散黑名单"),
@@ -88,6 +90,8 @@ class OtherTab(QWidget):
             "enable": decoded_data.get("enable"),
             "spell_queue_window": decoded_data.get("spell_queue_window"),
             "burst_time": decoded_data.get("burst_time"),
+            "UTF_hash": decoded_data.get("UTF_hash"),
+            "UTF_string": decoded_data.get("UTF_string"),
         }
         self._fill_scalar_values(runtime_data)
         self._fill_blacklist_value("dispel_blacklist", decoded_data.get("dispel_blacklist"))
@@ -96,7 +100,7 @@ class OtherTab(QWidget):
         if stale:
             self.status_label.setText("当前显示的是旧数据，最新帧还没解码成功。")
         else:
-            self.status_label.setText("共 10 个综合字段。")
+            self.status_label.setText("共 12 个综合字段。")
 
     def _build_runtime_section(self) -> dict[str, Any]:
         return self._build_scalar_section("运行信息", self.SCALAR_FIELD_DEFINITIONS)

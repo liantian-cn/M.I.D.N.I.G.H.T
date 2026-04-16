@@ -40,6 +40,8 @@ def test_other_tab_shows_empty_state_without_decoded_data(qapp: QApplication) ->
     assert tab.value_inputs["enable"].text() == "None"
     assert tab.value_inputs["spell_queue_window"].text() == "None"
     assert tab.value_inputs["burst_time"].text() == "None"
+    assert tab.value_inputs["UTF_hash"].text() == "None"
+    assert tab.value_inputs["UTF_string"].text() == "None"
     assert tab.blacklist_inputs["dispel_blacklist"].toPlainText() == ""
     assert tab.blacklist_inputs["interrupt_blacklist"].toPlainText() == ""
 
@@ -62,12 +64,14 @@ def test_other_tab_formats_decoded_values(qapp: QApplication) -> None:
                 "interrupt_blacklist": ["读条甲", "读条乙"],
                 "spell_queue_window": 0.3,
                 "burst_time": 18.5,
+                "UTF_hash": "abc123",
+                "UTF_string": "hello UTF",
             },
             "decode_result_is_stale": False,
         }
     )
 
-    assert tab.status_label.text() == "共 10 个综合字段。"
+    assert tab.status_label.text() == "共 12 个综合字段。"
     assert tab.value_inputs["combat_time"].text() == "12.35"
     assert tab.value_inputs["use_mouse"].text() == "True"
     assert tab.value_inputs["assisted_combat"].text() == "冰冷之触"
@@ -76,6 +80,10 @@ def test_other_tab_formats_decoded_values(qapp: QApplication) -> None:
     assert tab.value_inputs["enable"].text() == "True"
     assert tab.value_inputs["spell_queue_window"].text() == "0.30"
     assert tab.value_inputs["burst_time"].text() == "18.50"
+    assert tab.field_labels["UTF_hash"].text() == "UTF_hash"
+    assert tab.field_labels["UTF_string"].text() == "UTF_string"
+    assert tab.value_inputs["UTF_hash"].text() == "abc123"
+    assert tab.value_inputs["UTF_string"].text() == "hello UTF"
     assert tab.blacklist_inputs["dispel_blacklist"].toPlainText() == "减益甲;减益乙"
     assert tab.blacklist_inputs["interrupt_blacklist"].toPlainText() == "读条甲;读条乙"
 
@@ -98,6 +106,8 @@ def test_other_tab_marks_stale_decode_results(qapp: QApplication) -> None:
                 "interrupt_blacklist": ["法术甲"],
                 "spell_queue_window": 0.25,
                 "burst_time": 9,
+                "UTF_hash": "stale_hash",
+                "UTF_string": "stale text",
             },
             "decode_result_is_stale": True,
         }
@@ -106,6 +116,8 @@ def test_other_tab_marks_stale_decode_results(qapp: QApplication) -> None:
     assert tab.status_label.text() == "当前显示的是旧数据，最新帧还没解码成功。"
     assert tab.value_inputs["combat_time"].text() == "2"
     assert tab.value_inputs["use_mouse"].text() == "False"
+    assert tab.value_inputs["UTF_hash"].text() == "stale_hash"
+    assert tab.value_inputs["UTF_string"].text() == "stale text"
     assert tab.blacklist_inputs["dispel_blacklist"].toPlainText() == ""
     assert tab.blacklist_inputs["interrupt_blacklist"].toPlainText() == "法术甲"
 
