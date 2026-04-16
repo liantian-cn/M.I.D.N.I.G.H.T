@@ -208,4 +208,5 @@ class MatrixDecoder(object):
             r, g, b = cell.color
             char_list.append(rgb_to_char(r, g, b))
 
-        return "".join(char_list)
+        result = "".join(char_list)
+        return result
