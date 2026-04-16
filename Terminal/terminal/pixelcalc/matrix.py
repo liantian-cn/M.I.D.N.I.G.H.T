@@ -195,18 +195,29 @@ class MatrixDecoder(object):
     def readUTFString(self, x: int, y: int, length: int) -> str | None:
         char_list = []
 
-        def rgb_to_char(r, g, b):
-            byte_list = [x for x in (r, g, b) if x != 0] or [0]
-            return bytes(byte_list).decode('utf-8')
+        def rgb_to_char(r: int, g: int, b: int) -> str:
+            byte_list = [value for value in (r, g, b) if value != 0] or [0]
+            return bytes(byte_list).decode("utf-8")
 
-        for i in range(length):
-            pos_x = x + i
-            pos_y = y
-            cell = self.getCell(pos_x, pos_y)
-            if not cell.is_pure:
+        try:
+            for i in range(length):
+                pos_x = x + i
+                pos_y = y
+                cell = self.getCell(pos_x, pos_y)
+                if not cell.is_pure:
+                    return None
+                r, g, b = cell.color
+                char_list.append(rgb_to_char(r, g, b))
+
+            result = "".join(char_list)
+            start = result.find("*#")
+            if start == -1:
                 return None
-            r, g, b = cell.color
-            char_list.append(rgb_to_char(r, g, b))
 
-        result = "".join(char_list)
-        return result
+            end = result.find("*#", start + 2)
+            if end == -1:
+                return None
+
+            return result[start + 2:end]
+        except Exception:
+            return None
