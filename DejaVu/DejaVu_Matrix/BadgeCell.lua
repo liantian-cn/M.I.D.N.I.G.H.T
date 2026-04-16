@@ -177,7 +177,7 @@ function BadgeCell:setCell(icon, color, title)
         self.BadgeFrame:Show()
         self.BadgeTexture:Show()
     end
-    if (title ~= nil) and (not issecretvalue(title)) and (not issecretvalue(icon)) and (not issecretvalue(color.r)) then
+    if (title ~= nil) and (not issecretvalue(title)) then
         local titleKey = format("%s_%s_%s_%s", tostring(icon), tostring(color.r), tostring(color.g), tostring(color.b))
         if not BadgeTitleKey[titleKey] then
             BadgeTitleKey[titleKey] = true
