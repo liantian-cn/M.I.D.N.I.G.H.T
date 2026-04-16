@@ -16,4 +16,5 @@ Burst.lua
 Enable.lua
 InterruptBlacklist.lua
 DispelBlacklist.lua
+BadgeUTF.lua
 # _Test.lua

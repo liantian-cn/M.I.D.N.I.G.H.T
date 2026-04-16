@@ -1,5 +1,6 @@
 {
     "Lua.diagnostics.globals": [
         "SlashCmdList"
-    ]
+    ],
+    "python-envs.defaultEnvManager": "ms-python.python:venv"
 }

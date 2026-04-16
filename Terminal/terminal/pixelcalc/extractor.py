@@ -214,6 +214,8 @@ def extract_all_data(matrix: MatrixDecoder) -> dict[str, Any]:
         'interrupt_blacklist': matrix.readBadgeCellList(43, 17, 20),  # 可中断的法术
         'spell_queue_window': matrix.getCell(57, 9).mean / 100,  # 映射到秒，游戏内的毫秒/10。
         'burst_time': matrix.getCell(82, 0).decimal * 60,
+        'UTF_hash': matrix.readUTFhash(64, 26),  # 用于测试的UTF8编码的hash值
+        'UTF_string': matrix.readUTFString(66, 26, 16),  # 用于测试的UTF8编码的字符串
     }
 
     target_exists = matrix.getCell(55, 10).is_not_black

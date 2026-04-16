@@ -186,4 +186,26 @@ class MatrixDecoder(object):
                 result[f"{i}"] = None
         return result
 
-        return result
+    def readUTFhash(self, x: int, y: int) -> str | None:
+        icon_cell = self.getBadgeCell(x, y)
+        if not icon_cell.footnote.is_pure:
+            return None
+        return icon_cell.hash
+
+    def readUTFString(self, x: int, y: int, length: int) -> str | None:
+        char_list = []
+
+        def rgb_to_char(r, g, b):
+            byte_list = [x for x in (r, g, b) if x != 0] or [0]
+            return bytes(byte_list).decode('utf-8')
+
+        for i in range(length):
+            pos_x = x + i
+            pos_y = y
+            cell = self.getCell(pos_x, pos_y)
+            if not cell.is_pure:
+                return None
+            r, g, b = cell.color
+            char_list.append(rgb_to_char(r, g, b))
+
+        return "".join(char_list)
