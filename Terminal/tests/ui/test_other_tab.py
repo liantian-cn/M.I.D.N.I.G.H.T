@@ -2,13 +2,14 @@ import os
 import sys
 from pathlib import Path
 
+import numpy as np
 import pytest
 from PySide6.QtWidgets import QApplication
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from terminal.pixelcalc.title_manager import TitleManager
+from terminal.pixelcalc.title_manager import TitleManager, ndarray_to_hash
 from terminal.ui.main_window import MainWindow
 from terminal.ui.tabs.other import OtherTab
 
@@ -137,6 +138,78 @@ def test_main_window_inserts_other_tab_between_plugin_and_advanced(
     try:
         tab_names = [window.tab_widget.tabText(index) for index in range(window.tab_widget.count())]
         assert tab_names.index("插件/专精") < tab_names.index("其他") < tab_names.index("高级设置")
+    finally:
+        window._shutdown_worker_thread()
+        window.deleteLater()
+        title_manager.close()
+
+
+def test_main_window_persists_pending_utf_title_record_on_decode_success(
+    monkeypatch: pytest.MonkeyPatch,
+    qapp: QApplication,
+    tmp_path: Path,
+) -> None:
+    title_manager = TitleManager(tmp_path / "test.sqlite")
+    valid_array = np.full((6, 6, 3), 11, dtype=np.uint8)
+    record_hash = ndarray_to_hash(valid_array)
+
+    class _FakeTitleDialog:
+        def __init__(self) -> None:
+            self.database_refreshes = 0
+            self.live_refreshes = 0
+
+        def refresh_database_tabs(self) -> None:
+            self.database_refreshes += 1
+
+        def refresh_live_tabs(self, *, force: bool = False) -> None:
+            assert force is True
+            self.live_refreshes += 1
+
+    monkeypatch.setattr("terminal.ui.main_window.get_monitors", lambda: [])
+    monkeypatch.setattr("terminal.ui.main_window.get_windows_by_title", lambda: [])
+    monkeypatch.setattr("terminal.ui.main_window.get_default_title_manager", lambda: title_manager)
+
+    window = MainWindow()
+    dialog = _FakeTitleDialog()
+    window.title_editor_dialog = dialog
+    window.is_running = True
+
+    data = {
+        "misc": {
+            "combat_time": 1.0,
+            "use_mouse": False,
+        },
+        "assisted_combat": "assist",
+        "delay": False,
+        "testCell": 1,
+        "enable": True,
+        "dispel_blacklist": [],
+        "interrupt_blacklist": [],
+        "spell_queue_window": 0.1,
+        "burst_time": 3.0,
+        "UTF_hash": record_hash,
+        "UTF_string": "自动标题",
+        "_pending_utf_title_record": {
+            "hash": record_hash,
+            "title": "自动标题",
+            "title_type": "PLAYER_SPELL",
+            "valid_array": valid_array.tolist(),
+        },
+    }
+
+    try:
+        window._handle_decode_succeeded(1, object(), data)
+
+        records = title_manager.list_database_records()
+        assert len(records) == 1
+        assert records[0]["hash"] == record_hash
+        assert records[0]["title"] == "自动标题"
+        assert records[0]["title_type"] == "PLAYER_SPELL"
+        assert window.decoded_data is data
+        assert "_pending_utf_title_record" not in data
+        assert "_pending_utf_title_record" not in window.decoded_data
+        assert dialog.database_refreshes == 1
+        assert dialog.live_refreshes == 1
     finally:
         window._shutdown_worker_thread()
         window.deleteLater()

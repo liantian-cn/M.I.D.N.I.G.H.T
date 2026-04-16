@@ -202,6 +202,10 @@ class TitleManager:
     def list_memory_records(self) -> list[dict[str, Any]]:
         return [self._record_to_public_dict(record) for record in self.records_by_hash.values()]
 
+    def has_persistent_record(self, record_hash: str) -> bool:
+        record = self.records_by_hash.get(record_hash)
+        return bool(record is not None and record.from_sqlite)
+
     def add_record(
         self,
         *,

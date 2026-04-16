@@ -3,6 +3,7 @@ from __future__ import annotations
 import time
 from typing import Any
 
+import numpy as np
 from PySide6.QtCore import QThread, QTime, QTimer, Qt, Signal
 from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import QInputDialog, QMainWindow, QTabWidget
@@ -360,6 +361,18 @@ class MainWindow(QMainWindow):
     def _handle_decode_succeeded(self, frame_id: int, matrix: Any, data: dict[str, Any]) -> None:
         if not self.is_running:
             return
+
+        pending_utf_title_record = data.pop('_pending_utf_title_record', None)
+        if pending_utf_title_record is not None:
+            self.title_manager.add_record(
+                valid_array=np.array(pending_utf_title_record['valid_array'], dtype=np.uint8),
+                title_type=str(pending_utf_title_record['title_type']),
+                title=str(pending_utf_title_record['title']),
+                hash=str(pending_utf_title_record['hash']),
+            )
+            if self.title_editor_dialog is not None:
+                self.title_editor_dialog.refresh_database_tabs()
+                self.title_editor_dialog.refresh_live_tabs(force=True)
 
         self.decoded_matrix = matrix
         self.decoded_data = data
