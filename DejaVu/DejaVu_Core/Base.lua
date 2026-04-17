@@ -55,12 +55,12 @@ SlashCmdList["BURST"] = function(msg)
 end
 
 After(0, function()
-    SetCVar("secretChallengeModeRestrictionsForced", 1)
-    SetCVar("secretCombatRestrictionsForced", 1)
-    SetCVar("secretEncounterRestrictionsForced", 1)
-    SetCVar("secretMapRestrictionsForced", 1)
-    SetCVar("secretPvPMatchRestrictionsForced", 1)
-    SetCVar("secretAuraDataRestrictionsForced", 1)
+    SetCVar("secretChallengeModeRestrictionsForced", 0)
+    SetCVar("secretCombatRestrictionsForced", 0)
+    SetCVar("secretEncounterRestrictionsForced", 0)
+    SetCVar("secretMapRestrictionsForced", 0)
+    SetCVar("secretPvPMatchRestrictionsForced", 0)
+    SetCVar("secretAuraDataRestrictionsForced", 0)
     SetCVar("scriptErrors", 1);
     SetCVar("doNotFlashLowHealthWarning", 1);
     SetCVar("cameraIndirectVisibility", 1);
