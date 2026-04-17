@@ -62,6 +62,17 @@ nvm install lts
 nvm use lts
 ```
 
+推荐安装npm
+
+```
+npm -g install  @github/copilot@latest
+npm -g install  @openai/codex@latest
+npm -g install  @playwright/mcp@latest
+npm -g install  mcp-fetch-server@latest
+npm -g install  npm-check-updates@latest
+
+```
+
 ### wow-api-mcp
 
 ```cmd
