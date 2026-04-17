@@ -64,7 +64,7 @@ nvm use lts
 
 推荐安装npm
 
-```
+```cmd
 npm -g install  @github/copilot@latest
 npm -g install  @openai/codex@latest
 npm -g install  @playwright/mcp@latest
