@@ -53,7 +53,7 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 
 1. 插件端参考 `DejaVu\DejaVu_DruidRestoration`、`DejaVu\DejaVu_DruidGuardian`、`DejaVu\DejaVu_DeathKnightBlood`，在游戏内枚举需要检测的技能、充能技能。再SPEC区域增加需要检测的特色职业属性。添加宏绑定。增加设置项。
 2. Python端参考`Terminal\terminal\rotation`
-3. 使用AI编程工具，使用使用Skill 'write_rotation'
+3. 使用AI编程工具，使用Skill 'write_rotation'
 
 ## 全局配置
 
