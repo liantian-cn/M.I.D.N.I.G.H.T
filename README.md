@@ -52,7 +52,7 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 
 ### 爆发宏
 
-```
+```lua
 /burst x.x
 ```
 
@@ -61,7 +61,7 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 
 ### 延迟宏
 
-```
+```lua
 /delay x.x
 ```
 
@@ -86,4 +86,11 @@ T不断小条
 
 ## 排错思路
 
-- [经验分享](https://github.com/liantian-cn/M.I.D.N.I.G.H.T/discussions/3)
+1. 先备份Interface和WTF目录，然后清空。
+2. 进入游戏，输入 /console cvar_default
+3. 安装插件
+4. 进入游戏后，输入/dump GetScreenHeight()
+5. 1080p下应该显示768、440p和2160p下，应该显示1200。
+6. 右键桌面属性，关闭HDR。
+
+## 版权
