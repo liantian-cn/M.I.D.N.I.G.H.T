@@ -47,6 +47,7 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 - 目前唯一难点，学院第一波。
   - 血DK看李哥视频，符文剑、吸血鬼。盾破了开冰刃。然后5层流血矮人解。再叠到4层前，队友打不死也不怪你了。14层已过。
   - 熊：留着群奔，2层差6秒，开始群奔风筝。冲锋和打断都可以用来风筝。
+- 3400分，需要16铁，额....。
 
 ### 爆发宏
 
