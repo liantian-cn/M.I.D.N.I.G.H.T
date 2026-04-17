@@ -34,7 +34,7 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 ## 本repo提供的专精
 
 这些专精是我玩的专精，对应的循环和插件设置端已经写好。
-我说3000分毕业的休闲玩家。
+目前是3000分毕业的休闲玩家。血DK和熊应该都可以完成这个任务。
 
 | 专精 | 完成度 | 说明 | 天赋 |
 | --- | --- | --- | --- |
@@ -44,6 +44,9 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 
 - 目前熊T和血DK还是下水道难兄难弟，还是需要有点副本理解才能玩的。
 - 减伤要预判提前开才有意义，虽然脚本帮你开树皮，但是脚本帮你开就离死不远了。
+- 目前唯一难点，学院第一波。
+  - 血DK看李哥视频，符文剑、吸血鬼。盾破了开冰刃。然后5层流血矮人解。再叠到4层前，队友打不死也不怪你了。14层已过。
+  - 熊：留着群奔，2层差6秒，开始群奔风筝。冲锋和打断都可以用来风筝。
 
 ### 爆发宏
 
