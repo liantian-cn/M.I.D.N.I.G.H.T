@@ -23,10 +23,6 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 
 ![Terminal.png](https://github.com/user-attachments/assets/a6bb4d44-ac5f-4af1-b51d-a0ccbea0f89b)
 
-## 进阶逻辑
-
-访问[repo wiki](https://github.com/liantian-cn/M.I.D.N.I.G.H.T/wiki)会缓慢更新。
-
 ## 意见建议
 
 [Discord](https://discord.gg/9z7Ubbabpg)
