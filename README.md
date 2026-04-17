@@ -23,11 +23,6 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 
 ![Terminal.png](https://github.com/user-attachments/assets/a6bb4d44-ac5f-4af1-b51d-a0ccbea0f89b)
 
-## 安装
-
-- 下载[QClaw](https://qclaw.qq.com/)
-- 发送指令`请根据 https://github.com/liantian-cn/M.I.D.N.I.G.H.T/blob/main/INSTALL.md 为我安装MIDNIGHT`
-
 ## 进阶逻辑
 
 访问[repo wiki](https://github.com/liantian-cn/M.I.D.N.I.G.H.T/wiki)会缓慢更新。
@@ -72,7 +67,7 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 
 T不断小条
 
-```
+```text
 1254669
 1258436
 1248327
@@ -94,3 +89,19 @@ T不断小条
 6. 右键桌面属性，关闭HDR。
 
 ## 版权
+
+### 本项目基于MIT协议
+
+- 允许任意分发、改造、重命名、转卖，都不介意。
+
+### 但
+
+有条件的、有能力的用户，应该开源版本。
+
+- 使用官网python是最安全的，目前代码也会检测。
+- 项目提供AGENTS.md和`.context`上下文，AI开发很方便。
+
+## 安装
+
+- 下载[QClaw](https://qclaw.qq.com/)
+- 发送指令`请根据 https://github.com/liantian-cn/M.I.D.N.I.G.H.T/blob/main/INSTALL.md 为我安装MIDNIGHT`
