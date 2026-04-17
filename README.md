@@ -15,7 +15,6 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 
 ## 截图
 
-
 ### DejaVu
 
 ![DejaVu.png](https://github.com/user-attachments/assets/23188976-473f-48fc-9b74-72ce0002f29f)
@@ -35,41 +34,44 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 
 ## 意见建议
 
-访问[repo discussions](https://github.com/liantian-cn/M.I.D.N.I.G.H.T/discussions)
+[Discord](https://discord.gg/9z7Ubbabpg)
 
-[WA1KEY Discord](https://discord.gg/9z7Ubbabpg)
+## 本repo提供的专精
 
-## 当前repo专精支持情况
+这些专精是我玩的专精，对应的循环和插件设置端已经写好。
+我说3000分毕业的休闲玩家。
 
-- **血DK**：比较OK，可以用在13层及以下的大米，需要自行开冰刃和吸血鬼、符文剑简易手动开或爆发模式。
-```
-CoPASnrjTdwaLTX9NnLQoJJXfwMz2MzwMmZmhZbmZmmZxMjZmxAAAAAmxMzMzMDzYMAYMzMzAAAYmZbMMmxySjltlhJbDDLAmxMAAMzAAGA
-```
-- **熊德**：相对OK，可以用在13层及以下的大米，需要自行提前开爆发、本能。
-```
-CgGA8cL7tpvige+kkmGM9zUPWDAAAAAAAAAAAgZmxswMjZWmZZeAmZZZgZzwoJamZWYmZmlxMAAAAAAMjtZAAAAomZZWmZmBAwCzMPAwy2MDDYxiBAzsBD
-```
-- **奶德**：相对OK。可用在12层及以下大米。
+| 专精 | 完成度 | 说明 | 天赋 |
+| --- | --- | --- | --- |
+| 血DK | 99% <br/> 网易大神统计dps在85%+ | 大号274、3100分 <br/> 需要手动开符文剑、吸血鬼、冰刃。符文剑使用/delay 宏。| 死亡使者、无吞噬 |
+| 熊 | 99% <br/> 网易大神统计dps在85%+ | 中号272，2800分，<br/>化身手动开。<br/>选保持一层铁鬃 | 利爪 |
+| 奶德 | 90% | 小号268，集合石只混10C次数。 | 猫奶 |
 
-PS：目前熊T和血DK还是下水道难兄难弟，还是需要有点副本理解才能玩的。
+- 目前熊T和血DK还是下水道难兄难弟，还是需要有点副本理解才能玩的。
+- 减伤要预判提前开才有意义，虽然脚本帮你开树皮，但是脚本帮你开就离死不远了。
 
 ### 爆发宏
+
 ```
 /burst x.x
 ```
+
 在x.x秒内处于爆发状态。
 血DK的符文剑会开启。熊的化身会开启。奶德会预铺5人双回春。
 
 ### 延迟宏
+
 ```
 /delay x.x
 ```
+
 在x.x秒内处于暂停状态。
 0.4秒就可以有效插入技能了。
 
 ### 打断黑名单
 
 T不断小条
+
 ```
 1254669
 1258436
@@ -78,11 +80,10 @@ T不断小条
 468962
 1262526
 ```
+
 节点尾王： `1257613`
 熊不断执政老2：`248831`
 
 ## 排错思路
 
 - [经验分享](https://github.com/liantian-cn/M.I.D.N.I.G.H.T/discussions/3)
-   
-
