@@ -1,4 +1,5 @@
 from __future__ import annotations
+from .application import Termnal
 
 import json
 import os
@@ -7,7 +8,7 @@ import sys
 from pathlib import Path
 
 
-_PYTHON_SIGNATURE_HELP_URL = "https://github.com/liantian-cn/M.I.D.N.I.G.H.T/discussions/4"
+_PYTHON_SIGNATURE_HELP_URL = "https://discord.gg/9z7Ubbabpg"
 _PYTHON_SIGNATURE_REQUIRED_CN = "CN=Python Software Foundation"
 
 
@@ -93,6 +94,5 @@ def _ensure_supported_python_signature() -> None:
 
 _ensure_supported_python_signature()
 
-from .application import Termnal
 
 __all__ = ["Termnal"]

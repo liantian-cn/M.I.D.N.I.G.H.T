@@ -110,7 +110,8 @@ T不断小条
 
 有条件的、有能力的用户，应该开源版本。
 
-- 使用官网python是最安全的，目前代码也会检测。
+- 使用官网python是最安全的。
+- 当前项目会检测是否使用官网python,逻辑在`Terminal\terminal\__init__.py`
 - 项目提供AGENTS.md和`.context`上下文，AI开发很方便。
 
 ## 安装
