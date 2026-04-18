@@ -149,10 +149,12 @@ class DruidGuardian(BaseRotation):
         if guardian_ironfur_logic_cell is None:
             ironfur_logic = "two"  # 默认值，保持2层
         else:
-            if guardian_ironfur_logic_cell.mean > 200:
+            if (guardian_ironfur_logic_cell.mean > 120) and (guardian_ironfur_logic_cell.mean <= 134):
                 ironfur_logic = "one"
-            elif guardian_ironfur_logic_cell.mean > 100:
+            elif (guardian_ironfur_logic_cell.mean > 56) and (guardian_ironfur_logic_cell.mean <= 70):
                 ironfur_logic = "two"
+            elif (guardian_ironfur_logic_cell.mean > 184) and (guardian_ironfur_logic_cell.mean <= 198):
+                ironfur_logic = "bypass"
             else:
                 ironfur_logic = "more"
 
@@ -247,8 +249,12 @@ class DruidGuardian(BaseRotation):
                 if not player.hasBuff("生存本能"):
                     return self.cast("player生存本能")
 
+        if ironfur_logic == "bypass":
+            if ctx.spell_cooldown_ready("毁灭", spell_queue_window):
+                return self.cast("毁灭")
+
         if ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True) and (rage > 41):
-            if (not player.hasBuff("铁鬃")) or (player.buffRemain("铁鬃") < 3):
+            if (not player.hasBuff("铁鬃")) or (player.buffRemain("铁鬃") < 2):
                 return self.cast("低保铁鬃")
 
             if ironfur_logic == "two":
