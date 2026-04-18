@@ -51,7 +51,16 @@ $signature = Get-AuthenticodeSignature -LiteralPath '{target_path}'
     return json.loads(completed.stdout)
 
 
+def _is_venv_python() -> bool:
+    """检测是否在虚拟环境中运行"""
+    return sys.prefix != sys.base_prefix
+
+
 def _ensure_supported_python_signature() -> None:
+    # 虚拟环境中的 Python 没有签名是正常的，跳过校验
+    if _is_venv_python():
+        return
+
     python_executable = Path(sys.executable).resolve()
 
     try:
