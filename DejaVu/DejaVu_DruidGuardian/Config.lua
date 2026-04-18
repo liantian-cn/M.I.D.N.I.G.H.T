@@ -341,6 +341,7 @@ do
         tooltip = "保持1层: 实际铁鬃覆盖1-2层\n保持2层: 实际铁鬃覆盖1-3层\n无限堆叠: 除了保留狂暴回复的怒气外，全部打铁鬃。",
         default_value = "two",
         options = {
+            { k = "bypass", v = "优先毁灭" },
             { k = "one", v = "保持1层" },
             { k = "two", v = "保持2层" },
             { k = "more", v = "无限堆叠" }
@@ -359,9 +360,11 @@ do
         -- 依赖定时刷新：无
         local function set_guardian_ironfur_logic(value)
             if value == "one" then
-                guardian_ironfur_logic_cell:setCellRGBA(255 / 255)
-            elseif value == "two" then
                 guardian_ironfur_logic_cell:setCellRGBA(127 / 255)
+            elseif value == "two" then
+                guardian_ironfur_logic_cell:setCellRGBA(63 / 255)
+            elseif value == "bypass" then
+                guardian_ironfur_logic_cell:setCellRGBA(191 / 255)
             else
                 guardian_ironfur_logic_cell:setCellRGBA(0 / 255)
             end
