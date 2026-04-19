@@ -95,7 +95,7 @@ class Cell(CellRegion):
     @property
     def is_not_black(self) -> bool:
         if not self.is_pure:
-            logging.warning(f"Cell at ({self.x}, {self.y}) is not pure, color: {self.color_string}")
+            logging.warning(f"坐标在 ({self.x}, {self.y}) 的单元格不是纯色, 颜色: {self.color_string}，发生串色，考虑抗锯齿、插帧、缩放异常。")
             pass
         return not self.is_black
 
