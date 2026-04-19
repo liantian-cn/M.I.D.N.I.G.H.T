@@ -2,8 +2,6 @@ local addonName, addonTable             = ... -- 插件入口固定写法
 
 -- Lua 原生函数
 local insert                            = table.insert
-local After                             = C_Timer.After
-
 -- WoW 官方 API
 local UnitClass                         = UnitClass
 local GetSpecialization                 = GetSpecialization
@@ -21,6 +19,8 @@ local DejaVu = _G["DejaVu"]
 local Config = DejaVu.Config
 local ConfigRows = DejaVu.ConfigRows
 local Cell = DejaVu.Cell
+local MartixInitFuncs = DejaVu.MartixInitFuncs
+
 
 do
     local guardian_aoe_enemy_count = Config("guardian_aoe_enemy_count")
@@ -36,7 +36,7 @@ do
         bind_config = guardian_aoe_enemy_count,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:55 y:12
         -- 用途：显示守护德鲁伊 AOE 敌人数量阈值配置。
         -- 更新函数：set_guardian_aoe_enemy_count
@@ -52,7 +52,8 @@ do
         guardian_aoe_enemy_count:register_callback(set_guardian_aoe_enemy_count)
 
         set_guardian_aoe_enemy_count(guardian_aoe_enemy_count:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -68,8 +69,7 @@ do
         default_value = 10,
         bind_config = guardian_opener_time,
     })
-
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:56 y:12
         -- 用途：显示守护德鲁伊起手时间判定配置。
         -- 更新函数：set_guardian_opener_time
@@ -85,7 +85,8 @@ do
         guardian_opener_time:register_callback(set_guardian_opener_time)
 
         set_guardian_opener_time(guardian_opener_time:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -102,7 +103,7 @@ do
         bind_config = guardian_frenzied_regeneration_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:57 y:12
         -- 用途：显示狂暴回复生命值阈值配置。
         -- 更新函数：set_guardian_frenzied_regeneration_threshold
@@ -118,7 +119,8 @@ do
         guardian_frenzied_regeneration_threshold:register_callback(set_guardian_frenzied_regeneration_threshold)
 
         set_guardian_frenzied_regeneration_threshold(guardian_frenzied_regeneration_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -135,7 +137,7 @@ do
         bind_config = guardian_barkskin_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:58 y:12
         -- 用途：显示树皮术生命值阈值配置。
         -- 更新函数：set_guardian_barkskin_threshold
@@ -151,7 +153,8 @@ do
         guardian_barkskin_threshold:register_callback(set_guardian_barkskin_threshold)
 
         set_guardian_barkskin_threshold(guardian_barkskin_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -168,7 +171,7 @@ do
         bind_config = guardian_survival_instincts_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:59 y:12
         -- 用途：显示生存本能生命值阈值配置。
         -- 更新函数：set_guardian_survival_instincts_threshold
@@ -184,7 +187,8 @@ do
         guardian_survival_instincts_threshold:register_callback(set_guardian_survival_instincts_threshold)
 
         set_guardian_survival_instincts_threshold(guardian_survival_instincts_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -201,7 +205,7 @@ do
         bind_config = guardian_rage_overflow_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:60 y:12
         -- 用途：显示怒气溢出阈值配置。
         -- 更新函数：set_guardian_rage_overflow_threshold
@@ -217,7 +221,8 @@ do
         guardian_rage_overflow_threshold:register_callback(set_guardian_rage_overflow_threshold)
 
         set_guardian_rage_overflow_threshold(guardian_rage_overflow_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -234,7 +239,7 @@ do
         bind_config = guardian_rage_maul_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:61 y:12
         -- 用途：显示重殴怒气下限配置。
         -- 更新函数：set_guardian_rage_maul_threshold
@@ -250,7 +255,8 @@ do
         guardian_rage_maul_threshold:register_callback(set_guardian_rage_maul_threshold)
 
         set_guardian_rage_maul_threshold(guardian_rage_maul_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -268,7 +274,7 @@ do
         bind_config = guardian_interrupt_logic,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:62 y:12
         -- 用途：显示守护德鲁伊打断逻辑配置。
         -- 更新函数：set_guardian_interrupt_logic
@@ -288,7 +294,8 @@ do
         guardian_interrupt_logic:register_callback(set_guardian_interrupt_logic)
 
         set_guardian_interrupt_logic(guardian_interrupt_logic:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -307,7 +314,7 @@ do
         bind_config = guardian_incarnation_logic,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:63 y:12
         -- 用途：显示化身逻辑配置。
         -- 更新函数：set_guardian_incarnation_logic
@@ -329,7 +336,8 @@ do
         guardian_incarnation_logic:register_callback(set_guardian_incarnation_logic)
 
         set_guardian_incarnation_logic(guardian_incarnation_logic:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -349,7 +357,7 @@ do
         bind_config = guardian_ironfur_logic,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:64 y:12
         -- 用途：显示铁鬃逻辑配置。
         -- 更新函数：set_guardian_ironfur_logic
@@ -373,7 +381,8 @@ do
         guardian_ironfur_logic:register_callback(set_guardian_ironfur_logic)
 
         set_guardian_ironfur_logic(guardian_ironfur_logic:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -390,7 +399,7 @@ do
         bind_config = guardian_rage_limit,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:65 y:12
         -- 用途：显示怒气上限配置。
         -- 更新函数：set_guardian_rage_limit
@@ -406,5 +415,6 @@ do
         guardian_rage_limit:register_callback(set_guardian_rage_limit)
 
         set_guardian_rage_limit(guardian_rage_limit:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end

@@ -1,7 +1,7 @@
 local addonName, addonTable             = ... -- luacheck: ignore addonName
 
 -- Lua 原生函数
-local After                             = C_Timer.After
+local insert                            = table.insert
 local random                            = math.random
 
 -- WoW 官方 API
@@ -22,8 +22,10 @@ if currentSpec ~= 3 then return end -- 不是守护专精则停止
 -- DejaVu Core
 local DejaVu = _G["DejaVu"]
 local Cell = DejaVu.Cell
+local MartixInitFuncs = DejaVu.MartixInitFuncs
 
-After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+
+local function InitFrame()
     local eventFrame = CreateFrame("Frame") -- 事件框架
 
     local cells = {
@@ -42,7 +44,7 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         cells.ComboPoints:setCellRGBA(mean)
     end
 
-    local lowTimeElapsed = -random() -- 0.5 秒刷新连击点数量
+    local lowTimeElapsed = -random()                           -- 0.5 秒刷新连击点数量
     eventFrame:HookScript("OnUpdate", function(frame, elapsed) -- luacheck: ignore frame
         lowTimeElapsed = lowTimeElapsed + elapsed
         if lowTimeElapsed > 0.5 then
@@ -50,4 +52,5 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
             UpdateComboPoints()
         end
     end)
-end)
+end
+insert(MartixInitFuncs, InitFrame)

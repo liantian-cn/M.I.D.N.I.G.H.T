@@ -2,8 +2,6 @@ local addonName, addonTable             = ... -- 插件入口固定写法
 
 -- Lua 原生函数
 local insert                            = table.insert
-local After                             = C_Timer.After
-local random                            = math.random
 
 -- WoW 官方 API
 local UnitClass                         = UnitClass
@@ -22,6 +20,7 @@ local Config = DejaVu.Config
 local ConfigRows = DejaVu.ConfigRows
 local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
+local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 -- 全局变量。设置窗体数不够，这些修改较少的，放在变量里。
 local WILD_GROWTH_COUNT_THRESHOLD = 2
@@ -47,7 +46,7 @@ do
         bind_config = restoration_ironbark_hp_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:55 y:12
         -- 用途：显示铁木树皮血量阈值配置。
         -- 更新函数：set_restoration_ironbark_hp_threshold
@@ -62,7 +61,8 @@ do
 
         restoration_ironbark_hp_threshold:register_callback(set_restoration_ironbark_hp_threshold)
         set_restoration_ironbark_hp_threshold(restoration_ironbark_hp_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 do
     -- x:56 y:12
@@ -81,7 +81,7 @@ do
         bind_config = restoration_barkskin_hp_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:56 y:12
         -- 用途：显示树皮术血量阈值配置。
         -- 更新函数：set_restoration_barkskin_hp_threshold
@@ -96,7 +96,8 @@ do
 
         restoration_barkskin_hp_threshold:register_callback(set_restoration_barkskin_hp_threshold)
         set_restoration_barkskin_hp_threshold(restoration_barkskin_hp_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -116,7 +117,7 @@ do
         bind_config = restoration_convoke_party_hp_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:57 y:12
         -- 用途：显示万灵队伍血量阈值配置。
         -- 更新函数：set_restoration_convoke_party_hp_threshold
@@ -131,7 +132,8 @@ do
 
         restoration_convoke_party_hp_threshold:register_callback(set_restoration_convoke_party_hp_threshold)
         set_restoration_convoke_party_hp_threshold(restoration_convoke_party_hp_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -151,7 +153,7 @@ do
         bind_config = restoration_convoke_single_hp_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:58 y:12
         -- 用途：显示万灵单体血量阈值配置。
         -- 更新函数：set_restoration_convoke_single_hp_threshold
@@ -166,7 +168,8 @@ do
 
         restoration_convoke_single_hp_threshold:register_callback(set_restoration_convoke_single_hp_threshold)
         set_restoration_convoke_single_hp_threshold(restoration_convoke_single_hp_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -186,7 +189,7 @@ do
         bind_config = restoration_wild_growth_hp_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:59 y:12
         -- 用途：显示野性成长血量阈值配置。
         -- 更新函数：set_restoration_wild_growth_hp_threshold
@@ -201,7 +204,8 @@ do
 
         restoration_wild_growth_hp_threshold:register_callback(set_restoration_wild_growth_hp_threshold)
         set_restoration_wild_growth_hp_threshold(restoration_wild_growth_hp_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -221,7 +225,7 @@ do
         bind_config = restoration_tranquility_party_hp_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:60 y:12
         -- 用途：显示宁静队伍血量阈值配置。
         -- 更新函数：set_restoration_tranquility_party_hp_threshold
@@ -236,7 +240,8 @@ do
 
         restoration_tranquility_party_hp_threshold:register_callback(set_restoration_tranquility_party_hp_threshold)
         set_restoration_tranquility_party_hp_threshold(restoration_tranquility_party_hp_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -256,7 +261,7 @@ do
         bind_config = restoration_nature_swiftness_hp_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:61 y:12
         -- 用途：显示自然迅捷血量阈值配置。
         -- 更新函数：set_restoration_nature_swiftness_hp_threshold
@@ -271,7 +276,8 @@ do
 
         restoration_nature_swiftness_hp_threshold:register_callback(set_restoration_nature_swiftness_hp_threshold)
         set_restoration_nature_swiftness_hp_threshold(restoration_nature_swiftness_hp_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -291,7 +297,7 @@ do
         bind_config = restoration_swiftmend_hp_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:62 y:12
         -- 用途：显示迅捷治愈血量阈值配置。
         -- 更新函数：set_restoration_swiftmend_hp_threshold
@@ -306,7 +312,8 @@ do
 
         restoration_swiftmend_hp_threshold:register_callback(set_restoration_swiftmend_hp_threshold)
         set_restoration_swiftmend_hp_threshold(restoration_swiftmend_hp_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -326,7 +333,7 @@ do
         bind_config = restoration_swiftmend_count_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:63 y:12
         -- 用途：显示迅捷治愈人数阈值配置。
         -- 更新函数：set_restoration_swiftmend_count_threshold
@@ -341,7 +348,8 @@ do
 
         restoration_swiftmend_count_threshold:register_callback(set_restoration_swiftmend_count_threshold)
         set_restoration_swiftmend_count_threshold(restoration_swiftmend_count_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -361,7 +369,7 @@ do
         bind_config = restoration_regrowth_hp_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:64 y:12
         -- 用途：显示愈合血量阈值配置。
         -- 更新函数：set_restoration_regrowth_hp_threshold
@@ -376,7 +384,8 @@ do
 
         restoration_regrowth_hp_threshold:register_callback(set_restoration_regrowth_hp_threshold)
         set_restoration_regrowth_hp_threshold(restoration_regrowth_hp_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -396,7 +405,7 @@ do
         bind_config = restoration_rejuvenation_hp_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:65 y:12
         -- 用途：显示回春血量阈值配置。
         -- 更新函数：set_restoration_rejuvenation_hp_threshold
@@ -411,7 +420,8 @@ do
 
         restoration_rejuvenation_hp_threshold:register_callback(set_restoration_rejuvenation_hp_threshold)
         set_restoration_rejuvenation_hp_threshold(restoration_rejuvenation_hp_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -431,7 +441,7 @@ do
         bind_config = restoration_abundance_stack_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:66 y:12
         -- 用途：显示丰饶层数阈值配置。
         -- 更新函数：set_restoration_abundance_stack_threshold
@@ -446,7 +456,8 @@ do
 
         restoration_abundance_stack_threshold:register_callback(set_restoration_abundance_stack_threshold)
         set_restoration_abundance_stack_threshold(restoration_abundance_stack_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -500,7 +511,7 @@ do
         bind_config = restoration_hot_hp_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:68 y:12
         -- 用途：显示 hot 等效生命值配置。
         -- 更新函数：set_restoration_hot_hp_threshold
@@ -515,5 +526,6 @@ do
 
         restoration_hot_hp_threshold:register_callback(set_restoration_hot_hp_threshold)
         set_restoration_hot_hp_threshold(restoration_hot_hp_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end

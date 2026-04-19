@@ -3,11 +3,11 @@ local addonName, addonTable = ... -- luacheck: ignore addonName -- 插件入口�
 -- Lua 原生函数
 local pairs = pairs
 local random = math.random
+local insert = table.insert
 
 -- WoW 官方 API
 local UnitName = UnitName
 local issecretvalue = issecretvalue
-local After = C_Timer.After
 local CreateFrame = CreateFrame
 local UnitExists = UnitExists
 
@@ -24,8 +24,10 @@ local party_members = {
     "party3",
     "party4",
 }
+local MartixInitFuncs = DejaVu.MartixInitFuncs
 
-After(2, function()
+
+local function InitFrame()
     -- eventFrame 构建
     local eventFrame = CreateFrame("Frame") -- 事件框架
 
@@ -165,4 +167,5 @@ After(2, function()
 
     -- 首次刷新
     updateAll()
-end)
+end
+insert(MartixInitFuncs, InitFrame)

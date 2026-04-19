@@ -3,6 +3,7 @@ local addonName, addonTable             = ... -- luacheck: ignore addonName
 -- Lua 原生函数
 local After                             = C_Timer.After
 local random                            = math.random
+local insert                            = table.insert
 
 -- WoW 官方 API
 local CreateFrame                       = CreateFrame
@@ -22,8 +23,10 @@ if currentSpec ~= 1 then return end -- 不是鲜血专精则停止
 -- DejaVu Core
 local DejaVu = _G["DejaVu"]
 local Cell = DejaVu.Cell
+local MartixInitFuncs = DejaVu.MartixInitFuncs
 
-After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+
+local function InitFrame()
     local eventFrame = CreateFrame("Frame") -- 事件框架
 
     local cells = {
@@ -47,7 +50,7 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         cells.ReadyRunes:setCellRGBA(readyRunes * 10 / 255)
     end
 
-    local fastTimeElapsed = -random() -- 0.1 秒刷新可用符文数量
+    local fastTimeElapsed = -random()                          -- 0.1 秒刷新可用符文数量
     eventFrame:HookScript("OnUpdate", function(frame, elapsed) -- luacheck: ignore frame
         fastTimeElapsed = fastTimeElapsed + elapsed
         if fastTimeElapsed > 0.1 then
@@ -55,4 +58,5 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
             UpdateReadyRunes()
         end
     end)
-end)
+end
+insert(MartixInitFuncs, InitFrame)

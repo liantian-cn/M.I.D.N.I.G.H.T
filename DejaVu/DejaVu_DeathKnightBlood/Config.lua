@@ -2,7 +2,6 @@ local addonName, addonTable             = ... -- 插件入口固定写法
 
 -- Lua 原生函数
 local insert                            = table.insert
-local After                             = C_Timer.After
 
 -- WoW 官方 API
 local UnitClass                         = UnitClass
@@ -21,6 +20,8 @@ local DejaVu = _G["DejaVu"]
 local Config = DejaVu.Config
 local ConfigRows = DejaVu.ConfigRows
 local Cell = DejaVu.Cell
+local MartixInitFuncs = DejaVu.MartixInitFuncs
+
 
 do
     local runic_power_max = Config("runic_power_max")
@@ -36,7 +37,7 @@ do
         bind_config = runic_power_max,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:55 y:12
         -- 用途：显示最大符文能量配置。
         -- 更新函数：set_runic_power_max
@@ -52,7 +53,8 @@ do
         runic_power_max:register_callback(set_runic_power_max)
 
         set_runic_power_max(runic_power_max:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -70,7 +72,7 @@ do
         bind_config = dk_interrupt_mode,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:56 y:12
         -- 用途：显示鲜血死亡骑士打断模式配置。
         -- 更新函数：set_dk_interrupt_mode
@@ -90,7 +92,8 @@ do
         dk_interrupt_mode:register_callback(set_dk_interrupt_mode)
 
         set_dk_interrupt_mode(dk_interrupt_mode:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -107,7 +110,7 @@ do
         bind_config = blood_death_strike_health_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:57 y:12
         -- 用途：显示死亡打击生命值阈值配置。
         -- 更新函数：set_blood_death_strike_health_threshold
@@ -123,7 +126,8 @@ do
         blood_death_strike_health_threshold:register_callback(set_blood_death_strike_health_threshold)
 
         set_blood_death_strike_health_threshold(blood_death_strike_health_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -140,7 +144,7 @@ do
         bind_config = blood_death_strike_runic_power_overflow_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:58 y:12
         -- 用途：显示死亡打击泄能阈值配置。
         -- 更新函数：set_blood_death_strike_runic_power_overflow_threshold
@@ -156,7 +160,8 @@ do
         blood_death_strike_runic_power_overflow_threshold:register_callback(set_blood_death_strike_runic_power_overflow_threshold)
 
         set_blood_death_strike_runic_power_overflow_threshold(blood_death_strike_runic_power_overflow_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -173,7 +178,7 @@ do
         bind_config = reaper_mark_health_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:59 y:12
         -- 用途：显示死神印记血量阈值配置。
         -- 更新函数：set_reaper_mark_health_threshold
@@ -189,7 +194,8 @@ do
         reaper_mark_health_threshold:register_callback(set_reaper_mark_health_threshold)
 
         set_reaper_mark_health_threshold(reaper_mark_health_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -208,7 +214,7 @@ do
         bind_config = dancing_rune_mode,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:60 y:12
         -- 用途：显示符文刃舞模式配置。
         -- 更新函数：set_dancing_rune_mode
@@ -230,5 +236,6 @@ do
         dancing_rune_mode:register_callback(set_dancing_rune_mode)
 
         set_dancing_rune_mode(dancing_rune_mode:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end

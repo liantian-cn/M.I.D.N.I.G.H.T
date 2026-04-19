@@ -1,8 +1,6 @@
 local addonName, addonTable = ... -- 插件入口固定写法
 
 -- Lua 原生函数
-local ipairs = ipairs
-local After = C_Timer.After
 local random = math.random
 local min = math.min
 local insert = table.insert
@@ -45,6 +43,7 @@ local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
 local BadgeCell = DejaVu.BadgeCell
 local MeleeRange = DejaVu.MeleeRange -- 默认的近战检测范围
+local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 local function itemUsable(itemId)
     if not itemId then
@@ -65,10 +64,12 @@ zeroToOneCurve:SetType(Enum.LuaCurveType.Linear)
 zeroToOneCurve:AddPoint(0.0, CreateColor(0, 0, 0, 1))
 zeroToOneCurve:AddPoint(1.0, CreateColor(1, 1, 1, 1))
 
-local cell = {}                                         -- 状态单元格，提供给外部调用以更新状态显示                                    -- 触发器，提供给外部调用以触发状态更新
+local cell = {} -- 状态单元格，提供给外部调用以更新状态显示                                    -- 触发器，提供给外部调用以触发状态更新
 
-After(2, function()                                     -- 延迟加载
-    local eventFrame = CreateFrame("Frame")             -- 事件框架
+
+
+local function InitFrame()
+    local eventFrame = CreateFrame("Frame") -- 事件框架
 
     -- x:45 y:14
     -- 用途：单位施法图标
@@ -550,4 +551,5 @@ After(2, function()                                     -- 延迟加载
     updateCastAndChannel()
     updateCastAndChannelDuration()
     updateMovement_fix()
-end)
+end
+insert(MartixInitFuncs, InitFrame)

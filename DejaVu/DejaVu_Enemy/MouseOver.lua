@@ -1,12 +1,11 @@
 local addonName, addonTable = ... -- 插件入口固定写法
 
 -- Lua 原生函数
-local pairs = pairs
 local random = math.random
 local select = select
+local insert = table.insert
 
 -- WoW 官方 API
-local After = C_Timer.After
 local CreateColor = CreateColor
 local CreateColorCurve = C_CurveUtil.CreateColorCurve
 local EvaluateColorFromBoolean = C_CurveUtil.EvaluateColorFromBoolean
@@ -35,6 +34,7 @@ local Cell = DejaVu.Cell
 local BadgeCell = DejaVu.BadgeCell
 local RangedRange = DejaVu.RangedRange -- 默认的远程检测范围
 local MeleeRange = DejaVu.MeleeRange   -- 默认的近战检测范围
+local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 local LibStub = LibStub
 local LRC = LibStub("LibRangeCheck-3.0")
@@ -48,12 +48,12 @@ zeroToOneCurve:SetType(Enum.LuaCurveType.Linear)
 zeroToOneCurve:AddPoint(0.0, CreateColor(0, 0, 0, 1))
 zeroToOneCurve:AddPoint(1.0, CreateColor(1, 1, 1, 1))
 
-local cell = {}                             -- 状态单元格，提供给外部调用以更新状态显示
-local UNIT_KEY = "mouseover"                -- 目标单位
-local posX = 70                             -- 起始 x 坐标
-local posY = 12                             -- 起始 y 坐标
+local cell = {}              -- 状态单元格，提供给外部调用以更新状态显示
+local UNIT_KEY = "mouseover" -- 目标单位
+local posX = 70              -- 起始 x 坐标
+local posY = 12              -- 起始 y 坐标
 
-After(2, function()                         -- 延迟加载
+local function InitFrame()
     local eventFrame = CreateFrame("Frame") -- 事件框架
 
     local unitExists = false
@@ -508,4 +508,5 @@ After(2, function()                         -- 延迟加载
     end)
 
     updateAll()
-end)
+end
+insert(MartixInitFuncs, InitFrame)

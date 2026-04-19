@@ -1,23 +1,25 @@
 local addonName, addonTable = ... -- 插件入口固定写法
 
 -- Lua 原生函数
-local ipairs = ipairs
-local After = C_Timer.After
-local random = math.random
-local CreateFrame = CreateFrame
+local random                = math.random
+local insert                = table.insert
+local CreateFrame           = CreateFrame
 
 -- 插件内引用
-local CreateAuraController = addonTable.CreateAuraController
+local CreateAuraController  = addonTable.CreateAuraController
 
-local MAX_AURA_COUNT = 10
-local BASE_X = 1
-local BASE_Y = 14
-local UNIT_KEY = "focus"
-local AURA_FILTER = "HARMFUL|PLAYER"
-local SORT_RULE = Enum.UnitAuraSortRule.Default
-local SORT_DIRECTION = Enum.UnitAuraSortDirection.Normal
+local MAX_AURA_COUNT        = 10
+local BASE_X                = 1
+local BASE_Y                = 14
+local UNIT_KEY              = "focus"
+local AURA_FILTER           = "HARMFUL|PLAYER"
+local SORT_RULE             = Enum.UnitAuraSortRule.Default
+local SORT_DIRECTION        = Enum.UnitAuraSortDirection.Normal
 
-After(2, function()
+local DejaVu                = _G["DejaVu"]
+local MartixInitFuncs       = DejaVu.MartixInitFuncs
+
+local function InitFrame()
     local eventFrame = CreateFrame("Frame")
     local controller = CreateAuraController({
         unitKey = UNIT_KEY,
@@ -93,7 +95,7 @@ After(2, function()
         refreshAll()
     end
 
-    local fastTimeElapsed = -random()     -- 随机初始时间，避免所有事件在同一帧更新。
+    local fastTimeElapsed = -random() -- 随机初始时间，避免所有事件在同一帧更新。
     -- local lowTimeElapsed = -random()      -- 当前未使用，保留 0.5 秒刷新档位结构。
     -- local superLowTimeElapsed = -random() -- 当前未使用，保留 2 秒刷新档位结构。
     eventFrame:HookScript("OnUpdate", function(frame, elapsed)
@@ -118,4 +120,5 @@ After(2, function()
     end)
 
     refreshAll()
-end)
+end
+insert(MartixInitFuncs, InitFrame)

@@ -1,10 +1,10 @@
 local addonName, addonTable = ... -- 插件入口固定写法
 
 -- Lua 原生函数
-local After = C_Timer.After
 local random = math.random
 local floor = math.floor
 local min = math.min
+local insert = table.insert
 
 -- WoW 官方 API
 local CreateFrame = CreateFrame
@@ -13,8 +13,10 @@ local UnitAffectingCombat = UnitAffectingCombat
 
 local DejaVu = _G["DejaVu"]
 local Cell = DejaVu.Cell
+local MartixInitFuncs = DejaVu.MartixInitFuncs
 
-After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+
+local function InitFrame()
     local eventFrame = CreateFrame("Frame")
 
     -- x:56 y:9
@@ -60,4 +62,5 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
 
     -- 首次刷新
     updateCell()
-end)
+end
+insert(MartixInitFuncs, InitFrame)

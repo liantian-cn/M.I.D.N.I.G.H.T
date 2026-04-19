@@ -1,22 +1,27 @@
 local addonName, addonTable = ... -- 插件入口固定写法
 
 -- Lua 原生函数
-local After = C_Timer.After
-local random = math.random
-local CreateFrame = CreateFrame
+local random                = math.random
+local insert                = table.insert
+local CreateFrame           = CreateFrame
 
 -- 插件内引用
-local CreateAuraController = addonTable.CreateAuraController
+local CreateAuraController  = addonTable.CreateAuraController
 
-local MAX_AURA_COUNT = 16
-local BASE_X = 22
-local BASE_Y = 14
-local UNIT_KEY = "mouseover"
-local AURA_FILTER = "HARMFUL|PLAYER"
-local SORT_RULE = Enum.UnitAuraSortRule.Default
-local SORT_DIRECTION = Enum.UnitAuraSortDirection.Normal
+local MAX_AURA_COUNT        = 16
+local BASE_X                = 22
+local BASE_Y                = 14
+local UNIT_KEY              = "mouseover"
+local AURA_FILTER           = "HARMFUL|PLAYER"
+local SORT_RULE             = Enum.UnitAuraSortRule.Default
+local SORT_DIRECTION        = Enum.UnitAuraSortDirection.Normal
 
-After(2, function()
+local DejaVu                = _G["DejaVu"]
+local MartixInitFuncs       = DejaVu.MartixInitFuncs
+
+
+
+local function InitFrame()
     -- 先构建 eventFrame
     local eventFrame = CreateFrame("Frame")
 
@@ -78,6 +83,7 @@ After(2, function()
     function eventFrame.UNIT_AURA(unitTarget, updateInfo)
         updateMouseoverHarmfulAuras(updateInfo)
     end
+
     -- eventFrame:RegisterUnitEvent("UNIT_AURA", UNIT_KEY)
 
     -- UPDATE_MOUSEOVER_UNIT
@@ -86,6 +92,7 @@ After(2, function()
     function eventFrame.UPDATE_MOUSEOVER_UNIT()
         pollMouseoverHarmfulAuras()
     end
+
     -- eventFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT") -- 当鼠标移开时不会触发 UPDATE_MOUSEOVER_UNIT 事件，所以只能放弃
 
     -- CURSOR_CHANGED
@@ -94,6 +101,7 @@ After(2, function()
     function eventFrame.CURSOR_CHANGED()
         pollMouseoverHarmfulAuras()
     end
+
     -- eventFrame:RegisterEvent("CURSOR_CHANGED")
 
     -- UNIT_FLAGS
@@ -102,6 +110,7 @@ After(2, function()
     function eventFrame.UNIT_FLAGS(unitTarget)
         pollMouseoverHarmfulAuras()
     end
+
     -- eventFrame:RegisterUnitEvent("UNIT_FLAGS", UNIT_KEY)
 
     -- 路由
@@ -132,6 +141,6 @@ After(2, function()
 
     -- 首次刷新
     controller.refreshAll()
-end)
-
+end
+insert(MartixInitFuncs, InitFrame)
 -- 鼠标指向没有事件精准捕获。干脆.5秒更新一次。而且时间无需更新，毕竟指向要在变。

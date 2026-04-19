@@ -1,10 +1,7 @@
 local addonName, addonTable = ... -- 插件入口固定写法
 
 -- Lua 原生函数
-local ipairs = ipairs
-local After = C_Timer.After
 local random = math.random
-local min = math.min
 local insert = table.insert
 
 -- WoW 官方 API
@@ -14,9 +11,10 @@ local UnitHealthMax = UnitHealthMax
 
 local DejaVu = _G["DejaVu"]
 local Bar = DejaVu.Bar
+local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 
-After(2, function()
+local function InitFrame()
     local eventFrame = CreateFrame("Frame") -- 事件框架
 
     -- x:43 y:16
@@ -135,4 +133,5 @@ After(2, function()
     updateDamageAbsorbs()
     updateHealAbsorbs()
     -- updateIncomingHeals()
-end)
+end
+insert(MartixInitFuncs, InitFrame)

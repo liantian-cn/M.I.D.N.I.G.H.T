@@ -1,26 +1,28 @@
 local addonName, addonTable = ... -- 插件入口固定写法
 
 -- Lua 原生函数
-local ipairs = ipairs
-local After = C_Timer.After
-local random = math.random
-local format = string.format
+local random                = math.random
+local insert                = table.insert
+local format                = string.format
 -- WoW 官方 API
-local CreateFrame = CreateFrame
+local CreateFrame           = CreateFrame
 
-local DejaVu_Aura = _G["DejaVu_Aura"]
+local DejaVu_Aura           = _G["DejaVu_Aura"]
 
 -- 插件内引用
-local CreateAuraController = DejaVu_Aura.CreateAuraController
+local CreateAuraController  = DejaVu_Aura.CreateAuraController
 
-local MAX_AURA_COUNT = 3
-local BASE_Y = 19
+local MAX_AURA_COUNT        = 3
+local BASE_Y                = 19
 -- local AURA_FILTER = "HELPFUL"
-local AURA_FILTER = "HARMFUL"
-local SORT_RULE = Enum.UnitAuraSortRule.Default
-local SORT_DIRECTION = Enum.UnitAuraSortDirection.Reverse
+local AURA_FILTER           = "HARMFUL"
+local SORT_RULE             = Enum.UnitAuraSortRule.Default
+local SORT_DIRECTION        = Enum.UnitAuraSortDirection.Reverse
+local DejaVu                = _G["DejaVu"]
+local MartixInitFuncs       = DejaVu.MartixInitFuncs
 
-After(2, function()
+
+local function InitFrame()
     for partyIndex = 1, 4 do
         local eventFrame = CreateFrame("Frame")
         local UNIT_KEY = format("party%d", partyIndex)
@@ -168,4 +170,5 @@ After(2, function()
 
         refreshAll()
     end
-end)
+end
+insert(MartixInitFuncs, InitFrame)
