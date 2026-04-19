@@ -6,7 +6,7 @@
 ## LoadSavedVariablesFirst: 1
 ## Category: DéjàVu
 ## IconTexture: Interface\Icons\Ability_Domination_Rune13
-## Dependencies: !BugGrabber,BugSack
+## Dependencies: !BugGrabber,BugSack,LibRangeCheck-3.0
 
 Base.lua
 Profile.lua

@@ -1,7 +1,23 @@
 {
     "Lua.diagnostics.globals": [
         "SlashCmdList",
-        "Settings"
+        "Settings",
+        "ScriptErrorsFrame",
+        "DEFAULT_CHAT_FRAME",
+        "AddonCompartmentFrame",
+        "CreateSettingsButtonInitializer",
+        "ScrollBoxFactoryInitializerMixin",
+        "SettingsElementHierarchyMixin",
+        "SettingsSearchableElementMixin",
+        "SettingsPanel",
+        "RaidNotice_AddMessage",
+        "RaidWarningFrame",
+        "CLOSE",
+        "ReloadUI",
+        "PanelTemplates_DeselectTab",
+        "PanelTemplates_TabResize",
+        "PanelTemplates_SelectTab",
+        "StaticPopup_Show"
     ],
     "python-envs.defaultEnvManager": "ms-python.python:venv"
 }

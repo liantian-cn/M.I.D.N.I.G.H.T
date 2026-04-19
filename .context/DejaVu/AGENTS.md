@@ -35,3 +35,11 @@
 ## 检查命令
 
 - 在 `DejaVu/` 目录下运行 `luacheck DejaVu_Common DejaVu_Core DejaVu_Matrix DejaVu_Panel DejaVu_Player DejaVu_Party DejaVu_Enemy DejaVu_Spell DejaVu_Aura DejaVu_DeathKnightBlood DejaVu_DruidGuardian DejaVu_DruidRestoration`
+
+## 第三方
+
+以下文件夹是第三方依赖插件，在repo中，但无需修改。
+
+- !BugGrabber
+- BugSack
+- LibRangeCheck-3.0
