@@ -63,7 +63,7 @@ After(2, function()
     local function updateCastingTarget(unitToken)
         for k, c in pairs(cell) do
             if k == unitToken then
-                c:setCell(COLOR.WHITE)
+                c:setCell(COLOR.GREEN)
             else
                 c:setCell(COLOR.BLACK)
             end
