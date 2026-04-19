@@ -26,7 +26,7 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
     -- 依赖事件更新：无。
     -- 依赖定时刷新：0.1 秒。
     local function updateCell()
-        cell:setCellBoolean(DejaVu.Enable == true, COLOR.WHITE, COLOR.BLACK)
+        cell:setCellBoolean(DejaVu.Enable == true, COLOR.GREEN, COLOR.BLACK)
     end
 
     -- 定时路由：每 0.1 秒轮询全局启用状态。
@@ -50,5 +50,4 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
         --     controller.refreshAll()
         -- end
     end)
-
 end)

@@ -89,14 +89,17 @@ class Cell(CellRegion):
         return self.is_pure and tuple(self.color) == (0, 0, 0)
 
     @property
+    def is_green(self) -> bool:
+        return self.is_pure and tuple(self.color) == (0, 255, 0)
+
+    @property
     def is_white(self) -> bool:
         return self.is_pure and tuple(self.color) == (255, 255, 255)
 
     @property
     def is_not_black(self) -> bool:
-        if not self.is_pure:
-            logging.warning(f"坐标在 ({self.x}, {self.y}) 的单元格不是纯色, 颜色: {self.color_string}，发生串色，考虑抗锯齿、插帧、缩放异常。")
-            pass
+        if (not self.is_green) and (not self.is_black):
+            logging.warning(f"坐标在 ({self.x}, {self.y}) 的单元格不是二元色, 颜色: {self.color_string}，发生串色，考虑抗锯齿、插帧、缩放异常。")
         return not self.is_black
 
 
