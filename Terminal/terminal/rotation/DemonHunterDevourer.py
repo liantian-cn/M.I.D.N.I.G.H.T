@@ -73,6 +73,7 @@ class DemonHunterDevourer(BaseRotation):
                 "blacklist" if dh_interrupt_mode_cell.mean >= 200 else "any"
             )
         interrupt_blacklist = ctx.interrupt_blacklist
+        spell_stop_blacklist = ctx.spell_stop_blacklist
 
         # 设置项 #
         # 疾影的血量阈值，默认60%，当目标血量低于这个值时才使用疾影来保命。
@@ -177,6 +178,15 @@ class DemonHunterDevourer(BaseRotation):
             return self.cast("疾影")
 
         # 打断逻辑
+        # 停止施法名单检查：如果目标或焦点正在释放名单上的法术，则停止施法
+        if spell_stop_blacklist:
+            if focus.exists and focus.canAttack and focus.isInRangedRange:
+                if (focus.anyCastIcon is not None) and (focus.anyCastIcon in spell_stop_blacklist):
+                    return self.idle(f"目标释放停止施法法术: {focus.anyCastIcon}")
+            if target.exists and target.canAttack and target.isInRangedRange:
+                if (target.anyCastIcon is not None) and (target.anyCastIcon in spell_stop_blacklist):
+                    return self.idle(f"目标释放停止施法法术: {target.anyCastIcon}")
+
         target_need_interrupt = False
         focus_need_interrupt = False
         if focus.exists and focus.canAttack and focus.isInRangedRange:

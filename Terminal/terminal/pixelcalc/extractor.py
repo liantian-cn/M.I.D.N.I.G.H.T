@@ -213,6 +213,8 @@ def extract_all_data(matrix: MatrixDecoder) -> dict[str, Any]:
         'dispel_blacklist': matrix.readBadgeCellList(64, 15, 10),  # 可移除的法术
         # DejaVu\06_spec\52_interrupt_blacklist.lua
         'interrupt_blacklist': matrix.readBadgeCellList(43, 17, 20),  # 可中断的法术
+        # DejaVu\DejaVu_Common\SpellStopBlacklist.lua
+        'spell_stop_blacklist': matrix.readBadgeCellList(43, 19, 20),  # 停止施法的法术
         'spell_queue_window': matrix.getCell(57, 9).mean / 100,  # 映射到秒，游戏内的毫秒/10。
         'burst_time': matrix.getCell(82, 0).decimal * 60,
     }
