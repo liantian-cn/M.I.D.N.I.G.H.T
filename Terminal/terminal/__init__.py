@@ -25,7 +25,9 @@ $signature = Get-AuthenticodeSignature -LiteralPath '{target_path}'
     signer_subject = if ($null -ne $signature.SignerCertificate) {{ $signature.SignerCertificate.Subject }} else {{ $null }}
     signer_issuer = if ($null -ne $signature.SignerCertificate) {{ $signature.SignerCertificate.Issuer }} else {{ $null }}
 }} | ConvertTo-Json -Compress
-""".strip().format(target_path=escaped_target_path)
+""".strip().format(
+        target_path=escaped_target_path
+    )
     powershell_executable = (
         Path(os.environ.get("SystemRoot", r"C:\Windows"))
         / "System32"
@@ -46,12 +48,25 @@ $signature = Get-AuthenticodeSignature -LiteralPath '{target_path}'
         check=False,
     )
     if completed.returncode != 0:
-        error_message = completed.stderr.strip() or completed.stdout.strip() or "Get-AuthenticodeSignature failed"
+        error_message = (
+            completed.stderr.strip()
+            or completed.stdout.strip()
+            or "Get-AuthenticodeSignature failed"
+        )
         raise RuntimeError(error_message)
     return json.loads(completed.stdout)
 
 
+def _is_venv_python() -> bool:
+    """检测是否在虚拟环境中运行"""
+    return sys.prefix != sys.base_prefix
+
+
 def _ensure_supported_python_signature() -> None:
+    # 虚拟环境中的 Python 没有签名是正常的，跳过校验
+    if _is_venv_python():
+        return
+
     python_executable = Path(sys.executable).resolve()
 
     try:
