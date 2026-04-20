@@ -24,7 +24,7 @@ local macroList = {}
 insert(macroList, { title = "reloadUI", key = "CTRL-F12", text = "/reload" })
 insert(macroList, { title = "target吞噬", key = "ALT-NUMPAD1", text = "/cast [@target] 吞噬" })
 insert(macroList, { title = "focus吞噬", key = "ALT-NUMPAD2", text = "/cast [@focus] 吞噬" })
-insert(macroList, { title = "就近吞噬", key = "ALT-NUMPAD3", text = "/cleartarget \n/targetenemy [noharm][dead][noexists][help] \n/cast [nocombat] 就近吞噬 \n/stopmacro [channeling] \n/startattack \n/cast [harm]就近吞噬 \n/targetlasttarget" })
+insert(macroList, { title = "就近吞噬", key = "ALT-NUMPAD3", text = "/cleartarget \n/targetenemy [noharm][dead][noexists][help] \n/cast [nocombat] 就近吞噬 \n/stopmacro [channeling] \n/startattack \n/cast [harm] 就近吞噬 \n/targetlasttarget" })
 insert(macroList, { title = "target收割", key = "ALT-NUMPAD4", text = "/cast [@target] 收割" })
 insert(macroList, { title = "虚空射线", key = "ALT-NUMPAD5", text = "/cast 虚空射线" })
 insert(macroList, { title = "target根除", key = "ALT-NUMPAD6", text = "/cast [@target] 根除" })

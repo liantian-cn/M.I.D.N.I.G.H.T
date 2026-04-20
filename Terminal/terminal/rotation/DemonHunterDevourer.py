@@ -12,6 +12,7 @@ class DemonHunterDevourer(BaseRotation):
     def __init__(self) -> None:
         super().__init__()
 
+        # 这些键名要和 DejaVu/DejaVu_DemonHunter/Devourer/Macro.lua 里的 title 保持一致。
         self.macroTable = {
             "target吞噬": "ALT-NUMPAD1",
             "focus吞噬": "ALT-NUMPAD2",
@@ -79,7 +80,7 @@ class DemonHunterDevourer(BaseRotation):
             dh_health_threshold = int(dh_health_threshold_cell.mean)
 
         # 设置项 #
-        # 虚空射线符能溢出阈值，默认100，当符
+        # 虚空射线符能溢出阈值，默认100，当符能高于该值时优先打虚空射线泄能。
         fury_overflow_threshold_cell = ctx.setting.cell(3)
         if fury_overflow_threshold_cell is None:
             fury_overflow_threshold = 100
