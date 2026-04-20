@@ -22,7 +22,7 @@ class DemonHunterDevourer(BaseRotation):
             "虚空变形": "ALT-NUMPAD7",
             "target坍缩之星": "ALT-NUMPAD8",
             "target瓦解": "ALT-NUMPAD9",
-            "focus瓦解": "SHIFT-NUMPAD1",
+            "focus瓦解": "ALT-NUMPAD0",
             "疾影": "SHIFT-NUMPAD1",
         }
 
@@ -93,13 +93,7 @@ class DemonHunterDevourer(BaseRotation):
 
         # 设置项 #
         # 变身的血量阈值，默认30%，当目标血量高于这个值时才使用虚空变身。
-        void_metamorphosis_health_threshold_cell = ctx.setting.cell(4)
-        if void_metamorphosis_health_threshold_cell is None:
-            void_metamorphosis_health_threshold = 30
-        else:
-            void_metamorphosis_health_threshold = int(
-                void_metamorphosis_health_threshold_cell.mean
-            )
+        void_metamorphosis_health_threshold = 30
 
         is_opener = float(ctx.combat_time) <= 10
         # print(f"游戏读取到的延迟容限{ctx.spell_queue_window}")
