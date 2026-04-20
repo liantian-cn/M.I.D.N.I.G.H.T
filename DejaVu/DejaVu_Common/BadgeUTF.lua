@@ -4,8 +4,8 @@
 local byte = string.byte
 local sub = string.sub
 local len = string.len
-local After = C_Timer.After
 local random = math.random
+local insert = table.insert
 
 -- WoW 官方 API
 local CreateFrame = CreateFrame
@@ -14,6 +14,7 @@ local DejaVu = _G["DejaVu"]
 local BadgeTitleTable = DejaVu.BadgeTitleTable
 local Cell = DejaVu.Cell
 local BadgeCell = DejaVu.BadgeCell
+local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 local ROTATE_INTERVAL = 0.5
 local UTF_CELL_COUNT = 16
@@ -69,7 +70,7 @@ local function render_utf_title(utfCells, title)
     end
 end
 
-After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+local function InitFrame()
     local eventFrame = CreateFrame("Frame")
     local IconCell = BadgeCell:New(64, 26)
     local UTFCells = {
@@ -127,4 +128,5 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
             render_current_badge(BadgeTitleTable[currentIndex])
         end
     end)
-end)
+end
+insert(MartixInitFuncs, InitFrame)

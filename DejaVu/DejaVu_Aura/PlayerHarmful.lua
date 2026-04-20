@@ -1,23 +1,26 @@
 local addonName, addonTable = ... -- 插件入口固定写法
 
 -- Lua 原生函数
-local After = C_Timer.After
-local random = math.random
-local CreateFrame = CreateFrame
+local random                = math.random
+local insert                = table.insert
+local CreateFrame           = CreateFrame
 
 -- 插件内引用
-local CreateAuraController = addonTable.CreateAuraController
+local CreateAuraController  = addonTable.CreateAuraController
 
-local MAX_AURA_COUNT = 10
-local BASE_X = 1
-local BASE_Y = 9
-local UNIT_KEY = "player"
+local MAX_AURA_COUNT        = 10
+local BASE_X                = 1
+local BASE_Y                = 9
+local UNIT_KEY              = "player"
 -- local AURA_FILTER = "HARMFUL"
-local AURA_FILTER = "HARMFUL"
-local SORT_RULE = Enum.UnitAuraSortRule.Default
-local SORT_DIRECTION = Enum.UnitAuraSortDirection.Normal
+local AURA_FILTER           = "HARMFUL"
+local SORT_RULE             = Enum.UnitAuraSortRule.Default
+local SORT_DIRECTION        = Enum.UnitAuraSortDirection.Normal
+local DejaVu                = _G["DejaVu"]
+local MartixInitFuncs       = DejaVu.MartixInitFuncs
 
-After(2, function()
+
+local function InitFrame()
     -- 先构建 eventFrame
     local eventFrame = CreateFrame("Frame")
 
@@ -108,4 +111,5 @@ After(2, function()
 
     -- 首次刷新
     controller.refreshAll()
-end)
+end
+insert(MartixInitFuncs, InitFrame)

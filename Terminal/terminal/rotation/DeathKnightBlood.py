@@ -40,7 +40,7 @@ class DeathKnightBlood(BaseRotation):
         if runes_cell is None:
             runes = 1
         else:
-            runes = int(runes_cell.mean/10)
+            runes = int(runes_cell.mean / 10)
 
         # 设置项 #
         # 符能最大值，默认120，符能百分比是根据这个值来计算的。因为不同版本符能的最大值可能不同，所以让用户自己设置这个值。
@@ -49,14 +49,16 @@ class DeathKnightBlood(BaseRotation):
             runic_power_max = 120
         else:
             runic_power_max = runic_power_max_cell.mean
-        runic_power = int(ctx.player.powerPercent * runic_power_max/100)
+        runic_power = int(ctx.player.powerPercent * runic_power_max / 100)
         # 设置项
         # 打断模式，默认黑名单模式，只有当施法名称不在黑名单中时才打断。另一种模式是任何可打断的施法都打断。
         dk_interrupt_mode_cell = ctx.setting.cell(1)
         if dk_interrupt_mode_cell is None:
             dk_interrupt_mode = "blacklist"
         else:
-            dk_interrupt_mode = "blacklist" if dk_interrupt_mode_cell.mean >= 200 else "any"
+            dk_interrupt_mode = (
+                "blacklist" if dk_interrupt_mode_cell.mean >= 200 else "any"
+            )
         interrupt_blacklist = ctx.interrupt_blacklist
 
         # 设置项 #
@@ -162,7 +164,11 @@ class DeathKnightBlood(BaseRotation):
         # 如果玩家生命值低于设定的阈值，并且符能足够，就优先使用灵界打击来保命
         # 灵界打击需要40符文能量，计算到像素误差，这里使用42
 
-        if (player.healthPercent < ds_health_threshold) and (runic_power >= 42) and ctx.spell_cooldown_ready("灵界打击", spell_queue_window):
+        if (
+            (player.healthPercent < ds_health_threshold)
+            and (runic_power >= 42)
+            and ctx.spell_cooldown_ready("灵界打击", spell_queue_window)
+        ):
             if main_target is not None:
                 return self.cast(main_target.unitToken + "灵界打击")
                 # print(main_target.unitToken + "灵界打击")
@@ -229,7 +235,9 @@ class DeathKnightBlood(BaseRotation):
         # 2符文=3骨盾
         # 可打出镰刀
         # 留镰刀则不能用
-        MarrowrendUsable = ctx.spell_cooldown_ready("精髓分裂", spell_queue_window, ignore_usable=True)
+        MarrowrendUsable = ctx.spell_cooldown_ready(
+            "精髓分裂", spell_queue_window, ignore_usable=True
+        )
         # print(f"精髓分裂可用: {MarrowrendUsable}", end="; ")
 
         # 补骨盾逻辑，当骨盾剩余层数<5，并且骨盾剩余时间<5秒时，要积极的补骨盾。
@@ -257,12 +265,18 @@ class DeathKnightBlood(BaseRotation):
                     return self.cast(f"{main_target.unitToken}精髓分裂")
                     # print(f"{main_target.unitToken}精髓分裂", end="; ")
                 else:
-                    if (main_target is not None) and (main_target.healthPercent > reaper_mark_health_threshold):
+                    if (main_target is not None) and (
+                        main_target.healthPercent > reaper_mark_health_threshold
+                    ):
                         return self.cast(f"{main_target.unitToken}精髓分裂")
                         # print(f"{main_target.unitToken}精髓分裂", end="; ")
 
         # 如果破灭的剩余时间小于5秒，那么无论如何都用了。
-        if MarrowrendUsable and (main_target is not None) and (ExterminateRemainingTime > 0):
+        if (
+            MarrowrendUsable
+            and (main_target is not None)
+            and (ExterminateRemainingTime > 0)
+        ):
             return self.cast(f"{main_target.unitToken}精髓分裂")
             # print(f"{main_target.unitToken}精髓分裂", end="; ")
 
@@ -271,13 +285,25 @@ class DeathKnightBlood(BaseRotation):
         # 不能用鼠标的时候。 不能移动的时候。 身上没有枯萎凋零buff的时候。
         # 鼠标指向存在，且是敌人，且在近战范围内，就用鼠标指向的目标。
         if ctx.spell_charges_ready("枯萎凋零", 1, spell_queue_window):
-            if (not ctx.use_mouse) and (not player.isMoving) and (not player.hasBuff("枯萎凋零")):
+            if (
+                (not ctx.use_mouse)
+                and (not player.isMoving)
+                and (not player.hasBuff("枯萎凋零"))
+            ):
                 return self.cast("player枯萎凋零")
                 # print("mouseover枯萎凋零", end="; ")
 
         if ctx.spell_charges_ready("枯萎凋零", 1, spell_queue_window):
-            if (not ctx.use_mouse) and (not player.isMoving) and (not player.hasBuff("枯萎凋零")):
-                if mouseover.exists and mouseover.canAttack and mouseover.isInMeleeRange:
+            if (
+                (not ctx.use_mouse)
+                and (not player.isMoving)
+                and (not player.hasBuff("枯萎凋零"))
+            ):
+                if (
+                    mouseover.exists
+                    and mouseover.canAttack
+                    and mouseover.isInMeleeRange
+                ):
                     return self.cast("cursor枯萎凋零")
                     # print("mouseover枯萎凋零", end="; ")
 
@@ -288,7 +314,9 @@ class DeathKnightBlood(BaseRotation):
                 # print("血液沸腾", end="; ")
 
         # 泄能打灵打
-        if (runic_power >= ds_power_overflow_threshold) and ctx.spell_cooldown_ready("灵界打击", spell_queue_window):
+        if (runic_power >= ds_power_overflow_threshold) and ctx.spell_cooldown_ready(
+            "灵界打击", spell_queue_window
+        ):
             if main_target is not None:
                 return self.cast(main_target.unitToken + "灵界打击")
                 # print(main_target.unitToken + "灵界打击")
@@ -298,7 +326,11 @@ class DeathKnightBlood(BaseRotation):
 
         # [符文刃舞]
         # 根据设置使用。
-        if ctx.spell_cooldown_ready("符文刃舞", spell_queue_window) and (main_target is not None) and (player.enemyCount >= 3):
+        if (
+            ctx.spell_cooldown_ready("符文刃舞", spell_queue_window)
+            and (main_target is not None)
+            and (player.enemyCount >= 3)
+        ):
             if dancing_rune_mode == "burst_mode":
                 if ctx.burst_time > 0:
                     return self.cast(f"{main_target.unitToken}符文刃舞")
@@ -314,7 +346,7 @@ class DeathKnightBlood(BaseRotation):
         # 符文有3个以上，积极打心打
         if runes >= 3:
             if ctx.spell_cooldown_ready("心脏打击", spell_queue_window):
-                if (main_target is not None):
+                if main_target is not None:
                     return self.cast(f"{main_target.unitToken}心脏打击")
                 elif player.enemyCount >= 1:
                     return self.cast("就近心脏打击")
@@ -342,7 +374,7 @@ class DeathKnightBlood(BaseRotation):
         # 心打作为填充技能。
         if runes > 1:
             if ctx.spell_cooldown_ready("心脏打击", spell_queue_window):
-                if (main_target is not None):
+                if main_target is not None:
                     return self.cast(f"{main_target.unitToken}心脏打击")
                     # print(f"{main_target.unitToken}心脏打击", end="; ")
                 elif player.enemyCount >= 1:

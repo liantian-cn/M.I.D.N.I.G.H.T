@@ -15,7 +15,18 @@ from ..rotation.base import BaseRotation
 from ..rotation.hot_reload import HotReloadEvent, RotationHotReloadTracker
 from ..workers import CaptureWorker, FrameDecodeWorker, RotationWorker
 from .dialogs import TitleEditorDialog
-from .tabs import AdvancedSettingsTab, DebugTab, HomeTab, OtherTab, PlayerAuraTab, PlayerStatusTab, PluginSpecTab, SpellTab, TargetStatusTab, TeammatesTab
+from .tabs import (
+    AdvancedSettingsTab,
+    DebugTab,
+    HomeTab,
+    OtherTab,
+    PlayerAuraTab,
+    PlayerStatusTab,
+    PluginSpecTab,
+    SpellTab,
+    TargetStatusTab,
+    TeammatesTab,
+)
 
 
 class MainWindow(QMainWindow):
@@ -30,21 +41,23 @@ class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
 
-        self.setWindowTitle("Transcendental Entelechy Revelation Machine for Instinct Neural Awakening Link")
+        self.setWindowTitle(
+            "Transcendental Entelechy Revelation Machine for Instinct Neural Awakening Link"
+        )
         self._setup_window_flags()
-        self.setFixedSize(1600, 989)
+        self.setFixedSize(800, 600)
 
         self.is_running = False
         self.monitor_region: dict[str, int] | None = None
         self.selected_rotation_class: type[BaseRotation] | None = None
         self.selected_window_handle: int | None = None
         self.capture_success = False
-        self.capture_error = '相机未启动'
+        self.capture_error = "相机未启动"
         self.capture_frame: Any = None
         self.decoded_matrix: Any = None
         self.decoded_data: dict[str, Any] | None = None
-        self.decode_state = 'idle'
-        self.decode_error = '尚未解析'
+        self.decode_state = "idle"
+        self.decode_error = "尚未解析"
         self.decode_result_is_stale = False
         self.fps = 20
 
@@ -79,19 +92,21 @@ class MainWindow(QMainWindow):
         self.advanced_settings_tab = AdvancedSettingsTab()
         self.debug_tab = DebugTab()
         self.advanced_settings_tab.set_title_manager(self.title_manager)
-        self._rotation_hot_reload = RotationHotReloadTracker(self.home_tab.current_rotation_class())
+        self._rotation_hot_reload = RotationHotReloadTracker(
+            self.home_tab.current_rotation_class()
+        )
 
         self.tab_widget = QTabWidget()
-        self.tab_widget.addTab(self.home_tab, '首页')
-        self.tab_widget.addTab(self.player_aura_tab, '玩家增益/减益')
-        self.tab_widget.addTab(self.player_status_tab, '玩家状态')
-        self.tab_widget.addTab(self.spell_tab, '技能')
-        self.tab_widget.addTab(self.target_status_tab, '目标状态')
-        self.tab_widget.addTab(self.teammates_tab, '队友')
-        self.tab_widget.addTab(self.plugin_spec_tab, '插件/专精')
-        self.tab_widget.addTab(self.other_tab, '其他')
-        self.tab_widget.addTab(self.advanced_settings_tab, '高级设置')
-        self.tab_widget.addTab(self.debug_tab, 'debug')
+        self.tab_widget.addTab(self.home_tab, "首页")
+        self.tab_widget.addTab(self.player_aura_tab, "玩家增益/减益")
+        self.tab_widget.addTab(self.player_status_tab, "玩家状态")
+        self.tab_widget.addTab(self.spell_tab, "技能")
+        self.tab_widget.addTab(self.target_status_tab, "目标状态")
+        self.tab_widget.addTab(self.teammates_tab, "队友")
+        self.tab_widget.addTab(self.plugin_spec_tab, "插件/专精")
+        self.tab_widget.addTab(self.other_tab, "其他")
+        self.tab_widget.addTab(self.advanced_settings_tab, "高级设置")
+        self.tab_widget.addTab(self.debug_tab, "debug")
         self.setCentralWidget(self.tab_widget)
 
         self._ui_refresh_timer = QTimer(self)
@@ -118,9 +133,15 @@ class MainWindow(QMainWindow):
         self.home_tab.start_clicked.connect(self._handle_start_requested)
         self.home_tab.stop_clicked.connect(self._handle_stop_requested)
         self.home_tab.monitor_changed.connect(self._handle_monitor_changed)
-        self.home_tab.open_title_editor_clicked.connect(self._handle_open_title_editor_requested)
-        self.home_tab.refresh_windows_clicked.connect(self._handle_refresh_windows_requested)
-        self.home_tab.rotation_combo.currentIndexChanged.connect(self._handle_rotation_changed)
+        self.home_tab.open_title_editor_clicked.connect(
+            self._handle_open_title_editor_requested
+        )
+        self.home_tab.refresh_windows_clicked.connect(
+            self._handle_refresh_windows_requested
+        )
+        self.home_tab.rotation_combo.currentIndexChanged.connect(
+            self._handle_rotation_changed
+        )
         self.advanced_settings_tab.fps_changed.connect(self._handle_fps_changed)
         self.tab_widget.currentChanged.connect(self._handle_tab_changed)
 
@@ -168,20 +189,20 @@ class MainWindow(QMainWindow):
         self.selected_window_handle = self.home_tab.current_window_handle()
 
         if self.monitor_region is None:
-            self._append_log('当前没有可用显示器，无法启动截图。')
+            self._append_log("当前没有可用显示器，无法启动截图。")
             return
 
         if self.selected_rotation_class is None:
-            self._append_log('当前没有可用 rotation，无法启动 rotation。')
+            self._append_log("当前没有可用 rotation，无法启动 rotation。")
             return
 
         if self.selected_window_handle is None:
-            self._append_log('当前没有可用游戏窗口，无法启动 rotation。')
+            self._append_log("当前没有可用游戏窗口，无法启动 rotation。")
             return
 
         self.is_running = True
         self.capture_success = False
-        self.capture_error = '相机未启动'
+        self.capture_error = "相机未启动"
         self.capture_frame = None
         self._capture_frame_id = 0
         self._reset_decode_state(clear_result=True)
@@ -189,13 +210,13 @@ class MainWindow(QMainWindow):
         self._reset_rotation_state()
         self.home_tab.set_running_state(True)
         self._refresh_visible_data_tab()
-        self._append_log('收到启动请求。')
+        self._append_log("收到启动请求。")
         self._start_worker_capture(self.monitor_region, self.fps)
 
     def _handle_stop_requested(self) -> None:
         self.is_running = False
         self.capture_success = False
-        self.capture_error = '相机未启动'
+        self.capture_error = "相机未启动"
         self.capture_frame = None
         self._capture_frame_id = 0
         self._reset_decode_state(clear_result=True)
@@ -203,7 +224,7 @@ class MainWindow(QMainWindow):
         self._reset_rotation_state()
         self.home_tab.set_running_state(False)
         self._refresh_visible_data_tab()
-        self._append_log('收到停止请求。')
+        self._append_log("收到停止请求。")
         self._stop_worker_capture()
 
     def _handle_fps_changed(self, value: int) -> None:
@@ -216,8 +237,8 @@ class MainWindow(QMainWindow):
         self._refresh_visible_data_tab()
 
     def _append_log(self, message: str) -> None:
-        timestamp = QTime.currentTime().toString('HH:mm:ss.zzz')
-        self.home_tab.append_log(f'{timestamp} {message}')
+        timestamp = QTime.currentTime().toString("HH:mm:ss.zzz")
+        self.home_tab.append_log(f"{timestamp} {message}")
 
     def _log_rotation_hot_reload_event(self, event: HotReloadEvent) -> None:
         self._append_log(event.message)
@@ -295,14 +316,14 @@ class MainWindow(QMainWindow):
 
     def _handle_capture_started(self, bounds: dict[str, int]) -> None:
         self._append_log(
-            '找到截图区域: '
+            "找到截图区域: "
             f"left={bounds['left']} top={bounds['top']} right={bounds['right']} bottom={bounds['bottom']}"
         )
 
     def _handle_capture_ready(self, frame: Any) -> None:
         self.capture_frame = frame
         self.capture_success = True
-        self.capture_error = ''
+        self.capture_error = ""
         self._capture_frame_id += 1
         self._submit_frame_to_decode_worker(frame, self._capture_frame_id)
 
@@ -319,14 +340,18 @@ class MainWindow(QMainWindow):
         self._decode_in_flight = True
         self.request_decode_frame.emit(frame, frame_id)
 
-    def _submit_data_to_rotation_worker(self, data: dict[str, Any], frame_id: int) -> None:
+    def _submit_data_to_rotation_worker(
+        self, data: dict[str, Any], frame_id: int
+    ) -> None:
         if not self.is_running or self.selected_rotation_class is None:
             return
 
         if self._wait_until_monotonic > time.monotonic():
             return
 
-        runtime_rotation_class, reload_event = self._rotation_hot_reload.get_runtime_rotation_class()
+        runtime_rotation_class, reload_event = (
+            self._rotation_hot_reload.get_runtime_rotation_class()
+        )
         if reload_event is not None:
             self._log_rotation_hot_reload_event(reload_event)
         if runtime_rotation_class is None:
@@ -356,19 +381,23 @@ class MainWindow(QMainWindow):
         self._append_log(reason)
 
     def _handle_capture_stopped(self) -> None:
-        self._append_log('worker 已停止。')
+        self._append_log("worker 已停止。")
 
-    def _handle_decode_succeeded(self, frame_id: int, matrix: Any, data: dict[str, Any]) -> None:
+    def _handle_decode_succeeded(
+        self, frame_id: int, matrix: Any, data: dict[str, Any]
+    ) -> None:
         if not self.is_running:
             return
 
-        pending_utf_title_record = data.pop('_pending_utf_title_record', None)
+        pending_utf_title_record = data.pop("_pending_utf_title_record", None)
         if pending_utf_title_record is not None:
             self.title_manager.add_record(
-                valid_array=np.array(pending_utf_title_record['valid_array'], dtype=np.uint8),
-                title_type=str(pending_utf_title_record['title_type']),
-                title=str(pending_utf_title_record['title']),
-                hash=str(pending_utf_title_record['hash']),
+                valid_array=np.array(
+                    pending_utf_title_record["valid_array"], dtype=np.uint8
+                ),
+                title_type=str(pending_utf_title_record["title_type"]),
+                title=str(pending_utf_title_record["title"]),
+                hash=str(pending_utf_title_record["hash"]),
             )
             if self.title_editor_dialog is not None:
                 self.title_editor_dialog.refresh_database_tabs()
@@ -376,8 +405,8 @@ class MainWindow(QMainWindow):
 
         self.decoded_matrix = matrix
         self.decoded_data = data
-        self.decode_state = 'success'
-        self.decode_error = ''
+        self.decode_state = "success"
+        self.decode_error = ""
         self.decode_result_is_stale = False
         self._last_invalid_reason_key = None
         self._submit_data_to_rotation_worker(data, frame_id)
@@ -387,7 +416,7 @@ class MainWindow(QMainWindow):
         if not self.is_running:
             return
 
-        self.decode_state = 'invalid_frame'
+        self.decode_state = "invalid_frame"
         self.decode_error = reason
         self.decode_result_is_stale = True
 
@@ -402,7 +431,7 @@ class MainWindow(QMainWindow):
         if not self.is_running:
             return
 
-        self.decode_state = 'error'
+        self.decode_state = "error"
         self.decode_error = reason
         self.decode_result_is_stale = True
         self._last_invalid_reason_key = None
@@ -422,33 +451,33 @@ class MainWindow(QMainWindow):
         if not self.is_running:
             return
 
-        if action == 'cast':
+        if action == "cast":
             if macro_name is None:
                 self._finish_rotation_cycle()
                 return
             if macro_key is None:
-                self._append_log(f'cast: {macro_name}，还没配置按键。')
+                self._append_log(f"cast: {macro_name}，还没配置按键。")
                 self._finish_rotation_cycle()
                 return
-            signature = ('cast', macro_name)
+            signature = ("cast", macro_name)
             if signature != self._last_action_signature:
-                self._append_log(f'cast: {macro_name}')
+                self._append_log(f"cast: {macro_name}")
                 self._last_action_signature = signature
             if self.selected_window_handle is not None:
                 send_hot_key(self.selected_window_handle, macro_key)
             self._finish_rotation_cycle()
             return
 
-        if action == 'wait':
+        if action == "wait":
             self._wait_until_monotonic = time.monotonic() + wait_seconds
-            self._append_log(f'wait {wait_seconds:.2f}s: {message}')
-            self._last_action_signature = ('wait', message)
+            self._append_log(f"wait {wait_seconds:.2f}s: {message}")
+            self._last_action_signature = ("wait", message)
             self._finish_rotation_cycle()
             return
 
-        signature = ('idle', message)
+        signature = ("idle", message)
         if signature != self._last_action_signature:
-            self._append_log(f'idle: {message}')
+            self._append_log(f"idle: {message}")
             self._last_action_signature = signature
         self._finish_rotation_cycle()
 
@@ -484,31 +513,31 @@ class MainWindow(QMainWindow):
 
     def _refresh_visible_data_tab(self) -> None:
         current_widget = self.tab_widget.currentWidget()
-        refresh_method = getattr(current_widget, 'refresh_from_decode_snapshot', None)
+        refresh_method = getattr(current_widget, "refresh_from_decode_snapshot", None)
         if callable(refresh_method):
             refresh_method(self._build_decode_snapshot())
 
     def _build_decode_snapshot(self) -> dict[str, Any]:
         return {
-            'decoded_data': self.decoded_data,
-            'decode_state': self.decode_state,
-            'decode_error': self.decode_error,
-            'decode_result_is_stale': self.decode_result_is_stale,
+            "decoded_data": self.decoded_data,
+            "decode_state": self.decode_state,
+            "decode_error": self.decode_error,
+            "decode_result_is_stale": self.decode_result_is_stale,
         }
 
     def _normalize_invalid_reason(self, reason: str) -> str:
-        if ': ' in reason:
-            return reason.split(': ', 1)[1].strip()
-        if ':' in reason:
-            return reason.split(':', 1)[1].strip()
+        if ": " in reason:
+            return reason.split(": ", 1)[1].strip()
+        if ":" in reason:
+            return reason.split(":", 1)[1].strip()
         return reason.strip()
 
     def _reset_decode_state(self, clear_result: bool) -> None:
         if clear_result:
             self.decoded_matrix = None
             self.decoded_data = None
-        self.decode_state = 'idle'
-        self.decode_error = '尚未解析'
+        self.decode_state = "idle"
+        self.decode_error = "尚未解析"
         self.decode_result_is_stale = False
         self._last_invalid_reason_key = None
 
@@ -560,8 +589,8 @@ class MainWindow(QMainWindow):
         self._shutdown_rotation_worker_thread()
 
     def closeEvent(self, event: QCloseEvent) -> None:
-        text, ok = QInputDialog.getText(self, '确认关闭', '输入 exit 以关闭程序: ')
-        if not ok or text != 'exit':
+        text, ok = QInputDialog.getText(self, "确认关闭", "输入 exit 以关闭程序: ")
+        if not ok or text != "exit":
             event.ignore()
             return
 

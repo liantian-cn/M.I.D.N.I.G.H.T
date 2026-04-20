@@ -2,8 +2,8 @@ local addonName, addonTable = ...
 
 local pairs = pairs
 local Enum = Enum
-local After = C_Timer.After
 local random = math.random
+local insert = table.insert
 
 -- WoW 官方 API
 local CreateFrame = CreateFrame
@@ -36,8 +36,10 @@ remainingCurve:AddPoint(155.0, COLOR.C200)
 remainingCurve:AddPoint(375.0, COLOR.C255)
 
 local CHARGE_LENGTH = 11
+local MartixInitFuncs = DejaVu.MartixInitFuncs
 
-After(2, function()
+
+local function InitFrame()
     if #chargeSpells > CHARGE_LENGTH then
         print("DejaVu_Spell: Charge spells number is greater than CHARGE_LENGTH")
         return
@@ -304,4 +306,5 @@ After(2, function()
     updateUnusableAll()
     updateUnknownAll()
     updateCountAll()
-end)
+end
+insert(MartixInitFuncs, InitFrame)

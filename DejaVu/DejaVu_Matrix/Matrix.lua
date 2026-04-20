@@ -1,17 +1,19 @@
 local addonName, addonTable = ... -- 插件名称与共享表
 
 -- WoW 官方 API
-local CreateFrame = CreateFrame -- 创建框体
-local UIParent = UIParent       -- 游戏主界面父框体
+local CreateFrame           = CreateFrame -- 创建框体
+local UIParent              = UIParent    -- 游戏主界面父框体
 -- DejaVu Core
-local DejaVu = _G["DejaVu"]
-local GetUIScaleFactor = DejaVu.GetUIScaleFactor -- UI 缩放计算
+local DejaVu                = _G["DejaVu"]
+local GetUIScaleFactor      = DejaVu.GetUIScaleFactor -- UI 缩放计算
+-- 框架初始化函数表
+DejaVu.MartixInitFuncs      = {}
 -- Matrix
-addonTable.FontPath = "Interface\\Addons\\" .. addonName .. "\\PixNum.ttf"
+addonTable.FontPath         = "Interface\\Addons\\" .. addonName .. "\\PixNum.ttf"
 
-local SIZE = {}
+local SIZE                  = {}
 
-local scale = 1
+local scale                 = 1
 
 local function InitializeSize()              -- 初始化尺寸
     SIZE = {                                 -- 尺寸表主体
@@ -49,4 +51,7 @@ end
 
 C_Timer.After(1, function()
     CreateMatrixFrame()
+    for _, func in ipairs(DejaVu.MartixInitFuncs) do
+        func()
+    end
 end)

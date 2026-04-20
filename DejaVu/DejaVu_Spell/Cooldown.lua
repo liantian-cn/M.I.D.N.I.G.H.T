@@ -3,7 +3,6 @@ local addonName, addonTable = ...
 local pairs = pairs
 local insert = table.insert
 local Enum = Enum
-local After = C_Timer.After
 local random = math.random
 
 -- WoW 官方 API
@@ -36,8 +35,10 @@ remainingCurve:AddPoint(155.0, COLOR.C200)
 remainingCurve:AddPoint(375.0, COLOR.C255)
 
 local COOLDOWN_LENGTH = 40
+local MartixInitFuncs = DejaVu.MartixInitFuncs
 
-After(2, function()
+
+local function InitFrame()
     if #cooldownSpells > COOLDOWN_LENGTH then
         print("DejaVu_Spell: Cooldown spells number is greater than COOLDOWN_LENGTH")
         return
@@ -274,4 +275,5 @@ After(2, function()
     updateOverlayedAll()
     updateUnusableAll()
     updateUnknownAll()
-end)
+end
+insert(MartixInitFuncs, InitFrame)

@@ -2,7 +2,6 @@ local addonName, addonTable = ... -- 插件入口固定写法
 
 -- Lua 原生函数
 local insert = table.insert
-local After = C_Timer.After
 
 -- WoW 官方 API
 
@@ -10,6 +9,7 @@ local DejaVu = _G["DejaVu"]
 local Config = DejaVu.Config
 local ConfigRows = DejaVu.ConfigRows
 local Cell = DejaVu.Cell
+local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 local spell_queue_window = Config("spell_queue_window") -- 滑块配置项
 
@@ -34,7 +34,7 @@ end
 
 spell_queue_window:register_callback(spell_queue_window_updater)
 
-After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+local function InitFrame()
     -- x:57 y:9
     -- 用途：显示延迟窗口配置值。
     -- 更新函数：updateSpellQueueWindow
@@ -50,4 +50,5 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
     end
 
     spell_queue_window:register_callback(updateSpellQueueWindow)
-end)
+end
+insert(MartixInitFuncs, InitFrame)
