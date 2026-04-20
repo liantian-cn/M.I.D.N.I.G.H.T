@@ -57,18 +57,13 @@ class DemonHunterDevourer(BaseRotation):
         else:
             reaper_health_threshold = int(reaper_health_threshold_cell.mean)
 
-        # # 灵魂碎片
-        # soul_fragment_cell = ctx.spec.cell(1)
-        # if soul_cell is not None:
-        #     soul_fragments = int(soul_cell.mean / 10)  # 或根据实际映射调整
-
-        # soul_fragment = int(ctx.player.powerPercent * fury_max / 100)
         # 设置项
         # 打断模式，默认黑名单模式，只有当施法名称不在黑名单中时才打断。另一种模式是任何可打断的施法都打断。
         dh_interrupt_mode_cell = ctx.setting.cell(1)
         if dh_interrupt_mode_cell is None:
             dh_interrupt_mode = "blacklist"
         else:
+            # DejaVu 侧当前用 255 表示 blacklist、127 表示 any，这里用 200 作为分界。
             dh_interrupt_mode = (
                 "blacklist" if dh_interrupt_mode_cell.mean >= 200 else "any"
             )
@@ -277,25 +272,8 @@ class DemonHunterDevourer(BaseRotation):
             ):
                 return self.cast("target根除")
 
-        # if (
-        #     (fury >= 50)
-        #     and (scattered_souls_fragments_Count >= 8)
-        #     and (moment_of_craving_RemainingTime >= 1)
-        # ):
-        #     if ctx.spell_cooldown_ready("根除", spell_queue_window):
-        #         return self.cast("target根除")
-
         # 爆发泄魂打坍缩之星，打坍缩之心前利用疾速多攒点魂
         collapsing_star_exists = ctx.player.hasBuff("坍缩之星")
-        # if collapsing_star_exists and soul_fragments >= 30:
-        #     # 1. 只有同时满足这些条件，才执行“吞噬”
-        #     if (fury >= 80) and (scattered_souls_fragments_Count < 8):
-        #         return self.cast("target吞噬")
-
-        #     # 2. 只要上述条件有一个不满足（即：怒气不足 80 OR 地上碎片 >= 10）
-        #     # 且 CD 好了，就执行“坍缩之星”
-        #     if ctx.spell_cooldown_ready("坍缩之星", spell_queue_window):
-        #         return self.cast("target坍缩之星")
 
         # 大米逻辑，有了就打
         if (
@@ -316,12 +294,12 @@ class DemonHunterDevourer(BaseRotation):
 
         # 吞噬作为填充技能。
         if ctx.spell_cooldown_ready("吞噬", spell_queue_window):
-            if main_target is not None:
-                return self.cast(f"{main_target.unitToken}吞噬")
-                # print(f"{main_target.unitToken}吞噬", end="; ")
+            if main_target is focus:
+                return self.cast("focus吞噬")
+            elif main_target is target:
+                return self.cast("target吞噬")
             elif player.enemyCount >= 1:
                 return self.cast("就近吞噬")
-                # print("就近心脏打击", end="; ")
 
         # print("end")
         return self.idle("当前没有合适动作")
