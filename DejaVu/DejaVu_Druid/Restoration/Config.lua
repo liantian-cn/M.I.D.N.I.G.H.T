@@ -60,7 +60,7 @@ do
         end
 
         restoration_ironbark_hp_threshold:register_callback(set_restoration_ironbark_hp_threshold)
-        set_restoration_ironbark_hp_threshold(restoration_ironbark_hp_threshold:get_value() or 50)
+        set_restoration_ironbark_hp_threshold(restoration_ironbark_hp_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -95,7 +95,7 @@ do
         end
 
         restoration_barkskin_hp_threshold:register_callback(set_restoration_barkskin_hp_threshold)
-        set_restoration_barkskin_hp_threshold(restoration_barkskin_hp_threshold:get_value() or 65)
+        set_restoration_barkskin_hp_threshold(restoration_barkskin_hp_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -131,7 +131,7 @@ do
         end
 
         restoration_convoke_party_hp_threshold:register_callback(set_restoration_convoke_party_hp_threshold)
-        set_restoration_convoke_party_hp_threshold(restoration_convoke_party_hp_threshold:get_value() or 60)
+        set_restoration_convoke_party_hp_threshold(restoration_convoke_party_hp_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -167,7 +167,7 @@ do
         end
 
         restoration_convoke_single_hp_threshold:register_callback(set_restoration_convoke_single_hp_threshold)
-        set_restoration_convoke_single_hp_threshold(restoration_convoke_single_hp_threshold:get_value() or 25)
+        set_restoration_convoke_single_hp_threshold(restoration_convoke_single_hp_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -203,7 +203,7 @@ do
         end
 
         restoration_wild_growth_hp_threshold:register_callback(set_restoration_wild_growth_hp_threshold)
-        set_restoration_wild_growth_hp_threshold(restoration_wild_growth_hp_threshold:get_value() or 95)
+        set_restoration_wild_growth_hp_threshold(restoration_wild_growth_hp_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -239,7 +239,7 @@ do
         end
 
         restoration_tranquility_party_hp_threshold:register_callback(set_restoration_tranquility_party_hp_threshold)
-        set_restoration_tranquility_party_hp_threshold(restoration_tranquility_party_hp_threshold:get_value() or 50)
+        set_restoration_tranquility_party_hp_threshold(restoration_tranquility_party_hp_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -275,7 +275,7 @@ do
         end
 
         restoration_nature_swiftness_hp_threshold:register_callback(set_restoration_nature_swiftness_hp_threshold)
-        set_restoration_nature_swiftness_hp_threshold(restoration_nature_swiftness_hp_threshold:get_value() or 60)
+        set_restoration_nature_swiftness_hp_threshold(restoration_nature_swiftness_hp_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -311,7 +311,7 @@ do
         end
 
         restoration_swiftmend_hp_threshold:register_callback(set_restoration_swiftmend_hp_threshold)
-        set_restoration_swiftmend_hp_threshold(restoration_swiftmend_hp_threshold:get_value() or 90)
+        set_restoration_swiftmend_hp_threshold(restoration_swiftmend_hp_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -347,7 +347,7 @@ do
         end
 
         restoration_swiftmend_count_threshold:register_callback(set_restoration_swiftmend_count_threshold)
-        set_restoration_swiftmend_count_threshold(restoration_swiftmend_count_threshold:get_value() or 2)
+        set_restoration_swiftmend_count_threshold(restoration_swiftmend_count_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -383,7 +383,7 @@ do
         end
 
         restoration_regrowth_hp_threshold:register_callback(set_restoration_regrowth_hp_threshold)
-        set_restoration_regrowth_hp_threshold(restoration_regrowth_hp_threshold:get_value() or 85)
+        set_restoration_regrowth_hp_threshold(restoration_regrowth_hp_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -419,7 +419,7 @@ do
         end
 
         restoration_rejuvenation_hp_threshold:register_callback(set_restoration_rejuvenation_hp_threshold)
-        set_restoration_rejuvenation_hp_threshold(restoration_rejuvenation_hp_threshold:get_value() or 97)
+        set_restoration_rejuvenation_hp_threshold(restoration_rejuvenation_hp_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -455,7 +455,7 @@ do
         end
 
         restoration_abundance_stack_threshold:register_callback(set_restoration_abundance_stack_threshold)
-        set_restoration_abundance_stack_threshold(restoration_abundance_stack_threshold:get_value() or 5)
+        set_restoration_abundance_stack_threshold(restoration_abundance_stack_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -525,7 +525,7 @@ do
         end
 
         restoration_hot_hp_threshold:register_callback(set_restoration_hot_hp_threshold)
-        set_restoration_hot_hp_threshold(restoration_hot_hp_threshold:get_value() or 2)
+        set_restoration_hot_hp_threshold(restoration_hot_hp_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
