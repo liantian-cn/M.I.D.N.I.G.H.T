@@ -28,7 +28,7 @@ table.insert(ConfigRows, {
     name = "停止施法名单", -- 标题文本
     tooltip = "当目标释放名单上的法术时，rotation停止施法。", -- 提示信息
     default_value = { -- 默认技能集合
-        [1284627] = true, -- 示例技能1
+        [377004] = true, -- 示例技能1
     }, -- default_value 结束
     bind_config = spell_stop_blacklist -- 绑定的配置对象
 })

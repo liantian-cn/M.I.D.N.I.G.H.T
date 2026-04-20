@@ -178,15 +178,6 @@ class DemonHunterDevourer(BaseRotation):
             return self.cast("疾影")
 
         # 打断逻辑
-        # 停止施法名单检查：如果目标或焦点正在释放名单上的法术，则停止施法
-        if spell_stop_blacklist:
-            if focus.exists and focus.canAttack and focus.isInRangedRange:
-                if (focus.anyCastIcon is not None) and (focus.anyCastIcon in spell_stop_blacklist):
-                    return self.idle(f"目标释放停止施法法术: {focus.anyCastIcon}")
-            if target.exists and target.canAttack and target.isInRangedRange:
-                if (target.anyCastIcon is not None) and (target.anyCastIcon in spell_stop_blacklist):
-                    return self.idle(f"目标释放停止施法法术: {target.anyCastIcon}")
-
         target_need_interrupt = False
         focus_need_interrupt = False
         if focus.exists and focus.canAttack and focus.isInRangedRange:
@@ -220,6 +211,22 @@ class DemonHunterDevourer(BaseRotation):
                 return self.cast("target瓦解")
                 # print("target迎头痛击")
 
+        # 停止施法名单检查：如果目标或焦点正在释放名单上的法术，则停止施法
+        player_need_spell_stop = False
+        trigger_spell = None  # 初始化一个变量来记录是谁触发了黑名单
+
+        if target.exists and (target.anyCastIcon in spell_stop_blacklist):
+            trigger_spell = target.anyCastIcon
+            player_need_spell_stop = True
+        elif focus.exists and (focus.anyCastIcon in spell_stop_blacklist):
+            trigger_spell = focus.anyCastIcon
+            player_need_spell_stop = True
+
+        # 执行停止逻辑
+        if player_need_spell_stop:
+            # 这里的日志会动态显示到底是哪个技能触发的
+            return self.idle(f"检测到黑名单技能 [{trigger_spell}]，停止施法")
+
         # 泄能打虚空射线
         if (
             (fury >= fury_overflow_threshold)
@@ -232,7 +239,7 @@ class DemonHunterDevourer(BaseRotation):
         # 开启爆发逻辑
         if (
             (not player.isMoving)
-            and (soul_fragments >= 50)
+            and (soul_fragments >= 48)
             and main_target.healthPercent > void_metamorphosis_health_threshold
         ):
             if ctx.spell_cooldown_ready("虚空变形", spell_queue_window):
@@ -270,7 +277,7 @@ class DemonHunterDevourer(BaseRotation):
         # 条件：(碎片 >= 8 且 怒气 >= 54) 或者 (时间快到了 <= 1)
         if ctx.spell_cooldown_ready("根除", spell_queue_window):
             if (
-                (scattered_souls_fragments_Count >= 8 and fury >= 54)
+                (scattered_souls_fragments_Count >= 8 and fury >= 50)
                 or (0 < moment_of_craving_RemainingTime <= 1)
                 or (main_target.healthPercent < reaper_health_threshold)
             ):
