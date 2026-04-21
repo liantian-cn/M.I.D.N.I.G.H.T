@@ -2,7 +2,6 @@ local addonName, addonTable             = ... -- 插件入口固定写法
 
 -- Lua 原生函数
 local insert                            = table.insert
-local After                             = C_Timer.After
 
 -- WoW 官方 API
 local UnitClass                         = UnitClass
@@ -21,6 +20,7 @@ local DejaVu = _G["DejaVu"]
 local Config = DejaVu.Config
 local ConfigRows = DejaVu.ConfigRows
 local Cell = DejaVu.Cell
+local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 -- 1. 恶魔之怒最大值配置
 do
@@ -37,7 +37,7 @@ do
         bind_config = fury_max_config,
     })
 
-    After(2, function()
+    local function InitFrame()
         -- 对应识别位置 x:55 y:12
         local fury_max_cell = Cell:New(55, 12)
 
@@ -48,7 +48,8 @@ do
 
         fury_max_config:register_callback(set_fury_max)
         set_fury_max(fury_max_config:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -66,7 +67,7 @@ do
         bind_config = dh_interrupt_mode,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:56 y:12
         -- 用途：显示噬灭恶魔猎手打断模式配置。
         -- 更新函数：set_dh_interrupt_mode
@@ -86,7 +87,8 @@ do
         dh_interrupt_mode:register_callback(set_dh_interrupt_mode)
 
         set_dh_interrupt_mode(dh_interrupt_mode:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -103,7 +105,7 @@ do
         bind_config = phase_shift_threshold,
     })
 
-    After(2, function()
+    local function InitFrame()
         -- 保持坐标 x:57 y:12 不变，方便外部读取
         local phase_shift_threshold_cell = Cell:New(57, 12)
 
@@ -115,7 +117,8 @@ do
 
         phase_shift_threshold:register_callback(set_phase_shift_threshold)
         set_phase_shift_threshold(phase_shift_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -132,7 +135,7 @@ do
         bind_config = void_Ray_fury_overflow_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:58 y:12
         -- 用途：显示虚空射线泄能阈值配置。
         -- 更新函数：set_void_Ray_fury_overflow_threshold
@@ -148,7 +151,8 @@ do
         void_Ray_fury_overflow_threshold:register_callback(set_void_Ray_fury_overflow_threshold)
 
         set_void_Ray_fury_overflow_threshold(void_Ray_fury_overflow_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
 
 do
@@ -165,7 +169,7 @@ do
         bind_config = slider_enemy_health_threshold,
     })
 
-    After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
+    local function InitFrame()
         -- x:59 y:12
         -- 用途：显示坍缩之星血量阈值配置。
         -- 更新函数：set_slider_enemy_health_threshold
@@ -181,5 +185,6 @@ do
         slider_enemy_health_threshold:register_callback(set_slider_enemy_health_threshold)
 
         set_slider_enemy_health_threshold(slider_enemy_health_threshold:get_value())
-    end)
+    end
+    insert(MartixInitFuncs, InitFrame)
 end
