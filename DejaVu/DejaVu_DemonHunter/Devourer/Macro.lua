@@ -29,10 +29,10 @@ insert(macroList, { title = "target收割", key = "ALT-NUMPAD4", text = "/cast [
 insert(macroList, { title = "虚空射线", key = "ALT-NUMPAD5", text = "/cast 虚空射线" })
 insert(macroList, { title = "target根除", key = "ALT-NUMPAD6", text = "/cast [@target] 根除" })
 insert(macroList, { title = "虚空变形", key = "ALT-NUMPAD7", text = "/cast 虚空变形" })
-insert(macroList, { title = "target坍缩之星", key = "ALT-NUMPAD8", text = "/cast [@target] 虚空变形" })
+insert(macroList, { title = "target坍缩之星", key = "ALT-NUMPAD8", text = "/cast [@target] 坍缩之星" })
 insert(macroList, { title = "target瓦解", key = "ALT-NUMPAD9", text = "/cast [@target] 瓦解" })
 insert(macroList, { title = "focus瓦解", key = "ALT-NUMPAD0", text = "/cast [@focus] 瓦解" })
-insert(macroList, { title = "疾影", key = "SHIFT-NUMPAD1", text = "/cast [@focus] 疾影" })
+insert(macroList, { title = "疾影", key = "SHIFT-NUMPAD1", text = "/cast 疾影" })
 
 
 for _, macro in pairs(macroList) do
