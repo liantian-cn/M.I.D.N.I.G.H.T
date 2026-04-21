@@ -1,0 +1,18 @@
+## Interface: 120001
+## Title: DéjàVu 恶魔猎手
+## Author: Émile Boirac
+## Version: 12.0.1.66709
+## Dependencies: DejaVu_Spell,DejaVu_Common
+## LoadWith: DejaVu_Common
+## Group: DejaVu_Core
+## IconTexture: Interface\Icons\ClassIcon_DemonHunter
+
+
+
+
+# _Test.lua
+Devourer\Global.lua
+Devourer\Spec.lua
+Devourer\Spell.lua
+Devourer\Config.lua
+Devourer\Macro.lua
