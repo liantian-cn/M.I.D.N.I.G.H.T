@@ -209,10 +209,9 @@ def extract_all_data(matrix: MatrixDecoder) -> dict[str, Any]:
         'delay': matrix.getCell(55, 9).is_not_black,    # 延迟
         'testCell': matrix.readCharCell(0, 2),
         'enable': matrix.getCell(83, 0).is_not_black,
-        # DejaVu\06_spec\51_dispel_blacklist.lua
         'dispel_blacklist': matrix.readBadgeCellList(64, 15, 10),  # 可移除的法术
-        # DejaVu\06_spec\52_interrupt_blacklist.lua
         'interrupt_blacklist': matrix.readBadgeCellList(43, 17, 20),  # 可中断的法术
+        'spell_stop_list': matrix.readBadgeCellList(43, 26, 10),  # 可中断的法术
         'spell_queue_window': matrix.getCell(57, 9).mean / 100,  # 映射到秒，游戏内的毫秒/10。
         'burst_time': matrix.getCell(82, 0).decimal * 60,
     }
