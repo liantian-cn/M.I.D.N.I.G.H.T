@@ -210,6 +210,7 @@ class DemonHunterDevourer(BaseRotation):
         player_need_spell_stop = False
         trigger_spell = None  # 初始化一个变量来记录是谁触发了黑名单
         print(f"目标施放法术：{target.anyCastIcon}")
+        print(f"停止施法黑名单列表：{spell_stop_blacklist}")
 
         if target.exists and (target.anyCastIcon in spell_stop_blacklist):
             trigger_spell = target.anyCastIcon
