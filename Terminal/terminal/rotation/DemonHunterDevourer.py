@@ -7,7 +7,9 @@ from .base import BaseRotation
 
 class DemonHunterDevourer(BaseRotation):
     name = "噬灭DH"
-    desc = "目前只适配歼灭者，奥达奇可能会有问题"
+    desc = "目前只适配歼灭者，奥达奇可能会有问题\n" \
+        "作者：Alex-coder251\n" \
+        "Repo:https://github.com/Alex-coder251/"
 
     def __init__(self) -> None:
         super().__init__()
