@@ -15,7 +15,6 @@ UseMouse.lua
 Burst.lua
 Enable.lua
 InterruptBlacklist.lua
-SpellStopBlacklist.lua
 DispelBlacklist.lua
 BadgeUTF.lua
 # _Test.lua

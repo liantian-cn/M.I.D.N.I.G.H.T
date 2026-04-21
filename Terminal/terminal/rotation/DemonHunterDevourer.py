@@ -250,13 +250,13 @@ class DemonHunterDevourer(BaseRotation):
         if (
             (not player.isMoving)
             and (soul_fragments >= 48)
-            and main_target.healthPercent > void_metamorphosis_health_threshold
+            # and main_target.healthPercent > void_metamorphosis_health_threshold
             and moment_of_craving_exists
         ):
             if ctx.spell_cooldown_ready("虚空变形", spell_queue_window):
                 return self.cast("虚空变形")
 
-        # 聚能打收割
+        # 常态聚能打收割
         if (
             (fury >= 70)
             and (scattered_souls_fragments_Count >= 4)
@@ -270,7 +270,7 @@ class DemonHunterDevourer(BaseRotation):
                 if ctx.spell_cooldown_ready("根除", spell_queue_window):
                     return self.cast("target根除")
 
-        # 聚能打根除
+        # 常态聚能打根除
         # 优先处理“根除”逻辑 (优先级最高)
         # 条件：(碎片 >= 8 且 怒气 >= 54) 或者 (时间快到了 <= 1)
         if ctx.spell_cooldown_ready("根除", spell_queue_window):
@@ -289,8 +289,14 @@ class DemonHunterDevourer(BaseRotation):
         #     if ctx.spell_cooldown_ready("根除", spell_queue_window):
         #         return self.cast("target根除")
 
-        # 爆发泄魂打坍缩之星，打坍缩之心前利用疾速多攒点魂
         collapsing_star_exists = ctx.player.hasBuff("坍缩之星")
+
+        # 爆发打根除
+        if collapsing_star_exists and moment_of_craving_exists:
+            if ctx.spell_cooldown_ready("根除", spell_queue_window):
+                return self.cast("target根除")
+
+        # 爆发泄魂打坍缩之星，打坍缩之心前利用疾速多攒点魂
         if collapsing_star_exists and soul_fragments >= 28:
             # 1. 只有同时满足这些条件，才执行“吞噬”
             if (fury >= 80) and (scattered_souls_fragments_Count < 8):
@@ -309,7 +315,7 @@ class DemonHunterDevourer(BaseRotation):
         # ):
         #     return self.cast("target坍缩之星")
 
-        # 爆发时虚空射线好了就用
+        # 爆发时在没有噬欲时刻时虚空射线好了就用
         if (
             collapsing_star_exists
             and (not player.isMoving)
