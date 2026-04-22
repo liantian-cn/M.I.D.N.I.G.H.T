@@ -32,6 +32,7 @@ end
 
 DejaVu_Core.Logging = logging
 DejaVu_Core.GetUIScaleFactor = GetUIScaleFactor
+DejaVu_Core.MartixInitFuncs = {} -- 初始化矩阵框架函数表，确保在所有模块之前创建
 
 
 
