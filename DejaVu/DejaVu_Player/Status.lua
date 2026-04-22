@@ -11,7 +11,7 @@ local Enum = Enum
 
 local GetCurrentKeyBoardFocus = GetCurrentKeyBoardFocus
 local GetInventoryItemID = GetInventoryItemID
-local GetUnitSpeed = GetUnitSpeed
+local IsPlayerMoving = IsPlayerMoving
 local IsInGroup = IsInGroup
 local IsInRaid = IsInRaid
 local IsMounted = IsMounted
@@ -250,7 +250,7 @@ local function InitFrame()
     -- 依赖事件更新：无。
     -- 依赖定时刷新：2秒。
     local function updateMovement_fix()
-        cell.isMoving:setCellBoolean(GetUnitSpeed("player") > 0, COLOR.STATUS_BOOLEAN.IS_MOVING, COLOR.BLACK)
+        cell.isMoving:setCellBoolean(IsPlayerMoving(), COLOR.STATUS_BOOLEAN.IS_MOVING, COLOR.BLACK)
     end
 
     -- 说明：更新玩家是否在队伍或团队中。
