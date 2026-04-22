@@ -50,6 +50,7 @@ local function InitFrame()
     -- 依赖事件更新：无
     -- 依赖定时刷新：无
     local function updateCell(tableValue)
+        tableValue = tableValue or {}
         local i = 1
         for spellID in pairs(tableValue) do
             if i > MAX_COUNT then

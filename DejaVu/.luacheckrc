@@ -27,7 +27,7 @@ read_globals = {
     "GetScreenHeight",
     "GetSpecialization",
     "GetTime",
-    "IsPlayerMoving",
+    "GetUnitSpeed",
     "IsInGroup",
     "IsInRaid",
     "IsMounted",

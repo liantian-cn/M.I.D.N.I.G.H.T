@@ -3,7 +3,6 @@
 ## Author: Émile Boirac
 ## Version: 12.0.1.66709
 ## SavedVariables: DejaVu_CoreSave
-## LoadOnDemand: 1
 ## LoadSavedVariablesFirst: 1
 ## Group: DejaVu_Core
 ## IconTexture: Interface\Icons\Ability_Domination_Rune13
