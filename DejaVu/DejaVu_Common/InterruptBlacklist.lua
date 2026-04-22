@@ -15,8 +15,19 @@ local COLOR = DejaVu.COLOR
 local BadgeCell = DejaVu.BadgeCell
 local MartixInitFuncs = DejaVu.MartixInitFuncs
 
+-- 默认技能集合
+local DEFAULT_INTERRUPT_BLACKLIST = {
+    [1254669] = true, -- 示例技能1
+    [1258436] = true, -- 示例技能2
+    [1248327] = true, -- 示例技能3
+    [1262510] = true, -- 示例技能4
+    [468962] = true, -- 示例技能5
+    [1262526] = true, -- 示例技能6
+}
+
 -- 创建配置对象
 local interrupt_blacklist = Config("interrupt_blacklist")      -- 驱散黑名单配置项
+interrupt_blacklist:set_default(DEFAULT_INTERRUPT_BLACKLIST)    -- 设置默认值，确保 get_value() 不返回 nil
 local MAX_COUNT = 20                                           -- 最大数量
 local POS_X = 43                                               -- X轴位置
 local POS_Y = 17                                               -- Y轴位置
@@ -27,14 +38,7 @@ table.insert(ConfigRows, {
     key = "interrupt_blacklist", -- 行标识
     name = "打断黑名单", -- 标题文本
     tooltip = "不可以自动打断的技能列表。", -- 提示信息
-    default_value = { -- 默认技能集合
-        [1254669] = true, -- 示例技能1
-        [1258436] = true, -- 示例技能2
-        [1248327] = true, -- 示例技能3
-        [1262510] = true, -- 示例技能4
-        [468962] = true, -- 示例技能5
-        [1262526] = true, -- 示例技能6
-    }, -- default_value 结束
+    default_value = DEFAULT_INTERRUPT_BLACKLIST, -- 默认技能集合
     bind_config = interrupt_blacklist -- 绑定的配置对象
 })
 
@@ -55,9 +59,6 @@ local function InitFrame()
     -- 依赖事件更新：无
     -- 依赖定时刷新：无
     local function updateCell(tableValue)
-        if not tableValue then
-            return
-        end
         local i = 1
         for spellID in pairs(tableValue) do
             if i > MAX_COUNT then
