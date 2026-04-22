@@ -16,26 +16,23 @@ local BadgeCell = DejaVu.BadgeCell
 local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 -- 创建配置对象
-local interrupt_blacklist = Config("interrupt_blacklist")      -- 驱散黑名单配置项
-local MAX_COUNT = 20                                           -- 最大数量
-local POS_X = 43                                               -- X轴位置
-local POS_Y = 17                                               -- Y轴位置
-local BADGE_COLOR = COLOR.SPELL_TYPE.ENEMY_SPELL_INTERRUPTIBLE -- 图标颜色
+local spell_stop_list = Config("spell_stop_list")                  -- 驱散黑名单配置项
+local MAX_COUNT = 10                                               -- 最大数量
+local POS_X = 43                                                   -- X轴位置
+local POS_Y = 26                                                   -- Y轴位置
+local BADGE_COLOR = COLOR.SPELL_TYPE.ENEMY_SPELL_NOT_INTERRUPTIBLE -- 哪些技能一定是无法打断的。
 
 table.insert(ConfigRows, {
     type = "spell_list", -- 设置类型
-    key = "interrupt_blacklist", -- 行标识
-    name = "打断黑名单", -- 标题文本
-    tooltip = "不可以自动打断的技能列表。", -- 提示信息
+    key = "spell_stop_list", -- 行标识
+    name = "终止施法技能清单", -- 标题文本
+    tooltip = "那些会打断施法的怪物技能", -- 提示信息
     default_value = { -- 默认技能集合
-        [1254669] = true, -- 示例技能1
-        [1258436] = true, -- 示例技能2
-        [1248327] = true, -- 示例技能3
-        [1262510] = true, -- 示例技能4
-        [468962] = true, -- 示例技能5
-        [1262526] = true, -- 示例技能6
+        [377004] = true, -- 震耳尖啸
+        [1256047] = true, -- 震耳咆哮
+        [344923] = true, -- 血伤
     }, -- default_value 结束
-    bind_config = interrupt_blacklist -- 绑定的配置对象
+    bind_config = spell_stop_list -- 绑定的配置对象
 })
 
 local function InitFrame()
@@ -51,7 +48,7 @@ local function InitFrame()
         insert(cells, icon)
     end
 
-    -- 说明：根据打断黑名单配置刷新所有图标槽位。
+    -- 说明：根据终止施法技能清单配置刷新所有图标槽位。
     -- 依赖事件更新：无
     -- 依赖定时刷新：无
     local function updateCell(tableValue)
@@ -72,8 +69,8 @@ local function InitFrame()
         end
     end
 
-    interrupt_blacklist:register_callback(updateCell)
+    spell_stop_list:register_callback(updateCell)
 
-    updateCell(interrupt_blacklist:get_value())
+    updateCell(spell_stop_list:get_value())
 end
 insert(MartixInitFuncs, InitFrame)
