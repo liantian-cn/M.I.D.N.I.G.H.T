@@ -13,3 +13,5 @@ libs\load_libs.xml
 Target.lua
 Focus.lua
 MouseOver.lua
+
+DejaVu_Enemy.lua

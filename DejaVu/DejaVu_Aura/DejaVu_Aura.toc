@@ -10,6 +10,7 @@
 
 
 # _Test.lua
+
 AuraCommon.lua
 PlayerHelpful.lua
 PlayerHarmful.lua
@@ -17,3 +18,5 @@ PlayerHarmful.lua
 TargetHarmful.lua
 FocusHarmful.lua
 MouseoverHarmful.lua
+
+DejaVu_Aura.lua

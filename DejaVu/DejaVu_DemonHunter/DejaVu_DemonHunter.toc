@@ -16,3 +16,4 @@ Devourer\Spec.lua
 Devourer\Spell.lua
 Devourer\Config.lua
 Devourer\Macro.lua
+DejaVu_DemonHunter.lua

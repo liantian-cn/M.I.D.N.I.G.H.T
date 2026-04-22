@@ -11,3 +11,4 @@ Cooldown.lua
 Charge.lua
 
 # _Test.lua
+DejaVu_Spell.lua

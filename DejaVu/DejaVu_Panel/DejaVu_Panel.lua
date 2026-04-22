@@ -19,7 +19,8 @@ local DejaVu = _G["DejaVu"]
 local GetUIScaleFactor = DejaVu.GetUIScaleFactor -- UI 缩放计算
 local Config = DejaVu.Config                     -- 配置对象工厂
 local ConfigRows = DejaVu.ConfigRows             -- 配置行对象工厂
-
+local logging = DejaVu.Logging
+logging(addonName .. " loaded.")
 
 -- 面板模块主表
 local Panel = {}                                                       -- 面板模块主表

@@ -22,3 +22,4 @@ Restoration\Spec.lua
 Restoration\Spell.lua
 Restoration\Config.lua
 Restoration\Macro.lua
+DejaVu_Druid.lua

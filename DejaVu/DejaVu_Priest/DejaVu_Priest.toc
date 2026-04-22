@@ -16,3 +16,4 @@ Discipline\Spec.lua
 Discipline\Spell.lua
 Discipline\Config.lua
 Discipline\Macro.lua
+DejaVu_Priest.lua

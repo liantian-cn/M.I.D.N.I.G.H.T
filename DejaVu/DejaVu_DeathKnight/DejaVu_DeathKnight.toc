@@ -11,8 +11,10 @@
 
 
 # _Test.lua
+
 Blood\Global.lua
 Blood\Spec.lua
 Blood\Spell.lua
 Blood\Config.lua
 Blood\Macro.lua
+DejaVu_DeathKnight.lua
