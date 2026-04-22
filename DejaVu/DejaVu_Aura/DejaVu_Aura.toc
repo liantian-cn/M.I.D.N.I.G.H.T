@@ -2,8 +2,9 @@
 ## Title: DéjàVu 光环模组
 ## Author: Émile Boirac
 ## Version: 12.0.1.66709
-## Dependencies: DejaVu_Matrix
-## LoadWith: DejaVu_Matrix
+## LoadOnDemand: 1
+## Dependencies: DejaVu_Core, DejaVu_Matrix, DejaVu_Panel
+## LoadWith: DejaVu_Core, DejaVu_Matrix, DejaVu_Panel
 ## Group: DejaVu_Core
 ## IconTexture: Interface\Icons\Ability_Domination_Rune04
 
