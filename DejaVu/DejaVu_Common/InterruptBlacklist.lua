@@ -28,7 +28,12 @@ table.insert(ConfigRows, {
     name = "打断黑名单", -- 标题文本
     tooltip = "不可以自动打断的技能列表。", -- 提示信息
     default_value = { -- 默认技能集合
-        [1284627] = true, -- 示例技能1
+        [1254669] = true, -- 示例技能1
+        [1258436] = true, -- 示例技能2
+        [1248327] = true, -- 示例技能3
+        [1262510] = true, -- 示例技能4
+        [468962] = true, -- 示例技能5
+        [1262526] = true, -- 示例技能6
     }, -- default_value 结束
     bind_config = interrupt_blacklist -- 绑定的配置对象
 })

@@ -17,4 +17,5 @@ Enable.lua
 InterruptBlacklist.lua
 DispelBlacklist.lua
 BadgeUTF.lua
+SpellStopList.lua
 # _Test.lua
