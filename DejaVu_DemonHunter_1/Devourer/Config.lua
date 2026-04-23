@@ -22,17 +22,17 @@ local ConfigRows = DejaVu.ConfigRows
 local Cell = DejaVu.Cell
 local MartixInitFuncs = DejaVu.MartixInitFuncs
 
--- 1. 恶魔之怒最大值配置（用于计算当前恶魔之怒数量）
+-- 1. 恶魔之怒最大值配置
 do
     local fury_max_config = Config("fury_max")
     insert(ConfigRows, {
         type = "slider",
         key = "fury_max",
-        name = "最大恶魔之怒（用于计算当前恶魔之怒数量）",
+        name = "最大恶魔之怒",
         tooltip = "设置识别器的最大能量参考值（通常为 100 或 120）",
-        min_value = 90,
+        min_value = 100,
         max_value = 120,
-        step = 1,
+        step = 10,
         default_value = 120,
         bind_config = fury_max_config,
     })
@@ -47,7 +47,7 @@ do
         end
 
         fury_max_config:register_callback(set_fury_max)
-        set_fury_max(fury_max_config:get_value() or 120) -- 初始化时根据当前配置值更新显示
+        set_fury_max(fury_max_config:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -86,7 +86,7 @@ do
 
         dh_interrupt_mode:register_callback(set_dh_interrupt_mode)
 
-        set_dh_interrupt_mode(dh_interrupt_mode:get_value() or "blacklist")
+        set_dh_interrupt_mode(dh_interrupt_mode:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -100,7 +100,7 @@ do
         tooltip = "当前生命值低于该百分比时, 使用疾影", -- 修改描述
         min_value = 0,
         max_value = 120,
-        step = 1,
+        step = 5,
         default_value = 60, -- 设为您的目标值 72
         bind_config = phase_shift_threshold,
     })
@@ -116,7 +116,7 @@ do
         end
 
         phase_shift_threshold:register_callback(set_phase_shift_threshold)
-        set_phase_shift_threshold(phase_shift_threshold:get_value() or 60)
+        set_phase_shift_threshold(phase_shift_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -128,9 +128,9 @@ do
         key = "void_Ray_fury_overflow_threshold",
         name = "虚空射线泄能阈值",
         tooltip = "当前恶魔之怒高于该值时, 使用虚空射线避免浪费",
-        min_value = 90,
+        min_value = 0,
         max_value = 120,
-        step = 1,
+        step = 10,
         default_value = 100,
         bind_config = void_Ray_fury_overflow_threshold,
     })
@@ -150,7 +150,7 @@ do
 
         void_Ray_fury_overflow_threshold:register_callback(set_void_Ray_fury_overflow_threshold)
 
-        set_void_Ray_fury_overflow_threshold(void_Ray_fury_overflow_threshold:get_value() or 100)
+        set_void_Ray_fury_overflow_threshold(void_Ray_fury_overflow_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -184,7 +184,7 @@ do
 
         slider_enemy_health_threshold:register_callback(set_slider_enemy_health_threshold)
 
-        set_slider_enemy_health_threshold(slider_enemy_health_threshold:get_value() or 15)
+        set_slider_enemy_health_threshold(slider_enemy_health_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -203,7 +203,7 @@ do
         bind_config = aoe_enemy_count,
     })
 
-    local function InitFrame()
+    After(2, function()
         -- x:60 y:12
         -- 用途：显示 AOE 敌人数量阈值配置。
         -- 更新函数：set_aoe_enemy_count
@@ -219,6 +219,5 @@ do
         aoe_enemy_count:register_callback(set_aoe_enemy_count)
 
         set_aoe_enemy_count(aoe_enemy_count:get_value())
-    end
-    insert(MartixInitFuncs, InitFrame)
+    end)
 end
