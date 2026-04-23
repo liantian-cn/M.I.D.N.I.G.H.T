@@ -1,4 +1,20 @@
-# from __future__ import annotations
+"""
+本循环适用于35魂噬灭歼灭者
+天赋代码如下：
+CgcBG5bbocFKcv+yIq8fPd6ORBA2mxMzMzMzMGmBAAAAAAgxsNYGAAAAAAAAmxMMzMzMzMzMDzsZGjFZhZmZmt2mZmBwwAQgZMYMD
+
+【灵魂献祭使用逻辑】
+献祭共有 2 次充能，逻辑如下：
+  第一次（常态段）：未进入变身时，只要充能 >= 1 就使用；
+                   为给爆发段留一次，此处额外要求当前充能 == 2（满充能）才打，
+                   或者处于开场阶段（combat_time <= 10s）时充能 >= 1 即打。
+  第二次（爆发段）：变身后完成一轮「坍缩之星 → 收割 → 虚空射线」后，
+                   只要充能 >= 1 就立即使用。
+
+  充能由游戏自然恢复，无需手动追踪"是否用过"；
+  爆发三连状态用实例变量追踪，爆发结束时自动重置。
+"""
+
 from datetime import datetime
 
 from terminal.context import Context
@@ -24,7 +40,22 @@ class DemonHunterDevourer(BaseRotation):
             "target瓦解": "ALT-NUMPAD9",
             "focus瓦解": "ALT-NUMPAD0",
             "疾影": "SHIFT-NUMPAD1",
+            "灵魂献祭": "SHIFT-NUMPAD2",
         }
+
+        # ── 爆发三连追踪（第二次献祭前置条件）─────────────────────────
+        # 记录本轮爆发段内坍缩之星/收割/虚空射线是否已各打过至少一次
+        self._burst_cycle: dict[str, bool] = {
+            "star": False,
+            "reap": False,
+            "ray": False,
+        }
+
+        # 第二次献祭是否已在本轮爆发中使用（防止充能回满时重复触发）
+        self._burst_sacrifice_used: bool = False
+
+        # 上一帧是否处于爆发状态（检测爆发段结束，用于重置上述追踪）
+        self._was_in_burst: bool = False
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
 
@@ -44,7 +75,6 @@ class DemonHunterDevourer(BaseRotation):
         # ── 设置项读取 ──────────────────────────────────────────────
 
         # AOE敌人数量阈值 min:2 max:10 default:4 step:1
-        # print(f"敌人数量格子{aoe_enemy_count_cell.mean}")
         aoe_enemy_count_cell = ctx.setting.cell(5)
         aoe_enemy_count = (
             4 if aoe_enemy_count_cell is None else round(aoe_enemy_count_cell.mean / 10)
@@ -77,7 +107,7 @@ class DemonHunterDevourer(BaseRotation):
             else "any"
         )
         interrupt_blacklist = ctx.interrupt_blacklist
-        spell_stop_blacklist = ctx.spell_stop_blacklist
+        spell_stop_list = ctx.spell_stop_list
 
         # 疾影保命血量阈值（默认60%）
         dh_health_threshold_cell = ctx.setting.cell(2)
@@ -154,6 +184,23 @@ class DemonHunterDevourer(BaseRotation):
         # 坍缩之星（爆发变身标志）
         collapsing_star_exists = player.hasBuff("坍缩之星")
 
+        # ── 爆发段状态追踪：进出检测 ────────────────────────────────
+        # 当爆发段结束（坍缩之星消失）时，重置三连追踪和爆发献祭标记，为下一轮准备
+        if self._was_in_burst and not collapsing_star_exists:
+            self._burst_cycle = {"star": False, "reap": False, "ray": False}
+            self._burst_sacrifice_used = False
+            print("爆发段结束，重置爆发三连追踪及第二次献祭标记")
+
+        if not self._was_in_burst and collapsing_star_exists:
+            print("爆发段开始，开始追踪坍缩之星/收割/虚空射线完成状态")
+
+        self._was_in_burst = collapsing_star_exists
+
+        # ── 调试输出：献祭状态 ──────────────────────────────────────
+        print(
+            f"爆发三连:{self._burst_cycle} | 爆发献祭已用:{self._burst_sacrifice_used}"
+        )
+
         # ── 保命：疾影 ──────────────────────────────────────────────
 
         if (
@@ -164,7 +211,7 @@ class DemonHunterDevourer(BaseRotation):
             return self.cast("疾影")
 
         # ── 打断逻辑 ────────────────────────────────────────────────
-        print(f"打断黑名单：{interrupt_blacklist}")
+        # print(f"打断黑名单：{interrupt_blacklist}")
 
         focus_need_interrupt = False
         target_need_interrupt = False
@@ -191,20 +238,44 @@ class DemonHunterDevourer(BaseRotation):
 
         # ── 停止施法黑名单检查 ──────────────────────────────────────
 
-        print(f"目标施放法术：{target.anyCastIcon}")
-        print(f"停止施法黑名单列表：{spell_stop_blacklist}")
+        # print(f"目标施放法术：{target.anyCastIcon}")
+        # print(f"停止施法黑名单列表：{spell_stop_list}")
 
         trigger_spell = None
         player_need_spell_stop = False
-        if target.exists and target.anyCastIcon in spell_stop_blacklist:
+        if target.exists and target.anyCastIcon in spell_stop_list:
             trigger_spell = target.anyCastIcon
             player_need_spell_stop = True
-        elif focus.exists and focus.anyCastIcon in spell_stop_blacklist:
+        elif focus.exists and focus.anyCastIcon in spell_stop_list:
             trigger_spell = focus.anyCastIcon
             player_need_spell_stop = True
 
         if player_need_spell_stop:
             return self.idle(f"检测到黑名单技能 [{trigger_spell}]，停止施法")
+
+        # ══════════════════════════════════════════════════════════════
+        # 【第一次献祭】常态段、变身前使用
+        #
+        # 献祭有 2 次充能，爆发段需要保留 1 次。
+        # 因此常态段的使用条件：
+        #   - 当前充能 == 2（满充能），说明两次都回来了，可以放心用一次
+        #   - 或处于开场阶段（combat_time <= 10s），充能 >= 1 即用（开场必须先打）
+        # ══════════════════════════════════════════════════════════════
+        print(
+            f"【第一次献祭】常态段触发，灵魂献祭是否1充能：{ctx.spell_charges_ready("灵魂献祭", 1, spell_queue_window)}，开场:{is_opener}"
+        )
+        if (
+            not collapsing_star_exists
+            and ctx.spell_cooldown_ready("灵魂献祭", spell_queue_window)
+            and (
+                ctx.spell_charges_ready("灵魂献祭", 2, spell_queue_window)
+                # or (
+                #     is_opener
+                #     and ctx.spell_charges_ready("灵魂献祭", 1, spell_queue_window)
+                # )
+            )
+        ):
+            return self.cast("灵魂献祭")
 
         # ── 爆发触发：虚空变形 ──────────────────────────────────────
         # 条件：不在移动 + 身上魂 >= 48 + 有噬欲时刻
@@ -218,15 +289,10 @@ class DemonHunterDevourer(BaseRotation):
 
         # ══════════════════════════════════════════════════════════════
         # 爆发段逻辑（collapsing_star_exists == True）
-        # 坍缩之星（硬性要求：身上 >= 30 魂）和虚空射线（硬性要求：怒气 >= 100）
-        # 两个技能都要使用，优先级区别：
-        #   AOE：坍缩之星 > 虚空射线
-        #   单体：虚空射线 > 坍缩之星
         # ══════════════════════════════════════════════════════════════
         if collapsing_star_exists:
 
             # ── 爆发段：根除强制插入（最高优先级）────────────────────
-            # 噬欲时刻即将消失（<= 1s），无论如何先打根除
             if (
                 moment_of_craving_exists
                 and 0 < moment_of_craving_remaining <= 1
@@ -243,25 +309,53 @@ class DemonHunterDevourer(BaseRotation):
                 and target.isInRangedRange
                 and ctx.spell_cooldown_ready("虚空射线", spell_queue_window)
             )
+            reap_ready = (
+                fury >= 70
+                and scattered_souls_fragments_count >= 4
+                and moment_of_craving_exists
+                and ctx.spell_cooldown_ready("收割", spell_queue_window)
+            )
+
+            # ── 【第二次献祭】爆发段内完成三连后触发 ──────────────────
+            # 三个技能（坍缩之星、收割、虚空射线）本轮爆发都打过一次，
+            # 且本轮爆发尚未使用过献祭，且当前有充能可用
+            burst_cycle_complete = all(self._burst_cycle.values())
+            if (
+                burst_cycle_complete
+                and not self._burst_sacrifice_used
+                and ctx.spell_charges_ready("灵魂献祭", 1, spell_queue_window)
+                and ctx.spell_cooldown_ready("灵魂献祭", spell_queue_window)
+            ):
+                self._burst_sacrifice_used = True
+                print(
+                    "【第二次献祭】爆发三连完成（坍缩之星+收割+虚空射线），触发灵魂献祭"
+                )
+                return self.cast("灵魂献祭")
 
             def try_cast_void_ray():
                 """
-                打虚空射线前先检查根除：
+                打虚空射线前先检查根除；
                 射线会刷新噬欲时刻，所以如果根除CD好了且满足打根除条件，先打根除。
+                射线施放成功后，标记 burst_cycle["ray"] = True。
                 """
                 if ctx.spell_cooldown_ready("根除", spell_queue_window):
                     if scattered_souls_fragments_count >= 8 or moment_of_craving_exists:
                         return self.cast("target根除")
+                self._burst_cycle["ray"] = True
+                print("爆发段追踪：虚空射线已打")
                 return self.cast("虚空射线")
 
             def try_cast_star():
                 """
-                打坍缩之星前先检查根除（地上 >= 8 魂时）。
+                打坍缩之星前先检查根除（地上 >= 8 魂时）；
+                坍缩之星施放后，标记 burst_cycle["star"] = True。
                 """
                 if scattered_souls_fragments_count >= 8 and ctx.spell_cooldown_ready(
                     "根除", spell_queue_window
                 ):
                     return self.cast("target根除")
+                self._burst_cycle["star"] = True
+                print("爆发段追踪：坍缩之星已打")
                 return self.cast("target坍缩之星")
 
             # ── AOE：坍缩之星 > 虚空射线 ────────────────────────────
@@ -287,13 +381,10 @@ class DemonHunterDevourer(BaseRotation):
                 ):
                     return self.cast("target根除")
 
-            # 收割：有噬欲时刻时
-            if (
-                fury >= 70
-                and scattered_souls_fragments_count >= 4
-                and moment_of_craving_exists
-                and ctx.spell_cooldown_ready("收割", spell_queue_window)
-            ):
+            # 收割：有噬欲时刻时（同时追踪是否已打）
+            if reap_ready:
+                self._burst_cycle["reap"] = True
+                print("爆发段追踪：收割已打")
                 return self.cast("target收割")
 
             # 吞噬：产魂 + 堆怒气
@@ -318,7 +409,6 @@ class DemonHunterDevourer(BaseRotation):
             and target.isInRangedRange
             and ctx.spell_cooldown_ready("虚空射线", spell_queue_window)
         ):
-            # 射线前同样先检查是否需要打根除
             if ctx.spell_cooldown_ready("根除", spell_queue_window):
                 if scattered_souls_fragments_count >= 8 or moment_of_craving_exists:
                     return self.cast("target根除")
@@ -326,21 +416,18 @@ class DemonHunterDevourer(BaseRotation):
 
         # ── 常态：高怒气 + 足够地面魂 → 收割/根除 ───────────────────
         if fury >= 70 and scattered_souls_fragments_count >= 4:
-            # 优先根除（有噬欲时刻时）
             if (
                 moment_of_craving_exists
                 and ctx.spell_cooldown_ready("根除", spell_queue_window)
                 and scattered_souls_fragments_count >= 8
             ):
                 return self.cast("target根除")
-            # 没有噬欲时刻时考虑根除
             if not moment_of_craving_exists and ctx.spell_cooldown_ready(
                 "收割", spell_queue_window
             ):
                 return self.cast("target收割")
 
         # ── 常态：根除强制条件 ────────────────────────────────────────
-        # 地上 >= 8 魂，或噬欲时刻快消失，或目标低血量执行
         if ctx.spell_cooldown_ready("根除", spell_queue_window):
             if (
                 (scattered_souls_fragments_count >= 8 and fury >= 50)

@@ -28,7 +28,7 @@ do
     insert(ConfigRows, {
         type = "slider",
         key = "fury_max",
-        name = "最大恶魔之怒（用于计算当前恶魔之怒数量）",
+        name = "最大恶魔之怒",
         tooltip = "设置识别器的最大能量参考值（通常为 100 或 120）",
         min_value = 100,
         max_value = 120,
@@ -100,7 +100,7 @@ do
         tooltip = "当前生命值低于该百分比时, 使用疾影", -- 修改描述
         min_value = 0,
         max_value = 120,
-        step = 1,
+        step = 5,
         default_value = 60, -- 设为您的目标值 72
         bind_config = phase_shift_threshold,
     })
@@ -203,7 +203,7 @@ do
         bind_config = aoe_enemy_count,
     })
 
-    local function InitFrame()
+    After(2, function()
         -- x:60 y:12
         -- 用途：显示 AOE 敌人数量阈值配置。
         -- 更新函数：set_aoe_enemy_count
@@ -219,6 +219,5 @@ do
         aoe_enemy_count:register_callback(set_aoe_enemy_count)
 
         set_aoe_enemy_count(aoe_enemy_count:get_value())
-    end
-    insert(MartixInitFuncs, InitFrame)
+    end)
 end

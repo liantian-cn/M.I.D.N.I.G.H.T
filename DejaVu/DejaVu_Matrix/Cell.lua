@@ -59,7 +59,7 @@ function Cell:_initialize(x, y, backgroundColor)
 
     local cellFrame = CreateFrame("Frame", cellName, parent)
     cellFrame:SetPoint("TOPLEFT", parent, "TOPLEFT", x * cellSize, -y * cellSize)
-    cellFrame:SetFrameLevel(parent:GetFrameLevel() + 1)
+    cellFrame:SetFrameLevel(parent:GetFrameLevel() + 10)
     cellFrame:SetSize(cellSize, cellSize)
     cellFrame:Show()
 

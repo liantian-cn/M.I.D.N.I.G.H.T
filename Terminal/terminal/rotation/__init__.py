@@ -4,4 +4,4 @@ from .DruidRestoration import DruidRestoration
 from .DemonHunterDevourer import DemonHunterDevourer
 
 
-ALL_ROTATIONS = [DruidGuardian, DeathKnightBlood, DruidRestoration, DemonHunterDevourer]
+ALL_ROTATIONS = [DemonHunterDevourer, DruidGuardian, DeathKnightBlood, DruidRestoration]

@@ -43,6 +43,12 @@ local function InitFrame()
         -- 依赖事件更新：UNIT_MAXHEALTH。
         -- 依赖定时刷新：2 秒。
         local function updateMaxHealth()
+            if not unitExists then
+                damageAbsorbsBar:setMinMaxValues(0, 1)
+                healAbsorbsBar:setMinMaxValues(0, 1)
+                -- inCominngHealsBar:setMinMaxValues(0, 1)
+                return
+            end
             local maxHealth = UnitHealthMax(UNIT_KEY) or 0
             damageAbsorbsBar:setMinMaxValues(0, maxHealth / 2)
             healAbsorbsBar:setMinMaxValues(0, maxHealth / 2)
