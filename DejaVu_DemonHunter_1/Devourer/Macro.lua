@@ -33,7 +33,6 @@ insert(macroList, { title = "target坍缩之星", key = "ALT-NUMPAD8", text = "/
 insert(macroList, { title = "target瓦解", key = "ALT-NUMPAD9", text = "/cast [@target] 瓦解" })
 insert(macroList, { title = "focus瓦解", key = "ALT-NUMPAD0", text = "/cast [@focus] 瓦解" })
 insert(macroList, { title = "疾影", key = "SHIFT-NUMPAD1", text = "/cast 疾影" })
-insert(macroList, { title = "灵魂献祭", key = "SHIFT-NUMPAD2", text = "/cast 灵魂献祭" })
 
 
 for _, macro in pairs(macroList) do
