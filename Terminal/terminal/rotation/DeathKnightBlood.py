@@ -275,6 +275,12 @@ class DeathKnightBlood(BaseRotation):
                 return self.cast("player枯萎凋零")
                 # print("mouseover枯萎凋零", end="; ")
 
+        # 死亡印记多打出去
+        if ReaperMarkUsable and (main_target is not None):
+            if main_target.healthPercent > reaper_mark_health_threshold:
+                return self.cast(f"{main_target.unitToken}死神印记")
+                # print(f"{main_target.unitToken}死神印记", end="; ")
+
         if ctx.spell_charges_ready("枯萎凋零", 1, spell_queue_window):
             if (not ctx.use_mouse) and (not player.isMoving) and (not player.hasBuff("枯萎凋零")):
                 if mouseover.exists and mouseover.canAttack and mouseover.isInMeleeRange:
@@ -306,11 +312,6 @@ class DeathKnightBlood(BaseRotation):
                 if ctx.combat_time < 10:
                     return self.cast(f"{main_target.unitToken}符文刃舞")
 
-        # 死亡印记多打出去
-        if ReaperMarkUsable and (main_target is not None):
-            if main_target.healthPercent > reaper_mark_health_threshold:
-                return self.cast(f"{main_target.unitToken}死神印记")
-                # print(f"{main_target.unitToken}死神印记", end="; ")
         # 符文有3个以上，积极打心打
         if runes >= 3:
             if ctx.spell_cooldown_ready("心脏打击", spell_queue_window):
