@@ -6,7 +6,7 @@
 ## LoadSavedVariablesFirst: 1
 ## Group: DejaVu_Core
 ## IconTexture: Interface\Icons\Ability_Domination_Rune13
-## Dependencies: !BugGrabber,BugSack,DejaVu_Matrix
+## Dependencies: !BugGrabber,BugSack
 
 Base.lua
 Profile.lua

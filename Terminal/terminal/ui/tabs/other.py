@@ -33,6 +33,7 @@ class OtherTab(QWidget):
     BLACKLIST_FIELD_DEFINITIONS = [
         ("dispel_blacklist", "驱散黑名单"),
         ("interrupt_blacklist", "打断黑名单"),
+        ("spell_stop_list", "中断法术技能"),
     ]
     FIELD_LABELS = dict(SCALAR_FIELD_DEFINITIONS + BLACKLIST_FIELD_DEFINITIONS)
 
@@ -96,6 +97,7 @@ class OtherTab(QWidget):
         self._fill_scalar_values(runtime_data)
         self._fill_blacklist_value("dispel_blacklist", decoded_data.get("dispel_blacklist"))
         self._fill_blacklist_value("interrupt_blacklist", decoded_data.get("interrupt_blacklist"))
+        self._fill_blacklist_value("spell_stop_list", decoded_data.get("spell_stop_list"))
 
         if stale:
             self.status_label.setText("当前显示的是旧数据，最新帧还没解码成功。")

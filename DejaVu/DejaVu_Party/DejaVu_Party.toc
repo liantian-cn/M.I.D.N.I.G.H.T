@@ -2,8 +2,8 @@
 ## Title: DéjàVu 小队信息模组
 ## Author: Émile Boirac
 ## Version: 12.0.1.66709
-## Dependencies: DejaVu_Matrix,DejaVu_Aura
-## LoadWith: DejaVu_Aura
+## LoadOnDemand: 1
+## Dependencies: DejaVu_Core, DejaVu_Matrix, DejaVu_Aura
 ## Group: DejaVu_Core
 ## IconTexture: Interface\Icons\Ability_Domination_Rune07
 
@@ -15,3 +15,4 @@ AuraHarmful.lua
 Status.lua
 Absorbs.lua
 CastingTarget.lua
+DejaVu_Party.lua

@@ -1,37 +1,37 @@
-local addonName, addonTable = ... -- 插件入口固定写法
+local addonName, addonTable       = ... -- 插件入口固定写法
 
 -- Lua 原生函数
-local random = math.random
-local min = math.min
-local insert = table.insert
+local random                      = math.random
+local min                         = math.min
+local insert                      = table.insert
 
 -- WoW 官方 API
-local CreateColorCurve = C_CurveUtil.CreateColorCurve
-local Enum = Enum
+local CreateColorCurve            = C_CurveUtil.CreateColorCurve
+local Enum                        = Enum
 
-local GetCurrentKeyBoardFocus = GetCurrentKeyBoardFocus
-local GetInventoryItemID = GetInventoryItemID
-local GetUnitSpeed = GetUnitSpeed
-local IsInGroup = IsInGroup
-local IsInRaid = IsInRaid
-local IsMounted = IsMounted
-local IsUsableItem = C_Item.IsUsableItem
-local SpellIsTargeting = SpellIsTargeting
-local UnitAffectingCombat = UnitAffectingCombat
-local UnitCanAttack = UnitCanAttack
-local UnitChannelInfo = UnitChannelInfo
+local GetCurrentKeyBoardFocus     = GetCurrentKeyBoardFocus
+local GetInventoryItemID          = GetInventoryItemID
+local IsPlayerMoving              = IsPlayerMoving
+local IsInGroup                   = IsInGroup
+local IsInRaid                    = IsInRaid
+local IsMounted                   = IsMounted
+local IsUsableItem                = C_Item.IsUsableItem
+local SpellIsTargeting            = SpellIsTargeting
+local UnitAffectingCombat         = UnitAffectingCombat
+local UnitCanAttack               = UnitCanAttack
+local UnitChannelInfo             = UnitChannelInfo
 local UnitEmpoweredStageDurations = UnitEmpoweredStageDurations
-local UnitExists = UnitExists
-local UnitInVehicle = UnitInVehicle
-local UnitIsDeadOrGhost = UnitIsDeadOrGhost
-local UnitIsUnit = UnitIsUnit
-local GetUnitAuraInstanceIDs = C_UnitAuras.GetUnitAuraInstanceIDs
-local IsSpellInRange = C_Spell.IsSpellInRange
+local UnitExists                  = UnitExists
+local UnitInVehicle               = UnitInVehicle
+local UnitIsDeadOrGhost           = UnitIsDeadOrGhost
+local UnitIsUnit                  = UnitIsUnit
+local GetUnitAuraInstanceIDs      = C_UnitAuras.GetUnitAuraInstanceIDs
+local IsSpellInRange              = C_Spell.IsSpellInRange
 
-local GetItemCooldown = C_Container.GetItemCooldown
+local GetItemCooldown             = C_Container.GetItemCooldown
 
-local LibStub = LibStub
-local LRC = LibStub("LibRangeCheck-3.0")
+local LibStub                     = LibStub
+local LRC                         = LibStub("LibRangeCheck-3.0")
 if not LRC then
     print("|cffff0000[单位状态]|r LibRangeCheck-3.0 未找到, 模块无法工作。")
     return
@@ -250,7 +250,7 @@ local function InitFrame()
     -- 依赖事件更新：无。
     -- 依赖定时刷新：2秒。
     local function updateMovement_fix()
-        cell.isMoving:setCellBoolean(GetUnitSpeed("player") > 0, COLOR.STATUS_BOOLEAN.IS_MOVING, COLOR.BLACK)
+        cell.isMoving:setCellBoolean(IsPlayerMoving(), COLOR.STATUS_BOOLEAN.IS_MOVING, COLOR.BLACK)
     end
 
     -- 说明：更新玩家是否在队伍或团队中。

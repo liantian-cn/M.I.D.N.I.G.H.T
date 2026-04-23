@@ -28,9 +28,7 @@ table.insert(ConfigRows, {
     name = "终止施法技能清单", -- 标题文本
     tooltip = "那些会打断施法的怪物技能", -- 提示信息
     default_value = { -- 默认技能集合
-        [377004] = true, -- 震耳尖啸
-        [1256047] = true, -- 震耳咆哮
-        [344923] = true, -- 血伤
+        [377004] = true, -- 示例技能1
     }, -- default_value 结束
     bind_config = spell_stop_list -- 绑定的配置对象
 })
@@ -52,6 +50,7 @@ local function InitFrame()
     -- 依赖事件更新：无
     -- 依赖定时刷新：无
     local function updateCell(tableValue)
+        tableValue = tableValue or {}
         local i = 1
         for spellID in pairs(tableValue) do
             if i > MAX_COUNT then

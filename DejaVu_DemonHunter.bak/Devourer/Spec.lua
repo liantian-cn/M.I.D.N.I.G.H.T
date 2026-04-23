@@ -1,8 +1,8 @@
 local addonName, addonTable             = ... 
 
 -- Lua 原生函数
+local After                             = C_Timer.After
 local random                            = math.random
-local insert                            = table.insert
 
 -- WoW 官方 API
 local CreateFrame                       = CreateFrame
@@ -24,9 +24,8 @@ if currentSpec ~= 3 then return end -- 不是噬灭专精则停止
 -- DejaVu Core
 local DejaVu = _G["DejaVu"]
 local Cell = DejaVu.Cell
-local MartixInitFuncs = DejaVu.MartixInitFuncs
 
-local function InitFrame()
+After(2, function() 
     local eventFrame = CreateFrame("Frame")
 
     local cells = {
@@ -58,5 +57,4 @@ local function InitFrame()
             UpdateSoulFragments()
         end
     end)
-end
-insert(MartixInitFuncs, InitFrame)
+end)
