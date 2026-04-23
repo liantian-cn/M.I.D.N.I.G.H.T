@@ -47,7 +47,7 @@ do
         end
 
         fury_max_config:register_callback(set_fury_max)
-        set_fury_max(fury_max_config:get_value() or 120) -- 初始化时根据当前配置值更新显示
+        set_fury_max(fury_max_config:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -86,7 +86,7 @@ do
 
         dh_interrupt_mode:register_callback(set_dh_interrupt_mode)
 
-        set_dh_interrupt_mode(dh_interrupt_mode:get_value() or "blacklist")
+        set_dh_interrupt_mode(dh_interrupt_mode:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -116,7 +116,7 @@ do
         end
 
         phase_shift_threshold:register_callback(set_phase_shift_threshold)
-        set_phase_shift_threshold(phase_shift_threshold:get_value() or 60)
+        set_phase_shift_threshold(phase_shift_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -150,7 +150,7 @@ do
 
         void_Ray_fury_overflow_threshold:register_callback(set_void_Ray_fury_overflow_threshold)
 
-        set_void_Ray_fury_overflow_threshold(void_Ray_fury_overflow_threshold:get_value() or 100)
+        set_void_Ray_fury_overflow_threshold(void_Ray_fury_overflow_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -184,40 +184,7 @@ do
 
         slider_enemy_health_threshold:register_callback(set_slider_enemy_health_threshold)
 
-        set_slider_enemy_health_threshold(slider_enemy_health_threshold:get_value() or 15)
+        set_slider_enemy_health_threshold(slider_enemy_health_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
-end
-
-do
-    local aoe_enemy_count = Config("aoe_enemy_count")
-    insert(ConfigRows, {
-        type = "slider",
-        key = "aoe_enemy_count",
-        name = "AOE敌人数量",
-        tooltip = "设置判定为AOE条件的敌人数量",
-        min_value = 2,
-        max_value = 10,
-        step = 1,
-        default_value = 4,
-        bind_config = aoe_enemy_count,
-    })
-
-    After(2, function()
-        -- x:60 y:12
-        -- 用途：显示 AOE 敌人数量阈值配置。
-        -- 更新函数：set_aoe_enemy_count
-        local aoe_enemy_count_cell = Cell:New(60, 12)
-
-        -- 说明：根据 AOE 敌人数量阈值配置更新显示强度。
-        -- 依赖事件更新：无
-        -- 依赖定时刷新：无
-        local function set_aoe_enemy_count(value)
-            aoe_enemy_count_cell:setCellRGBA(value * 10 / 255)
-        end
-
-        aoe_enemy_count:register_callback(set_aoe_enemy_count)
-
-        set_aoe_enemy_count(aoe_enemy_count:get_value())
-    end)
 end

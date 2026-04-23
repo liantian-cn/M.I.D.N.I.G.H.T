@@ -14,7 +14,7 @@ local CreateAuraController  = DejaVu_Aura.CreateAuraController
 
 local MAX_AURA_COUNT        = 7
 local BASE_Y                = 19
-local AURA_FILTER           = "HELPFUL|PLAYER"
+local AURA_FILTER           = "HELPFUL|PLAYER|RAID_IN_COMBAT"
 local SORT_RULE             = Enum.UnitAuraSortRule.Default
 local SORT_DIRECTION        = Enum.UnitAuraSortDirection.Reverse
 local DejaVu                = _G["DejaVu"]
