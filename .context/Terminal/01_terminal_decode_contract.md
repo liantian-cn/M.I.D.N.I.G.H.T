@@ -89,9 +89,77 @@
 
 ### `spec` 和 `setting`
 
-- 这两块目前故意保持为“原始 Cell 字典”，不直接在 `pixelcalc` 层做业务语义命名。
+- 这两块目前故意保持为"原始 Cell 字典"，不直接在 `pixelcalc` 层做业务语义命名。
 - `context/CellDict` 只是提供轻量读取接口，没有替你定义业务含义。
 - 如果要正式约定某个索引的意义，先补共享协议或这里，再决定要不要改 `context/`。
+
+### `setting` 索引与坐标对应表
+
+`ctx.setting.cell(index)` 的 index 是配置在 WoW 插件端 `ConfigRows` 中的顺序（从 0 开始），实际坐标定义在各个专精的 `Config.lua` 的 `Cell:New(x, y)` 调用中。
+
+#### DeathKnightBlood
+
+| index | 坐标 | 配置项 | 说明 |
+|-------|------|--------|------|
+| 0 | x:55, y:12 | runic_power_max | 最大符文能量 |
+| 1 | x:56, y:12 | dk_interrupt_mode | 打断模式 |
+| 2 | x:57, y:12 | blood_death_strike_health_threshold | 死亡打击生命值阈值 |
+| 3 | x:58, y:12 | blood_death_strike_runic_power_overflow_threshold | 死亡打击泄能阈值 |
+| 4 | x:59, y:12 | reaper_mark_health_threshold | 死神印记血量阈值 |
+| 5 | x:60, y:12 | dancing_rune_mode | 符文刃舞模式 |
+
+#### DemonHunterDevourer
+
+| index | 坐标 | 配置项 | 说明 |
+|-------|------|--------|------|
+| 0 | x:55, y:12 | fury_max | 最大恶魔之怒 |
+| 1 | x:56, y:12 | dh_interrupt_mode | 打断模式 |
+| 2 | x:57, y:12 | phase_shift_threshold | 疾影血量阈值 |
+| 3 | x:58, y:12 | void_Ray_fury_overflow_threshold | 虚空射线泄能阈值 |
+| 4 | x:59, y:12 | slider_enemy_health_threshold | 收割血量阈值 |
+| 5 | x:60, y:12 | aoe_enemy_count | AOE敌人数量 |
+
+#### DruidGuardian
+
+| index | 坐标 | 配置项 | 说明 |
+|-------|------|--------|------|
+| 0 | - | guardian_aoe_enemy_count | AOE敌人数量 |
+| 1 | - | guardian_opener_time | 开怪时间 |
+| 2 | - | guardian_frenzied_regeneration_threshold | 狂暴回复阈值 |
+| 3 | - | guardian_barkskin_threshold | 树皮术阈值 |
+| 4 | - | guardian_survival_instincts_threshold | 生存本能阈值 |
+| 5 | - | guardian_rage_overflow_threshold | 怒气溢出阈值 |
+| 6 | - | guardian_rage_threshold | 怒气阈值 |
+| 7 | - | guardian_interrupt_logic | 打断逻辑 |
+| 8 | - | guardian_incarnation_logic | 化身逻辑 |
+| 9 | - | guardian_ironfur_logic | 铁皮逻辑 |
+| 10 | - | guardian_rage_limit | 怒气上限 |
+
+#### DruidRestoration
+
+| index | 配置项 | 说明 |
+|-------|--------|------|
+| 0 | restoration_ironbark_hp_threshold | 铁木树皮阈值 |
+| 1 | restoration_barkskin_hp_threshold | 树皮术阈值 |
+| 2 | restoration_convoke_party_hp_threshold | 熊群触发群体阈值 |
+| 3 | restoration_convoke_single_hp_threshold | 熊群触发单体阈值 |
+| 4 | restoration_wild_growth_hp_threshold | 野性成长阈值 |
+| 5 | restoration_tranquility_party_hp_threshold | 宁静群体阈值 |
+| 6 | restoration_nature_swiftness_hp_threshold | 自然迅捷阈值 |
+| 7 | restoration_swiftmend_hp_threshold | 迅捷治愈阈值 |
+| 8 | restoration_swiftmend_count_threshold | 迅捷治愈计数阈值 |
+| 9 | restoration_regrowth_hp_threshold | 愈合阈值 |
+| 10 | restoration_rejuvenation_hp_threshold | 回春术阈值 |
+| 11 | restoration_abundance_stack_threshold | 丰盛堆叠阈值 |
+| 13 | restoration_hot_hp_threshold | HOT血量阈值 |
+
+#### spec 索引说明
+
+`ctx.spec.cell(index)` 同样按专精 Spec.lua 中 Cell 创建顺序索引：
+
+| index | DeathKnightBlood | DemonHunterDevourer |
+|-------|------------------|---------------------|
+| 0 | - | soul_fragments (x:55, y:13) |
 
 ## 边界约束
 
