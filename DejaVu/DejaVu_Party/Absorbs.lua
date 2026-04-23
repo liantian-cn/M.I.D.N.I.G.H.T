@@ -44,9 +44,9 @@ local function InitFrame()
         -- 依赖定时刷新：2 秒。
         local function updateMaxHealth()
             local maxHealth = UnitHealthMax(UNIT_KEY) or 0
-            damageAbsorbsBar:setMinMaxValues(0, maxHealth / 2)
-            healAbsorbsBar:setMinMaxValues(0, maxHealth / 2)
-            -- inCominngHealsBar:setMinMaxValues(0, maxHealth / 2)
+            damageAbsorbsBar:setMinMaxValues(0, maxHealth)
+            healAbsorbsBar:setMinMaxValues(0, maxHealth)
+            -- inCominngHealsBar:setMinMaxValues(0, maxHealth)
         end
 
         -- 说明：刷新当前队友的伤害吸收条数值。
