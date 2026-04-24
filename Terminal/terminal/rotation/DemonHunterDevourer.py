@@ -1,7 +1,7 @@
 """
 本循环适用于35魂噬灭歼灭者
 天赋代码如下：
-CgcBG5bbocFKcv+yIq8fPd6ORBA2mxMzMzMzMGmBAAAAAAgxsNYGAAAAAAAAmxMMzMzMzMzMDzsZGjFZhZmZmt2mZmBwwAQgZMYMD
+CgcBG5bbocFKcv+yIq8fPd6ORBA2mxMzMzMzMGmBAAAAAAgxsNYGAAAAAAAAmxMMmZmZmZmZGzsZGjFtswMzMzWbzMzAYYAIwMGMmB
 """
 
 # from __future__ import annotations
@@ -31,6 +31,7 @@ class DemonHunterDevourer(BaseRotation):
             "focus瓦解": "ALT-NUMPAD0",
             "疾影": "SHIFT-NUMPAD1",
             "灵魂献祭": "SHIFT-NUMPAD2",
+            "圣光潜力": "SHIFT-NUMPAD3",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
@@ -97,7 +98,7 @@ class DemonHunterDevourer(BaseRotation):
         # 虚空射线泄能怒气阈值（常态，默认100）
         fury_overflow_threshold_cell = ctx.setting.cell(3)
         fury_overflow_threshold = (
-            100
+            90
             if fury_overflow_threshold_cell is None
             else int(fury_overflow_threshold_cell.mean)
         )
@@ -142,9 +143,9 @@ class DemonHunterDevourer(BaseRotation):
 
         # ── AOE判断 ─────────────────────────────────────────────────
         is_aoe = player.enemyCount >= aoe_enemy_count
-        print(
-            f"当前敌人数量:{player.enemyCount}；设定aoe阈值：{aoe_enemy_count}；判断是否为aoe:{is_aoe}"
-        )
+        # print(
+        #     f"当前敌人数量:{player.enemyCount}；设定aoe阈值：{aoe_enemy_count}；判断是否为aoe:{is_aoe}"
+        # )
 
         # ── Buff/状态读取 ───────────────────────────────────────────
 
@@ -160,6 +161,9 @@ class DemonHunterDevourer(BaseRotation):
 
         # 坍缩之星（爆发变身标志）
         collapsing_star_exists = player.hasBuff("坍缩之星")
+
+        # 灵魂献祭
+        soul_immolation_exists = player.hasBuff("灵魂献祭")
 
         # ── 保命：疾影 ──────────────────────────────────────────────
 
@@ -198,9 +202,6 @@ class DemonHunterDevourer(BaseRotation):
 
         # ── 停止施法黑名单检查 ──────────────────────────────────────
 
-        # print(f"目标施放法术：{target.anyCastIcon}")
-        # print(f"停止施法黑名单列表：{spell_stop_list}")
-
         trigger_spell = None
         player_need_spell_stop = False
         if target.exists and target.anyCastIcon in spell_stop_list:
@@ -213,14 +214,42 @@ class DemonHunterDevourer(BaseRotation):
         if player_need_spell_stop:
             return self.idle(f"检测到黑名单技能 [{trigger_spell}]，停止施法")
 
+        # ── 大范围技能停止施法黑名单检查 ──────────────────────────────────────
+
+        # print(f"目标施放法术：{target.anyCastIcon}")
+        # print(f"停止施法黑名单列表：{range_spell_stop_list}")
+
+        range_trigger_spell = None
+        player_need_specific_spell_stop = False
+        if target.exists and target.anyCastIcon in range_spell_stop_list:
+            range_trigger_spell = target.anyCastIcon
+            player_need_specific_spell_stop = True
+        elif focus.exists and focus.anyCastIcon in range_spell_stop_list:
+            range_trigger_spell = focus.anyCastIcon
+            player_need_specific_spell_stop = True
+
+        if player_need_specific_spell_stop:
+            return self.idle(
+                f"检测到黑名单大范围技能 [{range_trigger_spell}]，停止特定施法"
+            )
+
         # ── 爆发触发：虚空变形 ──────────────────────────────────────
         # 条件：不在移动 + 身上魂 >= 48 + 有噬欲时刻
+        # print(
+        #     f"圣光潜力是否已冷却：{}"
+        # )
         if (
             not player.isMoving
             and soul_fragments >= 33
             and moment_of_craving_exists
             and ctx.spell_cooldown_ready("虚空变形", spell_queue_window)
         ):
+            # 当敌人数量 >= 8 时，先额外使用“圣光潜力”
+            # 注意：这里不直接 return，除非你的框架要求必须 return 才能施法
+            if player.enemyCount >= 8:
+                self.cast("圣光潜力")
+
+            # 无论敌人多少，只要满足外层 if，最终都执行变身
             return self.cast("虚空变形")
 
         # ══════════════════════════════════════════════════════════════
@@ -242,11 +271,14 @@ class DemonHunterDevourer(BaseRotation):
                 return self.cast("target根除")
 
             # 预先计算两个核心技能是否满足硬性条件
-            star_ready = soul_fragments >= 30 and ctx.spell_cooldown_ready(
-                "坍缩之星", spell_queue_window
+            star_ready = (
+                not player_need_specific_spell_stop
+                and soul_fragments >= 30
+                and ctx.spell_cooldown_ready("坍缩之星", spell_queue_window)
             )
             void_ray_ready = (
-                not player.isMoving
+                not player_need_specific_spell_stop
+                and not player.isMoving
                 and target.isInRangedRange
                 and ctx.spell_cooldown_ready("虚空射线", spell_queue_window)
             )
@@ -297,20 +329,21 @@ class DemonHunterDevourer(BaseRotation):
             # 灵魂献祭
             if ctx.spell_cooldown_ready("灵魂献祭", spell_queue_window):
                 if (
-                    soul_fragments <= 32
-                    and fury <= 80
+                    not soul_immolation_exists
+                    and soul_fragments <= 32
+                    and fury <= 78
                     and ctx.spell_charges_ready("灵魂献祭", 1, spell_queue_window)
                 ):
                     return self.cast("灵魂献祭")
 
-            # 收割：有噬欲时刻时
-            if (
-                fury >= 70
-                and scattered_souls_fragments_count >= 4
-                and moment_of_craving_exists
-                and ctx.spell_cooldown_ready("收割", spell_queue_window)
-            ):
-                return self.cast("target收割")
+            # # 收割：有噬欲时刻时
+            # if (
+            #     fury >= 70
+            #     and scattered_souls_fragments_count >= 4
+            #     and moment_of_craving_exists
+            #     and ctx.spell_cooldown_ready("收割", spell_queue_window)
+            # ):
+            #     return self.cast("target收割")
 
             # 吞噬：产魂 + 堆怒气
             if ctx.spell_cooldown_ready("吞噬", spell_queue_window):
@@ -329,7 +362,8 @@ class DemonHunterDevourer(BaseRotation):
 
         # ── 常态：泄能打虚空射线（怒气溢出保护）──────────────────────
         if (
-            fury >= fury_overflow_threshold
+            not player_need_specific_spell_stop
+            and fury >= fury_overflow_threshold
             and not player.isMoving
             and target.isInRangedRange
             and ctx.spell_cooldown_ready("虚空射线", spell_queue_window)
@@ -341,7 +375,7 @@ class DemonHunterDevourer(BaseRotation):
             return self.cast("虚空射线")
 
         # ── 常态：高怒气 + 足够地面魂 → 收割/根除 ───────────────────
-        if fury >= 70 and scattered_souls_fragments_count >= 4:
+        if fury >= 68 and scattered_souls_fragments_count >= 4:
             # 优先根除（有噬欲时刻时）
             if (
                 moment_of_craving_exists
@@ -359,7 +393,7 @@ class DemonHunterDevourer(BaseRotation):
         if ctx.spell_cooldown_ready("灵魂献祭", spell_queue_window):
             if (
                 soul_fragments <= 32
-                and fury <= 80
+                and fury <= 75
                 and ctx.spell_charges_ready("灵魂献祭", 2, spell_queue_window)
                 # and scattered_souls_fragments_count <= 6
             ):
@@ -369,7 +403,7 @@ class DemonHunterDevourer(BaseRotation):
         # 地上 >= 8 魂，或噬欲时刻快消失，或目标低血量执行
         if ctx.spell_cooldown_ready("根除", spell_queue_window):
             if (
-                (scattered_souls_fragments_count >= 8 and fury >= 50)
+                (scattered_souls_fragments_count >= 8 and fury >= 48)
                 or (moment_of_craving_exists and 0 < moment_of_craving_remaining <= 1)
                 or main_target.healthPercent < reaper_health_threshold
             ):

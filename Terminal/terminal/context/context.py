@@ -34,13 +34,23 @@ class Context:
     def gcd_ready(self, queue_window: float = 0.2) -> bool:
         gcd_spell = self.spell("公共冷却时间")
         if gcd_spell is None:
-            return True  # 没有公共冷却时间这个技能，说明版本比较老，先默认它永远准备好了。
+            return (
+                True  # 没有公共冷却时间这个技能，说明版本比较老，先默认它永远准备好了。
+            )
         if gcd_spell.is_known and gcd_spell.is_usable:
             return gcd_spell.cooldown <= queue_window
         else:
-            return True  # 没有公共冷却时间这个技能，说明版本比较老，先默认它永远准备好了。
+            return (
+                True  # 没有公共冷却时间这个技能，说明版本比较老，先默认它永远准备好了。
+            )
 
-    def spell_cooldown_ready(self, spell_name: str, queue_window: float = 0.2, ignore_gcd=False, ignore_usable=False) -> bool:
+    def spell_cooldown_ready(
+        self,
+        spell_name: str,
+        queue_window: float = 0.2,
+        ignore_gcd=False,
+        ignore_usable=False,
+    ) -> bool:
         spell = self.spell(spell_name)
         if spell is None:
             return False
@@ -52,7 +62,14 @@ class Context:
             return ignore_gcd or self.gcd_ready(queue_window)
         return False
 
-    def spell_charges_ready(self, spell_name: str, charges: int, queue_window: float = 0.2, ignore_gcd=False, ignore_usable=False) -> bool:
+    def spell_charges_ready(
+        self,
+        spell_name: str,
+        charges: int,
+        queue_window: float = 0.2,
+        ignore_gcd=False,
+        ignore_usable=False,
+    ) -> bool:
         spell = self.spell(spell_name)
         if spell is None:
             return False
@@ -86,59 +103,63 @@ class Context:
     def parties(self) -> list[Unit]:
         units = []
         for i in range(1, 5):
-            party_key: str = f'party{i}'
+            party_key: str = f"party{i}"
             unit = Unit(self.decoded_data["party"][party_key])
             if unit.exists:
                 units.append(unit)
         return units
 
     def party(self, party_index: int) -> Unit:
-        return Unit(self.decoded_data["party"][f'party{party_index}'])
+        return Unit(self.decoded_data["party"][f"party{party_index}"])
 
     @property
     def burst_time(self) -> float:
-        return self.decoded_data['burst_time']
+        return self.decoded_data["burst_time"]
 
     @property
     def combat_time(self) -> float:
-        return self.decoded_data['misc']['combat_time']
+        return self.decoded_data["misc"]["combat_time"]
 
     @property
     def use_mouse(self) -> bool:
-        return self.decoded_data['misc']['use_mouse']
+        return self.decoded_data["misc"]["use_mouse"]
 
     @property
     def assisted_combat(self) -> str:
-        return self.decoded_data['assisted_combat']
+        return self.decoded_data["assisted_combat"]
 
     @property
     def delay(self) -> bool:
-        return self.decoded_data['delay']
+        return self.decoded_data["delay"]
 
     @property
     def enable(self) -> bool:
-        return self.decoded_data['enable']
+        return self.decoded_data["enable"]
 
     @property
     def dispel_blacklist(self) -> list[str]:
-        return self.decoded_data['dispel_blacklist']
+        return self.decoded_data["dispel_blacklist"]
 
     @property
     def interrupt_blacklist(self) -> list[str]:
-        return self.decoded_data['interrupt_blacklist']
+        return self.decoded_data["interrupt_blacklist"]
 
     @property
     def spell_stop_list(self) -> list[str]:
-        return self.decoded_data['spell_stop_list']
+        return self.decoded_data["spell_stop_list"]
+
+    @property
+    def range_spell_stop_list(self) -> list[str]:
+        return self.decoded_data["range_spell_stop_list"]
 
     @property
     def spell_queue_window(self) -> float:
-        return self.decoded_data['spell_queue_window']
+        return self.decoded_data["spell_queue_window"]
 
     @property
     def spec(self) -> CellDict:
-        return CellDict(self.decoded_data['spec'])
+        return CellDict(self.decoded_data["spec"])
 
     @property
     def setting(self) -> CellDict:
-        return CellDict(self.decoded_data['setting'])
+        return CellDict(self.decoded_data["setting"])

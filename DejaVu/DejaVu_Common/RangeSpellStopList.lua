@@ -16,21 +16,21 @@ local BadgeCell = DejaVu.BadgeCell
 local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 -- 创建配置对象
-local spell_stop_list = Config("spell_stop_list")                  -- 敌方沉默技能黑名单配置项
+local range_spell_stop_list = Config("range_spell_stop_list")                  -- 敌方范围技能黑名单配置项
 local MAX_COUNT = 10                                               -- 最大数量
 local POS_X = 43                                                   -- X轴位置
-local POS_Y = 26                                                   -- Y轴位置
+local POS_Y = 21                                                   -- Y轴位置
 local BADGE_COLOR = COLOR.SPELL_TYPE.ENEMY_SPELL_NOT_INTERRUPTIBLE -- 哪些技能一定是无法打断的。
 
 table.insert(ConfigRows, {
     type = "spell_list", -- 设置类型
-    key = "spell_stop_list", -- 行标识
-    name = "终止施法技能清单", -- 标题文本
+    key = "range_spell_stop_list", -- 行标识
+    name = "终止施法大范围技能清单", -- 标题文本
     tooltip = "那些会打断施法的怪物技能", -- 提示信息
     default_value = { -- 默认技能集合
-        [377004] = true, -- 示例技能1
+        [377912] = true, -- 驱除闯入者
     }, -- default_value 结束
-    bind_config = spell_stop_list -- 绑定的配置对象
+    bind_config = range_spell_stop_list -- 绑定的配置对象
 })
 
 local function InitFrame()
@@ -68,8 +68,8 @@ local function InitFrame()
         end
     end
 
-    spell_stop_list:register_callback(updateCell)
+    range_spell_stop_list:register_callback(updateCell)
 
-    updateCell(spell_stop_list:get_value())
+    updateCell(range_spell_stop_list:get_value())
 end
 insert(MartixInitFuncs, InitFrame)
