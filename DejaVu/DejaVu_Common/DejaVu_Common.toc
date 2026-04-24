@@ -19,5 +19,6 @@ InterruptBlacklist.lua
 DispelBlacklist.lua
 BadgeUTF.lua
 SpellStopList.lua
+RangeSpellStopList.lua
 # _Test.lua
 DejaVu_Common.lua
