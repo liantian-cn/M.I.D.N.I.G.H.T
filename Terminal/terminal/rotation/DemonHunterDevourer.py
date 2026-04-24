@@ -72,7 +72,7 @@ class DemonHunterDevourer(BaseRotation):
                 "blacklist" if dh_interrupt_mode_cell.mean >= 200 else "any"
             )
         interrupt_blacklist = ctx.interrupt_blacklist
-        spell_stop_blacklist = ctx.spell_stop_blacklist
+        spell_stop_list = ctx.spell_stop_list
 
         # 设置项 #
         # 疾影的血量阈值，默认60%，当目标血量低于这个值时才使用疾影来保命。
@@ -243,6 +243,25 @@ class DemonHunterDevourer(BaseRotation):
         if player_need_spell_stop:
             # 这里的日志会动态显示到底是哪个技能触发的
             return self.idle(f"检测到黑名单技能 [{trigger_spell}]，停止施法")
+
+        # ── 大范围技能停止施法黑名单检查 ──────────────────────────────────────
+
+        # print(f"目标施放法术：{target.anyCastIcon}")
+        # print(f"停止施法黑名单列表：{range_spell_stop_list}")
+
+        range_trigger_spell = None
+        player_need_specific_spell_stop = False
+        if target.exists and target.anyCastIcon in range_spell_stop_list:
+            range_trigger_spell = target.anyCastIcon
+            player_need_specific_spell_stop = True
+        elif focus.exists and focus.anyCastIcon in range_spell_stop_list:
+            range_trigger_spell = focus.anyCastIcon
+            player_need_specific_spell_stop = True
+
+        if player_need_specific_spell_stop:
+            return self.idle(
+                f"检测到黑名单大范围技能 [{range_trigger_spell}]，停止特定施法"
+            )
 
         # ── 爆发触发：虚空变形 ──────────────────────────────────────
         # 条件：不在移动 + 身上魂 >= 48 + 有噬欲时刻
