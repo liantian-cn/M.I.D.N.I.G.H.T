@@ -29,4 +29,5 @@ insert(cooldownSpells, { spellID = 1217605, name = "虚空变形" }) --  [虚空
 insert(cooldownSpells, { spellID = 1221150, name = "坍缩之星" }) --  [坍缩之星]
 insert(cooldownSpells, { spellID = 183752, name = "瓦解" }) --  [瓦解]
 insert(cooldownSpells, { spellID = 198589, name = "疾影" }) --  [疾影]
-insert(cooldownSpells, { spellID = 1241937, name = "灵魂献祭" }) --  [灵魂献祭]
+
+insert(chargeSpells, { spellID = 1241937, name = "灵魂献祭" }) --  [灵魂献祭]

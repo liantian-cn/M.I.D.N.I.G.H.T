@@ -22,17 +22,17 @@ local ConfigRows = DejaVu.ConfigRows
 local Cell = DejaVu.Cell
 local MartixInitFuncs = DejaVu.MartixInitFuncs
 
--- 1. 恶魔之怒最大值配置
+-- 1. 恶魔之怒最大值配置（用于计算当前恶魔之怒数量）
 do
     local fury_max_config = Config("fury_max")
     insert(ConfigRows, {
         type = "slider",
         key = "fury_max",
-        name = "最大恶魔之怒（用于计算当前恶魔之怒数量）",
+        name = "最大恶魔之怒",
         tooltip = "设置识别器的最大能量参考值（通常为 100 或 120）",
-        min_value = 100,
+        min_value = 90,
         max_value = 120,
-        step = 10,
+        step = 1,
         default_value = 120,
         bind_config = fury_max_config,
     })
@@ -128,9 +128,9 @@ do
         key = "void_Ray_fury_overflow_threshold",
         name = "虚空射线泄能阈值",
         tooltip = "当前恶魔之怒高于该值时, 使用虚空射线避免浪费",
-        min_value = 0,
+        min_value = 90,
         max_value = 120,
-        step = 10,
+        step = 1,
         default_value = 100,
         bind_config = void_Ray_fury_overflow_threshold,
     })
