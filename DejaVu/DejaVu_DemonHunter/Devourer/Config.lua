@@ -28,7 +28,7 @@ do
     insert(ConfigRows, {
         type = "slider",
         key = "fury_max",
-        name = "最大恶魔之怒（用于计算当前恶魔之怒数量）",
+        name = "最大恶魔之怒",
         tooltip = "设置识别器的最大能量参考值（通常为 100 或 120）",
         min_value = 90,
         max_value = 120,
