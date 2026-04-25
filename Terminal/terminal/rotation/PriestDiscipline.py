@@ -90,21 +90,23 @@ class PriestDiscipline(BaseRotation):
             "party2灌注": "SHIFT-NUMPAD8",
             "party3灌注": "SHIFT-NUMPAD9",
             "party4灌注": "SHIFT-NUMPAD0",
+            "绝望祷言": "SHIFT-F8",
+            "福音": "SHIFT-F9",
             # 暗言术：痛
-            "target痛": "未分配",
-            "focus痛": "未分配",
+            "target痛": "SHIFT-,",
+            "focus痛": "ALT-,",
             # 暗言术：灭
-            "target灭": "未分配",
-            "focus灭": "未分配",
+            "target灭": "SHIFT-.",
+            "focus灭": "ALT-.",
             # 心灵震爆
-            "target心灵震爆": "未分配",
-            "focus心灵震爆": "未分配",
+            "target心灵震爆": "SHIFT-/",
+            "focus心灵震爆": "ALT-/",
             # 苦修
-            "target苦修": "未分配",
-            "focus苦修": "未分配",
+            "target苦修": "SHIFT-;",
+            "focus苦修": "ALT-;",
             # 惩击
-            "target惩击": "未分配",
-            "focus惩击": "未分配",
+            "target惩击": "SHIFT-'",
+            "focus惩击": "ALT-'",
 
         }
 
@@ -216,6 +218,14 @@ class PriestDiscipline(BaseRotation):
         target = ctx.target
         focus = ctx.focus
         mouseover = ctx.mouseover
+        desperate_prayer_hp_threshold = 50
+        without_atonement_injured_hp_threshold = 90
+        shadow_word_death_hp_threshold = 20
+        surge_baseline_threshold = 80
+        shadow_mend_baseline_threshold = 70
+        penance_heal_hp_threshold = 80
+        cast_queue_window_threshold = 90
+        channel_queue_window_threshold = 90
 
         if not player.alive:
             return self.idle("玩家已死亡")
@@ -227,10 +237,12 @@ class PriestDiscipline(BaseRotation):
             return self.idle("骑乘中")
 
         if player.castIcon is not None:
-            return self.idle("正在施法")
+            if player.castDuration is None or player.castDuration < cast_queue_window_threshold:
+                return self.idle("正在施法")
 
         if player.channelIcon is not None:
-            return self.idle("正在引导")
+            if player.channelDuration is None or player.channelDuration < channel_queue_window_threshold:
+                return self.idle("正在引导")
 
         if player.isEmpowering:
             return self.idle("正在蓄力")
@@ -242,7 +254,7 @@ class PriestDiscipline(BaseRotation):
 
         # 2. 绝望祷言 冷却好且自己血量 < 50，放 绝望祷言。
 
-        if player.healthPercent < 50 and ctx.spell_cooldown_ready("绝望祷言", spell_queue_window, ignore_gcd=True):
+        if player.healthPercent < desperate_prayer_hp_threshold and ctx.spell_cooldown_ready("绝望祷言", spell_queue_window, ignore_gcd=True):
             return self.cast("绝望祷言")
 
         # 6. 纯净术 冷却好且存在 驱散单位，对该单位放 纯净术。
@@ -266,8 +278,8 @@ class PriestDiscipline(BaseRotation):
                 return self.cast(f"{main_enemy.unitToken}痛")
 
         # 救赎且血量低于90的队友，按照健康分数从低到高排序，优先级越高越先处理
-        without_atonement_and_below_90 = [member for member in party_members if (member.atonement_remaining <= 0 and member.healthPercent < 90)]
-        without_atonement_and_below_90.sort(key=lambda m: m.health_score)  # 按健康分数排序，数值越低优先级越高
+        without_atonement_and_injured = [member for member in party_members if (member.atonement_remaining <= 0 and member.healthPercent < without_atonement_injured_hp_threshold)]
+        without_atonement_and_injured.sort(key=lambda m: m.health_score)  # 按健康分数排序，数值越低优先级越高
         # 无救赎的队友
         without_atonement = [member for member in party_members if member.atonement_remaining <= 0]
         without_atonement.sort(key=lambda m: m.health_score)  # 按健康分数排序，数值越低优先级越高
@@ -279,31 +291,31 @@ class PriestDiscipline(BaseRotation):
         without_shield = [member for member in party_members if not member.has_shield]
 
         # 8. 无救赎90数量 >= 2、真言术：耀 可用、且 福音层数 > 0，放 真言术：耀。
-        if len(without_atonement_and_below_90) >= 2:
+        if len(without_atonement_and_injured) >= 2:
             if player.buffStack("福音") > 0:
                 if ctx.spell_charges_ready("真言术：耀", 1, spell_queue_window):
-                    return self.cast(f"{without_atonement_and_below_90[0].unitToken}耀")
+                    return self.cast(f"{without_atonement_and_injured[0].unitToken}耀")
 
         # 9. 无救赎90数量 >= 2、福音 可用，放 福音。
-        if len(without_atonement_and_below_90) >= 2:
+        if len(without_atonement_and_injured) >= 2:
             if player.buffStack("福音") == 0:
                 if ctx.spell_cooldown_ready("福音", spell_queue_window):
                     return self.cast(f"福音")
 
         # 10. 暗言术：灭 可用、当前有敌对目标、在战斗中、且目标血量 < 20，放 暗言术：灭。
         if main_enemy is not None:
-            if main_enemy.healthPercent < 20:
+            if main_enemy.healthPercent < shadow_word_death_hp_threshold:
                 if ctx.spell_charges_ready("暗言术：灭", 1, spell_queue_window):
                     return self.cast(f"{main_enemy.unitToken}灭")
 
         # 涌动阈值 = 80 - 圣光涌动CD + 涌动层数*10
         if player.hasBuff("圣光涌动"):
-            surge_threshold = 80 - player.buffRemain("圣光涌动") + player.buffStack("圣光涌动层数") * 10
+            surge_threshold = surge_baseline_threshold - player.buffRemain("圣光涌动") + player.buffStack("圣光涌动") * 10
 
             # 11. 圣光涌动 > 0 且 涌动层数 > 0，如果“无救赎最低”血量 < 90，对它放 快速治疗。
-            if len(without_atonement_and_below_90) > 0:
+            if len(without_atonement_and_injured) > 0:
                 if ctx.spell_cooldown_ready("快速治疗", spell_queue_window):
-                    return self.cast(f"{without_atonement_and_below_90[0].unitToken}快速治疗")
+                    return self.cast(f"{without_atonement_and_injured[0].unitToken}快速治疗")
             # 12. 同样要求 圣光涌动 > 0 且 涌动层数 > 0，如果全队最低血量 < 涌动阈值，对最低单位放 快速治疗。
             if lowest_health_percent.healthPercent < surge_threshold:
                 if ctx.spell_cooldown_ready("快速治疗", spell_queue_window):
@@ -312,7 +324,7 @@ class PriestDiscipline(BaseRotation):
         # 13. 暗影愈合 > 0、暗影层数 > 0、施法技能 != 34、且最低单位血量 < 暗影愈合阈值，代码标记为“放暗影愈合”。
         if ctx.spell_cooldown_ready("暗影愈合", spell_queue_window):
             # 暗影愈合阈值 = 70 - 暗影愈合*2 + 暗影层数*15
-            shadow_mend_threshold = 70 - player.buffRemain("暗影愈合") * 2 + player.buffStack("暗影愈合层数") * 15
+            shadow_mend_threshold = shadow_mend_baseline_threshold - player.buffRemain("暗影愈合") * 2 + player.buffStack("暗影愈合") * 15
             if lowest_health_percent.healthPercent < shadow_mend_threshold:
                 return self.cast(f"{lowest_health_percent.unitToken}快速治疗")
 
@@ -321,9 +333,9 @@ class PriestDiscipline(BaseRotation):
         # 其次自己没盾就上盾
         # 最后给无盾最低健康分的队友上盾。
         if ctx.spell_cooldown_ready("真言术：盾", spell_queue_window):
-            if len(without_atonement_and_below_90) > 0:
-                if without_atonement_and_below_90[0].healthPercent < 90 or player.hasBuff("虚空之盾"):
-                    return self.cast(f"{without_atonement_and_below_90[0].unitToken}真言术盾")
+            if len(without_atonement_and_injured) > 0:
+                if without_atonement_and_injured[0].healthPercent < without_atonement_injured_hp_threshold or player.hasBuff("虚空之盾"):
+                    return self.cast(f"{without_atonement_and_injured[0].unitToken}真言术盾")
 
             if not player.has_shield:
                 return self.cast(f"player真言术盾")
@@ -335,12 +347,12 @@ class PriestDiscipline(BaseRotation):
         # 18. 无救赎90数量 >= 3、真言术：耀 可用、且 施法技能 != 30，放 真言术：耀。
         if ctx.spell_charges_ready("真言术：耀", 1, spell_queue_window):
             if player.castIcon != "真言术：耀":
-                if len(without_atonement_and_below_90) >= 3:
-                    return self.cast(f"{without_atonement_and_below_90[0].unitToken}耀")
+                if len(without_atonement_and_injured) >= 3:
+                    return self.cast(f"{without_atonement_and_injured[0].unitToken}耀")
 
         # 19. 苦修 可用，且最低单位血量 < 75，对最低单位放 苦修。
         if ctx.spell_charges_ready("苦修", 1, spell_queue_window):
-            if lowest_health_percent.healthPercent < 80:
+            if lowest_health_percent.healthPercent < penance_heal_hp_threshold:
                 return self.cast(f"{lowest_health_percent.unitToken}苦修")
 
         # 20. 如果当前有敌对目标且在战斗中，进入 Atonement 输出补伤阶段：
