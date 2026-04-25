@@ -3,17 +3,17 @@ local addonName, addonTable = ... -- luacheck: ignore addonTable -- 插件入口
 
 
 -- Lua 原生函数
-local insert                            = table.insert
-local pairs                             = pairs
+local insert                  = table.insert
+local pairs                   = pairs
 
 -- WoW 官方 API
-local CreateFrame                       = CreateFrame
-local SetOverrideBindingClick           = SetOverrideBindingClick
-local UnitClass                         = UnitClass
-local GetSpecialization                 = GetSpecialization
+local CreateFrame             = CreateFrame
+local SetOverrideBindingClick = SetOverrideBindingClick
+local UnitClass               = UnitClass
+local GetSpecialization       = GetSpecialization
 -- 专精错误则停止
-local _, classFilename = UnitClass("player")
-local currentSpec                       = GetSpecialization()
+local _, classFilename        = UnitClass("player")
+local currentSpec             = GetSpecialization()
 if classFilename ~= "PRIEST" then
     C_AddOns.DisableAddOn(addonName)
     return
@@ -53,6 +53,11 @@ insert(macroList, { title = "party1灌注", key = "SHIFT-NUMPAD7", text = "/focu
 insert(macroList, { title = "party2灌注", key = "SHIFT-NUMPAD8", text = "/focus party2 \n/cast [@party2] 能量灌注" })
 insert(macroList, { title = "party3灌注", key = "SHIFT-NUMPAD9", text = "/focus party3 \n/cast [@party3] 能量灌注" })
 insert(macroList, { title = "party4灌注", key = "SHIFT-NUMPAD0", text = "/focus party4 \n/cast [@party4] 能量灌注" })
+insert(macroList, { title = "player恳求", key = "SHIFT-F2", text = "/focus player \n/cast [@player] 恳求" })
+insert(macroList, { title = "party1恳求", key = "SHIFT-F3", text = "/focus party1 \n/cast [@party1] 恳求" })
+insert(macroList, { title = "party2恳求", key = "SHIFT-F5", text = "/focus party2 \n/cast [@party2] 恳求" })
+insert(macroList, { title = "party3恳求", key = "SHIFT-F6", text = "/focus party3 \n/cast [@party3] 恳求" })
+insert(macroList, { title = "party4恳求", key = "SHIFT-F7", text = "/focus party4 \n/cast [@party4] 恳求" })
 insert(macroList, { title = "绝望祷言", key = "SHIFT-F8", text = "/cast 绝望祷言" })
 insert(macroList, { title = "福音", key = "SHIFT-F9", text = "/cast 福音" })
 insert(macroList, { title = "target痛", key = "SHIFT-,", text = "/cast [@target] 暗言术：痛" })

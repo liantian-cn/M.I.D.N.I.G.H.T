@@ -209,7 +209,8 @@ class DruidGuardian(BaseRotation):
             else:
                 # print("当前目标不可攻击或不在远程范围，且焦点也不可攻击或不在近战范围，无法使用技能")
                 return self.idle("没有合适的目标")
-
+        # print(f"{player.powerPercent=}")
+        print(f"{rage_limit=}")
         rage = float(player.powerPercent) * rage_limit / 100.0
         # print(f"main_target: {main_target.unitToken if main_target else None}, rage: {rage:.1f}")
         is_opener = float(ctx.combat_time) <= opener_time
@@ -255,6 +256,8 @@ class DruidGuardian(BaseRotation):
             if ctx.spell_cooldown_ready("毁灭", spell_queue_window):
                 return self.cast("毁灭")
 
+        # print(f"{ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True)=}")
+        # print(f"{rage=}")
         if ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True) and (rage > 41):
             if (not player.hasBuff("铁鬃")) or (player.buffRemain("铁鬃") < 2):
                 return self.cast("低保铁鬃")
