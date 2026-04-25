@@ -240,20 +240,6 @@ class PriestDiscipline(BaseRotation):
 
         # print(f"当前时间: {datetime.now().strftime('%H:%M:%S')}", end="; ")
 
-        # 循环前会先算的目标与阈值
-        # 最低单位/最低生命值：全队血量最低者，来自 /E:/Desktop/Fuyutsui/Fuyutsui/utils.py:138。
-        # 无救赎最低：没有“救赎”且血量最低者，来自 /E:/Desktop/Fuyutsui/Fuyutsui/utils.py:334。
-        # 无盾最低：没有“真言术：盾”且血量最低者，也是同一个函数。
-        # 无盾坦克：第一个没有盾的坦克，来自 /E:/Desktop/Fuyutsui/Fuyutsui/utils.py:221。
-        # 无救赎90数量：没有“救赎”且血量低于 90% 的人数，来自 /E:/Desktop/Fuyutsui/Fuyutsui/utils.py:476。
-        # 有救赎数量：当前有“救赎”的人数，来自 /E:/Desktop/Fuyutsui/Fuyutsui/utils.py:513。
-        # 驱散单位选择顺序：先看魔法驱散目标；在五人本里只要 首领战 != 64 就允许优先驱魔法；如果没有合适魔法目标，再退回疾病目标，逻辑在 /E:/Desktop/Fuyutsui/Fuyutsui/class/priest_logic.py:108。
-        # 阈值：
-        # 暗影愈合阈值 = 70 - 暗影愈合*2 + 暗影层数*15
-        # 涌动阈值 = 80 - 圣光涌动 + 涌动层数*10
-
-        # 五人本神谕者戒律实际优先级
-
         # 2. 绝望祷言 冷却好且自己血量 < 50，放 绝望祷言。
 
         if player.healthPercent < 50 and ctx.spell_cooldown_ready("绝望祷言", spell_queue_window, ignore_gcd=True):
