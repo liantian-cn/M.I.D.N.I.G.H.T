@@ -146,7 +146,7 @@ class PriestDiscipline(BaseRotation):
                 if ctx.player.castIcon == "快速治疗":
                     health_base = health_base + 10
                 elif ctx.player.castIcon == "暗影愈合":
-                    health_base = health_base + 20
+                    health_base = health_base + 30
 
             # 先找出单位身上可驱散的 debuff，再按黑名单过滤。
             dispel_list = [debuff.title for debuff in member.debuff if (debuff.type in self.dispel_types)]
@@ -173,10 +173,10 @@ class PriestDiscipline(BaseRotation):
             # 角色修正
             # 坦克的积分视为身上有3个hot。
             # 治疗的积分视为身上少1个hot
-            # if unit_role == "TANK":
-            #     health_score += 10
-            # elif unit_role == "HEALER":
-            #     health_score -= 3
+            if unit_role == "TANK":
+                health_score += 10
+            elif unit_role == "HEALER":
+                health_score -= 3
 
             # debuff修正，每个debuff，积分-15分
             health_score += -10 * len(debuff_list)
@@ -210,6 +210,10 @@ class PriestDiscipline(BaseRotation):
 
         self.use_mana_balance = use_mana_balance
 
+        can_dispel_disease_cell = ctx.setting.cell(0)
+        if can_dispel_disease_cell is not None and can_dispel_disease_cell.mean >= 200:
+            self.dispel_types = ["MAGIC", "DISEASE"]
+
     # 阈值计算器
     def threshold_calculator(self, use_calc, min_value, max_value, mana_percent) -> float:
         if not use_calc:
@@ -240,15 +244,17 @@ class PriestDiscipline(BaseRotation):
         # 绝望祷言血量阈值
         desperate_prayer_hp_threshold = 50
         # 无救赎受伤血量阈值
-        without_atonement_injured_hp_threshold = 90
+        without_atonement_injured_hp_threshold = self.threshold_calculator(use_cale, 80, 90, powerpercent)
         # 暗言术：灭血量阈值
         shadow_word_death_hp_threshold = 20
         # 圣光涌动阈值基线
-        surge_baseline_threshold = 80
+        surge_baseline_threshold = self.threshold_calculator(use_cale, 70, 80, powerpercent)
         # 暗影愈合阈值基线
-        shadow_mend_baseline_threshold = 70
+        shadow_mend_baseline_threshold = self.threshold_calculator(use_cale, 60, 70, powerpercent)
         # 苦修补血阈值
-        penance_heal_hp_threshold = 75
+        penance_heal_hp_threshold = self.threshold_calculator(use_cale, 70, 80, powerpercent)
+        # 快速治疗干拉阈值
+        flash_heal_hp_threshold = self.threshold_calculator(use_cale, 30, 40, powerpercent)
         # 技能队列窗口，施法中剩余时间小于这个值就算技能快要好了，可以提前衔接施放下一个技能，单位是秒
         cast_queue_window_threshold = 90
         # 引导技能队列窗口，引导剩余时间小于这个值就算快要引导好了，可以提前衔接施放下一个技能，单位是秒
@@ -321,8 +327,6 @@ class PriestDiscipline(BaseRotation):
         # 无救赎的队友
         without_atonement = [member for member in party_members if member.atonement_remaining <= 0]
         without_atonement.sort(key=lambda m: m.health_score)  # 按健康分数排序，数值越低优先级越高
-        with_atonement_unit = [member for member in party_members if member.atonement_remaining > 0]
-        with_atonement_unit.sort(key=lambda m: m.health_score)  # 按健康分数排序，数值越低优先级越高
         # 最低健康分的队友
         lowest_health_score = sorted(party_members, key=lambda m: m.health_score)[0]
         # 最低血量的队友
@@ -334,7 +338,8 @@ class PriestDiscipline(BaseRotation):
         if len(without_atonement_and_injured) >= 2:
             if player.buffStack("福音") > 0:
                 if ctx.spell_charges_ready("真言术：耀", 1, spell_queue_window):
-                    return self.cast(f"{without_atonement_and_injured[0].unitToken}耀")
+                    if ctx.latest_succeeded_cast != "真言术：耀":
+                        return self.cast(f"{without_atonement_and_injured[0].unitToken}耀")
 
         # 9. 无救赎90数量 >= 2、福音 可用，放 福音。
         if len(without_atonement_and_injured) >= 2:
@@ -369,7 +374,7 @@ class PriestDiscipline(BaseRotation):
                     return self.cast(f"{lowest_health_percent.unitToken}快速治疗")
 
         # 13. 暗影愈合 > 0、暗影层数 > 0、施法技能 != 34、且最低单位血量 < 暗影愈合阈值，代码标记为“放暗影愈合”。
-        if player.hasDebuff("暗影愈合"):
+        if ctx.spell_cooldown_ready("暗影愈合", spell_queue_window):
             # 暗影愈合阈值 = 70 - 暗影愈合*2 + 暗影层数*15
             shadow_mend_threshold = shadow_mend_baseline_threshold - player.buffRemain("暗影愈合") * 2 + player.buffStack("暗影愈合") * 15
             if lowest_health_percent.healthPercent < shadow_mend_threshold:
@@ -379,7 +384,7 @@ class PriestDiscipline(BaseRotation):
         # 优先给无救赎且血量 < 90 的队友上盾。
         # 其次自己没盾就上盾
         # 最后给无盾最低健康分的队友上盾。
-        if ctx.spell_cooldown_ready("真言术：盾", spell_queue_window):
+        if ctx.spell_cooldown_ready("真言术：盾", spell_queue_window) or ctx.spell_cooldown_ready("虚空之盾", spell_queue_window):
             if len(without_atonement_and_injured) > 0:
                 if without_atonement_and_injured[0].healthPercent < without_atonement_injured_hp_threshold or player.hasBuff("虚空之盾"):
                     return self.cast(f"{without_atonement_and_injured[0].unitToken}真言术盾")
@@ -402,20 +407,17 @@ class PriestDiscipline(BaseRotation):
             if lowest_health_percent.healthPercent < penance_heal_hp_threshold:
                 return self.cast(f"{lowest_health_percent.unitToken}苦修")
 
-        # 用恳求补救赎
-        if len(with_atonement_unit) <= 2:
-            return self.cast(f"{with_atonement_unit[0].unitToken}快速治疗")
+        # 没技能了，用快速技能干啦血线最低的单位
+        if ctx.spell_cooldown_ready("快速治疗", spell_queue_window) or ctx.spell_cooldown_ready("暗影愈合", spell_queue_window):
+            if lowest_health_percent.healthPercent < flash_heal_hp_threshold:
+                return self.cast(f"{lowest_health_percent.unitToken}快速治疗")
 
-        if len(with_atonement_unit) > 2:
-            return self.cast(f"{with_atonement_unit[0].unitToken}耀")
-
-            # 20. 如果当前有敌对目标且在战斗中，进入 Atonement 输出补伤阶段：
+        # 20. 如果当前有敌对目标且在战斗中，进入 Atonement 输出补伤阶段：
         if main_enemy is not None:
 
             # 21. 暗言术：灭 可用且 有救赎数量 > 0，放 暗言术：灭。
             # 有救赎的队友数量
-
-            with_atonement_count = len(with_atonement_unit)
+            with_atonement_count = len(party_members) - len(without_atonement)
             if ctx.spell_charges_ready("暗言术：灭", 1, spell_queue_window):
                 if with_atonement_count > 0:
                     if main_enemy.healthPercent < shadow_word_death_hp_threshold:

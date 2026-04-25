@@ -9,6 +9,8 @@ local CreateFrame                       = CreateFrame
 local UnitPower                         = UnitPower
 local UnitClass                         = UnitClass
 local GetSpecialization                 = GetSpecialization
+-- /dump C_SpellBook.IsSpellKnown(390632)
+local IsSpellKnown                      = C_SpellBook.IsSpellKnown
 
 -- 专精错误则停止
 local className, classFilename, classId = UnitClass("player")
@@ -29,7 +31,21 @@ local function InitFrame()
     local eventFrame = CreateFrame("Frame") -- 事件框架
 
     local cells = {
-
+        dispelAbilities = Cell:New(55, 13) -- 可否驱散疾病
     }
+
+    local function updateDispelAbilities()
+        cells.dispelAbilities:setCellBoolean(IsSpellKnown(390632), COLOR.WHITE, COLOR.BLACK)
+    end
+    eventFrame:RegisterEvent("SPELLS_CHANGED")
+    function eventFrame.SPELLS_CHANGED()
+        updateDispelAbilities()
+    end
+
+    updateDispelAbilities()
+
+    eventFrame:SetScript("OnEvent", function(self, event, ...)
+        self[event](...)
+    end)
 end
 insert(MartixInitFuncs, InitFrame)
