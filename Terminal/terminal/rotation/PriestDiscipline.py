@@ -203,6 +203,14 @@ class PriestDiscipline(BaseRotation):
 
         self.use_mana_balance = use_mana_balance
 
+    # 阈值计算器
+    def threshold_calculator(self, use_calc, min_value, max_value, mana_percent) -> float:
+        if not use_calc:
+            return max_value
+        # 线性插值计算当前阈值
+        threshold = max_value - (max_value - min_value) * (mana_percent / 100)
+        return threshold
+
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
         self.read_config(ctx)
         party_members = self.calculate_party_health_score(ctx)
@@ -218,13 +226,25 @@ class PriestDiscipline(BaseRotation):
         target = ctx.target
         focus = ctx.focus
         mouseover = ctx.mouseover
+
+        # 当前法力值百分比
+        powerpercent = player.powerPercent
+        use_cale = self.use_mana_balance == "yes"
+        # 绝望祷言血量阈值
         desperate_prayer_hp_threshold = 50
-        without_atonement_injured_hp_threshold = 90
+        # 无救赎受伤血量阈值
+        without_atonement_injured_hp_threshold = self.threshold_calculator(use_cale, 80, 90, powerpercent)
+        # 暗言术：灭血量阈值
         shadow_word_death_hp_threshold = 20
-        surge_baseline_threshold = 80
-        shadow_mend_baseline_threshold = 70
-        penance_heal_hp_threshold = 80
+        # 圣光涌动阈值基线
+        surge_baseline_threshold = self.threshold_calculator(use_cale, 70, 80, powerpercent)
+        # 暗影愈合阈值基线
+        shadow_mend_baseline_threshold = self.threshold_calculator(use_cale, 60, 70, powerpercent)
+        # 苦修补血阈值
+        penance_heal_hp_threshold = self.threshold_calculator(use_cale, 70, 80, powerpercent)
+        # 技能队列窗口，施法中剩余时间小于这个值就算技能快要好了，可以提前衔接施放下一个技能，单位是秒
         cast_queue_window_threshold = 90
+        # 引导技能队列窗口，引导剩余时间小于这个值就算快要引导好了，可以提前衔接施放下一个技能，单位是秒
         channel_queue_window_threshold = 90
 
         if not player.alive:
