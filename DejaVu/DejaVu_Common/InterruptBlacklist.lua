@@ -17,7 +17,7 @@ local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 -- 创建配置对象
 local interrupt_blacklist = Config("interrupt_blacklist")      -- 驱散黑名单配置项
-local MAX_COUNT = 20                                           -- 最大数量
+local MAX_COUNT = 19                                           -- 最大数量
 local POS_X = 43                                               -- X轴位置
 local POS_Y = 17                                               -- Y轴位置
 local BADGE_COLOR = COLOR.SPELL_TYPE.ENEMY_SPELL_INTERRUPTIBLE -- 图标颜色

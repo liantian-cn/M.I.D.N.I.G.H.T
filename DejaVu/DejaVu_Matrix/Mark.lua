@@ -97,4 +97,5 @@ After(2, function() -- 2 秒后执行，确保 DejaVu 核心已加载完成
     CreateMarkSet(42, 17, 2)
     CreateMarkSet(0, 26, 2)
     CreateMarkSet(41, 26, 2)
+    CreateMarkSet(81, 17, 2)
 end)

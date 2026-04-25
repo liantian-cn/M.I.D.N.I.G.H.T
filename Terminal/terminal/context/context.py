@@ -142,3 +142,7 @@ class Context:
     @property
     def setting(self) -> CellDict:
         return CellDict(self.decoded_data['setting'])
+
+    @property
+    def latest_succeeded_cast(self) -> str:
+        return self.decoded_data['latest_succeeded_cast']

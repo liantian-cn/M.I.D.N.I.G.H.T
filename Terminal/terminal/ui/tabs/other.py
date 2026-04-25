@@ -29,6 +29,7 @@ class OtherTab(QWidget):
         ("burst_time", "爆发状态倒计时"),
         ("UTF_hash", "UTF_hash"),
         ("UTF_string", "UTF_string"),
+        ("latest_succeeded_cast", "最后的施法技能"),
     ]
     BLACKLIST_FIELD_DEFINITIONS = [
         ("dispel_blacklist", "驱散黑名单"),
@@ -93,6 +94,7 @@ class OtherTab(QWidget):
             "burst_time": decoded_data.get("burst_time"),
             "UTF_hash": decoded_data.get("UTF_hash"),
             "UTF_string": decoded_data.get("UTF_string"),
+            "latest_succeeded_cast": decoded_data.get("latest_succeeded_cast"),
         }
         self._fill_scalar_values(runtime_data)
         self._fill_blacklist_value("dispel_blacklist", decoded_data.get("dispel_blacklist"))
