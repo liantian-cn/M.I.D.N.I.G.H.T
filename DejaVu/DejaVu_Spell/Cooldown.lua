@@ -46,21 +46,19 @@ local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 
 local function InitSpellListByCoolDownViewer()
-    if DejaVu.useCustomSpell == false then
-        local cooldownIDs = GetCooldownViewerCategorySet(Enum.CooldownViewerCategory.Essential, true)
-        tAppendAll(cooldownIDs, GetCooldownViewerCategorySet(Enum.CooldownViewerCategory.Utility, true))
+    local cooldownIDs = GetCooldownViewerCategorySet(Enum.CooldownViewerCategory.Essential, true)
+    tAppendAll(cooldownIDs, GetCooldownViewerCategorySet(Enum.CooldownViewerCategory.Utility, true))
 
-        for _, cooldownID in ipairs(cooldownIDs) do
-            local cooldownInfo = GetCooldownViewerCooldownInfo(cooldownID)
-            if cooldownInfo and (not cooldownInfo.charges) then
-                table.insert(cooldownSpells, {
-                    spellID = cooldownInfo.overrideSpellID,
-                    name = GetSpellName(cooldownInfo.overrideSpellID),
-                })
+    for _, cooldownID in ipairs(cooldownIDs) do
+        local cooldownInfo = GetCooldownViewerCooldownInfo(cooldownID)
+        if cooldownInfo and (not cooldownInfo.charges) then
+            table.insert(cooldownSpells, {
+                spellID = cooldownInfo.overrideSpellID,
+                name = GetSpellName(cooldownInfo.overrideSpellID),
+            })
 
 
-                print("从冷却管理器添加了CD技能: " .. GetSpellLink(cooldownInfo.overrideSpellID) .. "ID:" .. cooldownInfo.overrideSpellID)
-            end
+            print("从冷却管理器添加了CD技能: " .. GetSpellLink(cooldownInfo.overrideSpellID) .. "ID:" .. cooldownInfo.overrideSpellID)
         end
     end
 end
@@ -72,7 +70,9 @@ local function InitFrame()
         print("DejaVu_Spell: Cooldown spells number is greater than COOLDOWN_LENGTH")
         return
     end
-    InitSpellListByCoolDownViewer()
+    if not DejaVu.useCustomSpell then
+        InitSpellListByCoolDownViewer()
+    end
     local cellMap = {}
     local validSpellID = {}
     local baseIDToSpellID = {}
