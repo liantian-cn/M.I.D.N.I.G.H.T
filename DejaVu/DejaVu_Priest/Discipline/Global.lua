@@ -15,7 +15,7 @@ if classFilename ~= "PRIEST" then
     C_AddOns.DisableAddOn(addonName)
     return
 end                                 -- 不是牧师则停止
-if currentSpec ~= 4 then return end -- 不是戒律专精则停止
+if currentSpec ~= 1 then return end -- 不是戒律专精则停止
 -- DejaVu Core
 local DejaVu = _G["DejaVu"]
 DejaVu.RangedRange = 40 -- 默认的远程检测范围
