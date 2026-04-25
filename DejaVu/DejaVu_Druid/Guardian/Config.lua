@@ -51,7 +51,7 @@ do
 
         guardian_aoe_enemy_count:register_callback(set_guardian_aoe_enemy_count)
 
-        set_guardian_aoe_enemy_count(guardian_aoe_enemy_count:get_value())
+        set_guardian_aoe_enemy_count(guardian_aoe_enemy_count:get_value() or 4)
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -84,7 +84,7 @@ do
 
         guardian_opener_time:register_callback(set_guardian_opener_time)
 
-        set_guardian_opener_time(guardian_opener_time:get_value())
+        set_guardian_opener_time(guardian_opener_time:get_value() or 10)
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -118,7 +118,7 @@ do
 
         guardian_frenzied_regeneration_threshold:register_callback(set_guardian_frenzied_regeneration_threshold)
 
-        set_guardian_frenzied_regeneration_threshold(guardian_frenzied_regeneration_threshold:get_value())
+        set_guardian_frenzied_regeneration_threshold(guardian_frenzied_regeneration_threshold:get_value() or 50)
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -152,7 +152,7 @@ do
 
         guardian_barkskin_threshold:register_callback(set_guardian_barkskin_threshold)
 
-        set_guardian_barkskin_threshold(guardian_barkskin_threshold:get_value())
+        set_guardian_barkskin_threshold(guardian_barkskin_threshold:get_value() or 40)
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -186,7 +186,7 @@ do
 
         guardian_survival_instincts_threshold:register_callback(set_guardian_survival_instincts_threshold)
 
-        set_guardian_survival_instincts_threshold(guardian_survival_instincts_threshold:get_value())
+        set_guardian_survival_instincts_threshold(guardian_survival_instincts_threshold:get_value() or 30)
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -220,7 +220,7 @@ do
 
         guardian_rage_overflow_threshold:register_callback(set_guardian_rage_overflow_threshold)
 
-        set_guardian_rage_overflow_threshold(guardian_rage_overflow_threshold:get_value())
+        set_guardian_rage_overflow_threshold(guardian_rage_overflow_threshold:get_value() or 100)
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -254,7 +254,7 @@ do
 
         guardian_rage_maul_threshold:register_callback(set_guardian_rage_maul_threshold)
 
-        set_guardian_rage_maul_threshold(guardian_rage_maul_threshold:get_value())
+        set_guardian_rage_maul_threshold(guardian_rage_maul_threshold:get_value() or 120)
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -293,7 +293,7 @@ do
 
         guardian_interrupt_logic:register_callback(set_guardian_interrupt_logic)
 
-        set_guardian_interrupt_logic(guardian_interrupt_logic:get_value())
+        set_guardian_interrupt_logic(guardian_interrupt_logic:get_value() or "blacklist")
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -335,7 +335,7 @@ do
 
         guardian_incarnation_logic:register_callback(set_guardian_incarnation_logic)
 
-        set_guardian_incarnation_logic(guardian_incarnation_logic:get_value())
+        set_guardian_incarnation_logic(guardian_incarnation_logic:get_value() or "burst_mode")
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -380,7 +380,7 @@ do
 
         guardian_ironfur_logic:register_callback(set_guardian_ironfur_logic)
 
-        set_guardian_ironfur_logic(guardian_ironfur_logic:get_value())
+        set_guardian_ironfur_logic(guardian_ironfur_logic:get_value() or "bypass")
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -414,7 +414,7 @@ do
 
         guardian_rage_limit:register_callback(set_guardian_rage_limit)
 
-        set_guardian_rage_limit(guardian_rage_limit:get_value())
+        set_guardian_rage_limit(guardian_rage_limit:get_value() or 120)
     end
     insert(MartixInitFuncs, InitFrame)
 end
