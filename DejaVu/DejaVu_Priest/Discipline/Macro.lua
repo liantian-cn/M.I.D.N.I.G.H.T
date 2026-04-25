@@ -17,7 +17,7 @@ if classFilename ~= "PRIEST" then
     C_AddOns.DisableAddOn(addonName)
     return
 end                                 -- 不是牧师则停止
-if currentSpec ~= 4 then return end -- 不是戒律专精则停止
+if currentSpec ~= 1 then return end -- 不是戒律专精则停止
 
 
 local macroList = {}
