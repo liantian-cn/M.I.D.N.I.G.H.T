@@ -401,7 +401,8 @@ class PriestDiscipline(BaseRotation):
             with_atonement_count = len(party_members) - len(without_atonement)
             if ctx.spell_charges_ready("暗言术：灭", 1, spell_queue_window):
                 if with_atonement_count > 0:
-                    return self.cast(f"{main_enemy.unitToken}灭")
+                    if main_enemy.healthPercent < shadow_word_death_hp_threshold:
+                        return self.cast(f"{main_enemy.unitToken}灭")
             # 22. 不在移动、心灵震爆 可用、且 有救赎数量 > 0，放 心灵震爆。
             if ctx.spell_charges_ready("心灵震爆", 1, spell_queue_window):
                 if with_atonement_count > 0:
