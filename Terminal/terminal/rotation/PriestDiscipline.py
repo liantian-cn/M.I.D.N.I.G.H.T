@@ -322,6 +322,13 @@ class PriestDiscipline(BaseRotation):
                 if ctx.spell_cooldown_ready("福音", spell_queue_window):
                     return self.cast(f"福音")
 
+        # 灌注爆发逻辑
+        # 如果有3个人，血量低于涌动血线，且灌注可用，给自己灌注。
+        lower_health_count = len([member for member in party_members if member.healthPercent < surge_baseline_threshold])
+        if lower_health_count >= 3:
+            if ctx.spell_cooldown_ready("灌注", spell_queue_window, ignore_gcd=True):
+                return self.cast(f"player灌注")
+
         # 10. 暗言术：灭 可用、当前有敌对目标、在战斗中、且目标血量 < 20，放 暗言术：灭。
         if main_enemy is not None:
             if main_enemy.healthPercent < shadow_word_death_hp_threshold:
