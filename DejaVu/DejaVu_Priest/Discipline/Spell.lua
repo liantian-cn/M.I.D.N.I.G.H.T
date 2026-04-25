@@ -29,6 +29,7 @@ insert(cooldownSpells, { spellID = 586, name = "渐隐术" })
 insert(cooldownSpells, { spellID = 19236, name = "绝望祷言" })
 insert(cooldownSpells, { spellID = 200829, name = "恳求" })
 insert(cooldownSpells, { spellID = 2061, name = "快速治疗" })
+insert(cooldownSpells, { spellID = 585, name = "惩击" })
 
 
 

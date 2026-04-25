@@ -46,7 +46,7 @@ class DisciplinePartyMember(Unit):
 
 class PriestDiscipline(BaseRotation):
     name = "戒律"
-    desc = "戒律牧师的循环逻辑。"
+    desc = "戒律牧师的循环逻辑。\n仅限神谕者"
 
     def __init__(self) -> None:
         super().__init__()
@@ -270,6 +270,15 @@ class PriestDiscipline(BaseRotation):
         if player.hasBuff("食物和饮料"):
             return self.idle("正在吃喝")
 
+        if not player.isInCombat:
+            # 未进入战斗只干
+            # 1. 给自己加盾
+            if ctx.spell_cooldown_ready("真言术：盾", spell_queue_window):
+                if not player.has_shield:
+                    return self.cast(f"player真言术盾")
+
+            return self.idle("未进入战斗")
+
         # print(f"当前时间: {datetime.now().strftime('%H:%M:%S')}", end="; ")
 
         # 2. 绝望祷言 冷却好且自己血量 < 50，放 绝望祷言。
@@ -278,8 +287,10 @@ class PriestDiscipline(BaseRotation):
             return self.cast("绝望祷言")
 
         # 6. 纯净术 冷却好且存在 驱散单位，对该单位放 纯净术。
-
+        # 优先自己
         if ctx.spell_charges_ready("纯净术", 1, spell_queue_window):
+            if player.can_dispel:
+                return self.cast(f"player纯净术")
             for member in party_members:
                 if member.can_dispel:
                     return self.cast(f"{member.unitToken}纯净术")
