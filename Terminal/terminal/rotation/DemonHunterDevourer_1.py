@@ -1,7 +1,7 @@
 """
-本循环适用于35魂噬灭歼灭者
+本循环适用于噬灭35魂虚痕
 天赋代码如下：
-CgcBG5bbocFKcv+yIq8fPd6ORBA2mxMzMzMzMGmBAAAAAAgxsNYGAAAAAAAAmxMMmZmZmZmZGzsZGjFtswMzMzWbzMzAYYAIwMGMmB
+CgcBG5bbocFKcv+yIq8fPd6ORBA2mxMzMzMzMGmBAAAAAAgxsNYGAAAAAAAAmxMMzMzMzMzMDzsNzYsJLMzYGtMzYAMMzMLzMTzyMLGzwYGA
 """
 
 # from __future__ import annotations
@@ -11,9 +11,9 @@ from terminal.context import Context
 from .base import BaseRotation
 
 
-class DemonHunterDevourer(BaseRotation):
-    name = "噬灭歼灭者DH"
-    desc = "目前只适配歼灭者，奥达奇可能会有问题"
+class DemonHunterDevourer_1(BaseRotation):
+    name = "噬灭虚痕DH"
+    desc = "目前正在施工适配虚痕"
 
     def __init__(self) -> None:
         super().__init__()
@@ -32,6 +32,9 @@ class DemonHunterDevourer(BaseRotation):
             "疾影": "SHIFT-NUMPAD1",
             "灵魂献祭": "SHIFT-NUMPAD2",
             "圣光潜力": "SHIFT-NUMPAD3",
+            "target虚空之刃": "SHIFT-NUMPAD4",
+            "target饥渴斩击": "SHIFT-NUMPAD5",
+            "复仇回避": "SHIFT-NUMPAD6",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
@@ -99,7 +102,7 @@ class DemonHunterDevourer(BaseRotation):
         # 虚空射线泄能怒气阈值（常态，默认100）
         fury_overflow_threshold_cell = ctx.setting.cell(3)
         fury_overflow_threshold = (
-            100
+            90
             if fury_overflow_threshold_cell is None
             else int(fury_overflow_threshold_cell.mean)
         )
@@ -165,6 +168,12 @@ class DemonHunterDevourer(BaseRotation):
 
         # 灵魂献祭
         soul_immolation_exists = player.hasBuff("灵魂献祭")
+
+        # 饥渴斩击
+        hungering_slash_exists = player.hasBuff("饥渴斩击")
+
+        # 虚空瞬步
+        voidstep_exists = player.hasBuff("虚空瞬步")
 
         # ── 保命：疾影 ──────────────────────────────────────────────
 
@@ -236,8 +245,7 @@ class DemonHunterDevourer(BaseRotation):
         # )
         if (
             not player.isMoving
-            and soul_fragments >= 35
-            # and soul_fragments >= 50  # 团本用
+            and soul_fragments >= 33
             and moment_of_craving_exists
             and ctx.spell_cooldown_ready("虚空变形", spell_queue_window)
         ):
@@ -314,16 +322,6 @@ class DemonHunterDevourer(BaseRotation):
                 if star_ready:
                     return try_cast_star()
 
-                # 变身后只有在单体时用灵魂献祭补充
-                if ctx.spell_cooldown_ready("灵魂献祭", spell_queue_window):
-                    if (
-                        not soul_immolation_exists
-                        and soul_fragments <= 32
-                        and fury <= 78
-                        and ctx.spell_charges_ready("灵魂献祭", 1, spell_queue_window)
-                    ):
-                        return self.cast("灵魂献祭")
-
             # ── 爆发段填充：两个核心技能都没好 ──────────────────────
             # 根除：地上 >= 8 魂 或 目标低血
             if ctx.spell_cooldown_ready("根除", spell_queue_window):
@@ -332,6 +330,16 @@ class DemonHunterDevourer(BaseRotation):
                     or main_target.healthPercent < reaper_health_threshold
                 ):
                     return self.cast("target根除")
+
+            # 灵魂献祭
+            if ctx.spell_cooldown_ready("灵魂献祭", spell_queue_window):
+                if (
+                    not soul_immolation_exists
+                    and soul_fragments <= 32
+                    and fury <= 78
+                    and ctx.spell_charges_ready("灵魂献祭", 1, spell_queue_window)
+                ):
+                    return self.cast("灵魂献祭")
 
             # # 收割：有噬欲时刻时
             # if (
@@ -357,18 +365,31 @@ class DemonHunterDevourer(BaseRotation):
         # 常态段逻辑（collapsing_star_exists == False）
         # ══════════════════════════════════════════════════════════════
 
+        # ── 常态：聚能打虚空之刃+复仇回避──────────────────────
+        # 注意：饥渴斩击(Hungering Slash)是虚空之刃的触发效果(buff/debuff)，
+        # 不是独立可施放的技能，无需单独判断施放
+        if ctx.spell_cooldown_ready("虚空之刃", spell_queue_window):
+            return self.cast("target虚空之刃")
+
+        print(
+            f"饥渴斩击是否可用：{hungering_slash_exists}，是否已冷却{ctx.spell_cooldown_ready("饥渴斩击", spell_queue_window)}"
+        )
+        #  and ctx.spell_cooldown_ready("饥渴斩击", spell_queue_window)
+        if hungering_slash_exists:
+            # print("施放饥渴斩击")
+            return self.cast("target饥渴斩击")
+
+        if voidstep_exists and ctx.spell_cooldown_ready("复仇回避", spell_queue_window):
+            return self.cast("复仇回避")
+
         # ── 常态：泄能打虚空射线（怒气溢出保护）──────────────────────
-        # print(
-        #     f"虚空射线是否冷却：{ctx.spell_cooldown_ready("虚空射线", spell_queue_window)}"
-        # )
         if (
-            fury >= fury_overflow_threshold
-            and not player_need_specific_spell_stop
+            not player_need_specific_spell_stop
+            and fury >= fury_overflow_threshold
             and not player.isMoving
             and target.isInRangedRange
             and ctx.spell_cooldown_ready("虚空射线", spell_queue_window)
         ):
-            # print("进入判断虚空射线")
             # 射线前同样先检查是否需要打根除
             if ctx.spell_cooldown_ready("根除", spell_queue_window):
                 if scattered_souls_fragments_count >= 8 or moment_of_craving_exists:
@@ -392,7 +413,6 @@ class DemonHunterDevourer(BaseRotation):
 
         # ── 常态：献祭强制条件 ────────────────────────────────────────
         if ctx.spell_cooldown_ready("灵魂献祭", spell_queue_window):
-            print("献祭冷却完成，进入释放判断")
             if (
                 soul_fragments <= 32
                 and fury <= 75
@@ -405,14 +425,13 @@ class DemonHunterDevourer(BaseRotation):
         # 地上 >= 8 魂，或噬欲时刻快消失，或目标低血量执行
         if ctx.spell_cooldown_ready("根除", spell_queue_window):
             if (
-                (scattered_souls_fragments_count >= 9 and fury >= 52)
+                (scattered_souls_fragments_count >= 8 and fury >= 48)
                 or (moment_of_craving_exists and 0 < moment_of_craving_remaining <= 1)
                 or main_target.healthPercent < reaper_health_threshold
             ):
                 return self.cast("target根除")
 
         # ── 常态：吞噬作为填充技能 ────────────────────────────────────
-        # print(f"吞噬是否冷却好{ctx.spell_cooldown_ready("吞噬", spell_queue_window)}")
         if ctx.spell_cooldown_ready("吞噬", spell_queue_window):
             if main_target is focus:
                 return self.cast("focus吞噬")

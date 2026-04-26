@@ -233,7 +233,7 @@ local function CreatePanelFrame() -- 创建控制条与设置面板
     local areaWidth = (SIZE.MainFrame.Width - spacing * 4) / 3 -- 三等分区域宽度
 
     local controlFrame = CreateFrame("Frame", addonName .. "controlFrame", UIParent) -- 控制条
-    controlFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0) -- 居中
+    controlFrame:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 0) -- 居中
     controlFrame:SetSize(SIZE.MainFrame.Width, SIZE.MainFrame.Height) -- 尺寸
     controlFrame:SetFrameStrata("TOOLTIP") -- 层级
     controlFrame:SetFrameLevel(900) -- 层级
