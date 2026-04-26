@@ -249,7 +249,7 @@ class DruidGuardian(BaseRotation):
             if (player.healthPercent < survival_instincts_threshold):
                 if not player.hasBuff("生存本能"):
                     return self.cast("player生存本能")
-        if (rage > 110) and ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True):
+        if (rage > 100) and ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True):
             return self.cast("泻怒铁鬃")
 
         if ironfur_logic == "bypass":
