@@ -354,7 +354,7 @@ class PriestDiscipline(BaseRotation):
         # 新增逻辑
         # 如果耀层数 == 2，且受伤数量 > 2，放耀
         if ctx.spell_charges_ready("真言术：耀", 2, spell_queue_window):
-            if len(injured_unit) > 2:
+            if len(injured_unit) > 2 and len(without_atonement_and_injured_unit) > 0:
                 if ctx.latest_succeeded_cast != "真言术：耀":
                     if (player.buffStack("福音") > 0) or (not player.isMoving):
                         return self.cast(f"{without_atonement_and_injured_unit[0].unitToken}耀")

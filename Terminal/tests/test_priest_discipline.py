@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -280,6 +281,27 @@ def test_priest_discipline_keeps_radiance_recast_guard_inside_queue_window() -> 
     )
 
     action, _, value = rotation.handle(decoded_data)
+
+    assert action == "idle"
+    assert value == "当前没有合适动作"
+
+
+def test_priest_discipline_skips_double_radiance_branch_without_atonement_targets() -> None:
+    rotation = PriestDiscipline()
+    decoded_data = _decoded_data(
+        player=_unit("player", in_combat=True, buffs=[_aura("福音", count=1)]),
+        parties=[
+            _unit("party1", health=85.0, in_combat=True, buffs=[_aura("救赎", remain=10.0)]),
+            _unit("party2", health=86.0, in_combat=True, buffs=[_aura("救赎", remain=10.0)]),
+            _unit("party3", health=87.0, in_combat=True, buffs=[_aura("救赎", remain=10.0)]),
+        ],
+        spells=[_spell("真言术：耀", is_charge=True, charges=2)],
+    )
+
+    try:
+        action, _, value = rotation.handle(decoded_data)
+    except IndexError as exc:
+        pytest.fail(f"rotation should skip radiance recast without valid target: {exc}")
 
     assert action == "idle"
     assert value == "当前没有合适动作"
