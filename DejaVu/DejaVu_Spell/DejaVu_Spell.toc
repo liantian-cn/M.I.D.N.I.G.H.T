@@ -7,8 +7,8 @@
 ## Group: DejaVu_Core
 ## IconTexture: Interface\Icons\Ability_Domination_Rune03
 
+DejaVu_Spell.lua
 Cooldown.lua
 Charge.lua
 
 # _Test.lua
-DejaVu_Spell.lua

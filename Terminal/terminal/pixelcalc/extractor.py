@@ -306,7 +306,7 @@ def extract_all_data(matrix: MatrixDecoder) -> dict[str, Any]:
         "testCell": matrix.readCharCell(0, 2),
         "enable": matrix.getCell(83, 0).is_not_black,
         "dispel_blacklist": matrix.readBadgeCellList(64, 15, 10),  # 可移除的法术
-        "interrupt_blacklist": matrix.readBadgeCellList(43, 17, 20),  # 可中断的法术
+        "interrupt_blacklist": matrix.readBadgeCellList(43, 17, 19),  # 可中断的法术
         "spell_stop_list": matrix.readBadgeCellList(43, 26, 10),  # 需要停止施法的法术
         "range_spell_stop_list": matrix.readBadgeCellList(
             43, 21, 10

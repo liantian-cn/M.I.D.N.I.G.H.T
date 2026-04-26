@@ -1,26 +1,32 @@
-local addonName, addonTable = ...
+local addonName, addonTable         = ...
 
-local pairs = pairs
-local insert = table.insert
-local Enum = Enum
-local random = math.random
+local pairs                         = pairs
+local insert                        = table.insert
+local Enum                          = Enum
+local random                        = math.random
+local tAppendAll                    = tAppendAll
+local After                         = C_Timer.After
+local wipe                          = wipe
 
 -- WoW 官方 API
-local CreateFrame = CreateFrame
-local GetSpellTexture = C_Spell.GetSpellTexture
-local GetSpellCooldownDuration = C_Spell.GetSpellCooldownDuration
-local IsSpellOverlayed = C_SpellActivationOverlay.IsSpellOverlayed
-local IsSpellUsable = C_Spell.IsSpellUsable
-local IsSpellInSpellBook = C_SpellBook.IsSpellInSpellBook
-local EvaluateColorFromBoolean = C_CurveUtil.EvaluateColorFromBoolean
-local CreateColorCurve = C_CurveUtil.CreateColorCurve
-local FindBaseSpellByID = C_SpellBook.FindBaseSpellByID
-local GetSpellName = C_Spell.GetSpellName
+local CreateFrame                   = CreateFrame
+local GetSpellTexture               = C_Spell.GetSpellTexture
+local GetSpellCooldownDuration      = C_Spell.GetSpellCooldownDuration
+local IsSpellOverlayed              = C_SpellActivationOverlay.IsSpellOverlayed
+local IsSpellUsable                 = C_Spell.IsSpellUsable
+local IsSpellInSpellBook            = C_SpellBook.IsSpellInSpellBook
+local EvaluateColorFromBoolean      = C_CurveUtil.EvaluateColorFromBoolean
+local CreateColorCurve              = C_CurveUtil.CreateColorCurve
+local FindBaseSpellByID             = C_SpellBook.FindBaseSpellByID
+local GetSpellName                  = C_Spell.GetSpellName
+local GetCooldownViewerCategorySet  = C_CooldownViewer.GetCooldownViewerCategorySet
+local GetCooldownViewerCooldownInfo = C_CooldownViewer.GetCooldownViewerCooldownInfo
+local GetSpellLink                  = C_Spell.GetSpellLink
 
 -- DejaVu Core
-local DejaVu = _G["DejaVu"]
-local cooldownSpells = {}
-DejaVu.cooldownSpells = cooldownSpells
+local DejaVu                        = _G["DejaVu"]
+local cooldownSpells                = {}
+DejaVu.cooldownSpells               = cooldownSpells
 insert(cooldownSpells, { spellID = 61304, name = "公共冷却" })
 local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
@@ -38,12 +44,35 @@ local COOLDOWN_LENGTH = 40
 local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 
+
+local function InitSpellListByCoolDownViewer()
+    if DejaVu.useCustomSpell == false then
+        local cooldownIDs = GetCooldownViewerCategorySet(Enum.CooldownViewerCategory.Essential, true)
+        tAppendAll(cooldownIDs, GetCooldownViewerCategorySet(Enum.CooldownViewerCategory.Utility, true))
+
+        for _, cooldownID in ipairs(cooldownIDs) do
+            local cooldownInfo = GetCooldownViewerCooldownInfo(cooldownID)
+            if cooldownInfo and (not cooldownInfo.charges) then
+                table.insert(cooldownSpells, {
+                    spellID = cooldownInfo.overrideSpellID,
+                    name = GetSpellName(cooldownInfo.overrideSpellID),
+                })
+
+
+                print("从冷却管理器添加了CD技能: " .. GetSpellLink(cooldownInfo.overrideSpellID) .. "ID:" .. cooldownInfo.overrideSpellID)
+            end
+        end
+    end
+end
+
+
+
 local function InitFrame()
     if #cooldownSpells > COOLDOWN_LENGTH then
         print("DejaVu_Spell: Cooldown spells number is greater than COOLDOWN_LENGTH")
         return
     end
-
+    InitSpellListByCoolDownViewer()
     local cellMap = {}
     local validSpellID = {}
     local baseIDToSpellID = {}

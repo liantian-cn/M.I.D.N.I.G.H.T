@@ -19,7 +19,7 @@ local DejaVu = _G["DejaVu"]
 local cooldownSpells = DejaVu.cooldownSpells
 local chargeSpells = DejaVu.chargeSpells
 
-
+DejaVu.useCustomSpell = true
 
 insert(cooldownSpells, { spellID = 46585, name = "亡者复生" }) --  亡者复生
 insert(cooldownSpells, { spellID = 48792, name = "冰封之韧" }) --  [冰封之韧]

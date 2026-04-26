@@ -171,10 +171,10 @@ do
         key = "reaper_mark_health_threshold",
         name = "死神印记血量阈值",
         tooltip = "当敌人生命值低于此值时, 就不会再使用死神印记",
-        min_value = 10,
-        max_value = 60,
+        min_value = 0,
+        max_value = 40,
         step = 10,
-        default_value = 30,
+        default_value = 20,
         bind_config = reaper_mark_health_threshold,
     })
 

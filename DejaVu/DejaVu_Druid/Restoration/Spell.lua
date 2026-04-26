@@ -19,7 +19,7 @@ local DejaVu = _G["DejaVu"]
 local cooldownSpells = DejaVu.cooldownSpells
 local chargeSpells = DejaVu.chargeSpells
 
-
+DejaVu.useCustomSpell = true
 
 insert(cooldownSpells, { spellID = 102793, name = "乌索尔旋风" }) --  [乌索尔旋风]
 insert(cooldownSpells, { spellID = 474750, name = "共生关系" }) --  [共生关系]

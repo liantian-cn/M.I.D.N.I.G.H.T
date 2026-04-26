@@ -4,6 +4,7 @@ from .DruidRestoration import DruidRestoration
 from .PriestDiscipline import PriestDiscipline
 from .DruidGuardianElune import DruidGuardianElune
 from .DemonHunterDevourer import DemonHunterDevourer
+from .DemonHunterDevourer_1 import DemonHunterDevourer_1
 
 ALL_ROTATIONS = [
     DemonHunterDevourer,
