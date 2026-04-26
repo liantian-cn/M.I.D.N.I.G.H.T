@@ -385,10 +385,10 @@ class DruidRestoration(BaseRotation):
         # 1.2 共生关系逻辑（优先补坦克常驻 buff）
         # 有坦克且共生关系可用时，检查坦克身上是否还没有共生关系。
         # 如果满足条件，就给坦克补共生关系。
-        if (tank_member is not None) and ctx.spell_cooldown_ready("共生关系", spell_queue_window):
-            if not tank_member.hasBuff("共生关系"):
-                return self.cast(f"{tank_member.unitToken}共生关系")
-                # print(f"对{tank_member.unitToken}施放共生关系", end="; ")
+        # if (tank_member is not None) and ctx.spell_cooldown_ready("共生关系", spell_queue_window):
+        #     if not tank_member.hasBuff("共生关系"):
+        #         return self.cast(f"{tank_member.unitToken}共生关系")
+            # print(f"对{tank_member.unitToken}施放共生关系", end="; ")
 
         if (not player.isInCombat) and (ctx.burst_time <= 0):  # 爆发模式则忽略战斗判断，直接开始预铺
             return self.idle("未进入战斗")
