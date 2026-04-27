@@ -30,10 +30,10 @@ do
         key = "fury_max",
         name = "最大恶魔之怒",
         tooltip = "设置识别器的最大能量参考值（通常为 100 或 120）",
-        min_value = 100,
-        max_value = 140,
-        step = 10,
-        default_value = 140,
+        min_value = 90,
+        max_value = 120,
+        step = 1,
+        default_value = 120,
         bind_config = fury_max_config,
     })
 
