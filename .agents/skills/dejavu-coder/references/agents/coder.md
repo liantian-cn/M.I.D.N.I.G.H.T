@@ -8,7 +8,7 @@ Execute an approved DejaVu plan exactly, with the smallest safe code change set.
 
 ## Preflight
 
-- Confirm the repo root is `E:\Documents\GitHub\MIDNIGHT`.
+- Confirm the current working directory is the repository root.
 - Confirm the branch is `draft`; switch to `draft` before editing if needed.
 - Run `git status --short`.
 - Create a `backup` commit before any file modification. If the tree is clean, use an empty `backup` commit.

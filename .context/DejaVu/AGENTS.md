@@ -13,8 +13,8 @@
 
 ## 项目提醒
 
-- `DejaVu.Outdated` 是旧版本参考，不是当前主实现。
 - 当前实现由 `DejaVu_Core` 和多个 `DejaVu_*` 模块组成。
+- 专精实现现在放在职业模块子目录下，例如 `DejaVu_Druid/Restoration` 和 `DejaVu_DeathKnight/Blood`。
 - 这次重构主要目标是解决旧插件的性能问题。
 - 性能瓶颈主要来自 Cell 刷新，即颜色、图标等显示内容的频繁重绘；Lua 数值计算通常不是主要矛盾。
 - 重构时优先保留用户现有写法，不为了“更漂亮”而顺手优化、精简或重排。
@@ -34,7 +34,7 @@
 
 ## 检查命令
 
-- 在 `DejaVu/` 目录下运行 `luacheck DejaVu_Common DejaVu_Core DejaVu_Matrix DejaVu_Panel DejaVu_Player DejaVu_Party DejaVu_Enemy DejaVu_Spell DejaVu_Aura DejaVu_DeathKnightBlood DejaVu_DruidGuardian DejaVu_DruidRestoration`
+- 在 `DejaVu/` 目录下运行 `luacheck DejaVu_Common DejaVu_Core DejaVu_Matrix DejaVu_Panel DejaVu_Player DejaVu_Party DejaVu_Enemy DejaVu_Spell DejaVu_Aura DejaVu_DeathKnight DejaVu_DemonHunter DejaVu_Druid DejaVu_Priest`
 
 ## 第三方
 
