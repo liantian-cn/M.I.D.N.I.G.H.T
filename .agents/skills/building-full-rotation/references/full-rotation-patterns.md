@@ -8,11 +8,11 @@ A complete rotation in this repo is not just `Terminal/terminal/rotation/<Spec>.
 
 It includes:
 
-- `DejaVu/DejaVu_<Spec>/Global.lua`
-- `DejaVu/DejaVu_<Spec>/Spec.lua`
-- `DejaVu/DejaVu_<Spec>/Spell.lua`
-- `DejaVu/DejaVu_<Spec>/Config.lua`
-- `DejaVu/DejaVu_<Spec>/Macro.lua`
+- `DejaVu/DejaVu_<Class>/<Spec>/Global.lua`
+- `DejaVu/DejaVu_<Class>/<Spec>/Spec.lua`
+- `DejaVu/DejaVu_<Class>/<Spec>/Spell.lua`
+- `DejaVu/DejaVu_<Class>/<Spec>/Config.lua`
+- `DejaVu/DejaVu_<Class>/<Spec>/Macro.lua`
 - `Terminal/terminal/rotation/<Spec>.py`
 
 If any one of these is missing, the build is incomplete.

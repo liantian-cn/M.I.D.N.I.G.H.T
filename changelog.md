@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-04-27
+
+### Refresh DejaVu context and agent docs
+
+- Updated DejaVu context docs to match the current class/spec directory structure, loader order, matrix facts, and first-party luacheck target list.
+- Replaced old flattened spec paths and stale absolute skill paths in DejaVu-related `.agents` skill docs.
+- Removed the stale `DejaVu.Outdated` reference from the archived DejaVu context entry.
+
+Verification:
+
+- `rg -n "DejaVu_DeathKnightBlood|DejaVu_DruidGuardian|DejaVu_DruidRestoration|E:\\Documents\\GitHub\\MIDNIGHT|DejaVu\\.Outdated" .context .agents` -> no matches
+- `git diff --check` -> no whitespace errors
+
 ## 2026-04-15
 
 ### Build `dejavu-coder` skill

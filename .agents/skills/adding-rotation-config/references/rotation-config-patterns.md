@@ -6,9 +6,11 @@ Use this reference after reading `SKILL.md`. It distills the repo's existing exa
 
 Read these examples together, not in isolation:
 
-- `DejaVu/DejaVu_DruidRestoration`
-- `DejaVu/DejaVu_DruidGuardian`
-- `DejaVu/DejaVu_DeathKnightBlood`
+- `DejaVu/DejaVu_Druid/Restoration`
+- `DejaVu/DejaVu_Druid/Guardian`
+- `DejaVu/DejaVu_DeathKnight/Blood`
+- `DejaVu/DejaVu_Priest/Discipline`
+- `DejaVu/DejaVu_DemonHunter/Devourer`
 - `Terminal/terminal/rotation/DruidRestoration.py`
 - `Terminal/terminal/rotation/DruidGuardian.py`
 - `Terminal/terminal/rotation/DeathKnightBlood.py`

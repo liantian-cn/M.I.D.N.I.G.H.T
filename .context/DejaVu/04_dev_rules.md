@@ -51,7 +51,7 @@
 ## git 工作流
 
 - 动手前先看 `git status --short`
-- 如果当前工作区已经脏，先做一次备份提交
+- 修改任何文件前，先做一次 `backup` 提交；工作区干净时允许用空提交
 - 小步修改，方便回看
 
 ## 事件整改规则
@@ -78,10 +78,11 @@
 - Lua 检查命令示例：
 
 ```powershell
-luacheck DejaVu_Common DejaVu_Core DejaVu_Matrix DejaVu_Panel DejaVu_Player DejaVu_Party DejaVu_Enemy DejaVu_Spell DejaVu_Aura DejaVu_DeathKnightBlood DejaVu_DruidGuardian DejaVu_DruidRestoration
+luacheck DejaVu_Common DejaVu_Core DejaVu_Matrix DejaVu_Panel DejaVu_Player DejaVu_Party DejaVu_Enemy DejaVu_Spell DejaVu_Aura DejaVu_DeathKnight DejaVu_DemonHunter DejaVu_Druid DejaVu_Priest
 ```
 
 - `DejaVu/.luacheckrc` 会被 `luacheck` 自动加载；一般不用额外写 `--config`
+- 第三方目录 `!BugGrabber`、`BugSack`、`LibRangeCheck-3.0` 默认不纳入项目 Lua 检查
 - 自动检查过后，还要结合游戏内实际表现做 smoke test
 
 ## 给 DejaVu 的落地提醒

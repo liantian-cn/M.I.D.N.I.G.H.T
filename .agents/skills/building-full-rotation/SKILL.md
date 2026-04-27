@@ -26,11 +26,11 @@ This is an interactive gatekeeper skill. If the user has not supplied the full b
   - the full Markdown template
   - no code edits
 - Always build both sides together:
-  - `DejaVu/DejaVu_<Spec>/Global.lua`
-  - `DejaVu/DejaVu_<Spec>/Spec.lua`
-  - `DejaVu/DejaVu_<Spec>/Spell.lua`
-  - `DejaVu/DejaVu_<Spec>/Config.lua`
-  - `DejaVu/DejaVu_<Spec>/Macro.lua`
+  - `DejaVu/DejaVu_<Class>/<Spec>/Global.lua`
+  - `DejaVu/DejaVu_<Class>/<Spec>/Spec.lua`
+  - `DejaVu/DejaVu_<Class>/<Spec>/Spell.lua`
+  - `DejaVu/DejaVu_<Class>/<Spec>/Config.lua`
+  - `DejaVu/DejaVu_<Class>/<Spec>/Macro.lua`
   - `Terminal/terminal/rotation/<Spec>.py`
 - One class/spec can have only one DejaVu plugin.
 - Terminal may have multiple rotations, but this skill still writes exactly one target rotation file per task.
@@ -58,9 +58,11 @@ Always read:
 
 Study these examples before implementation:
 
-- `DejaVu/DejaVu_DruidRestoration`
-- `DejaVu/DejaVu_DruidGuardian`
-- `DejaVu/DejaVu_DeathKnightBlood`
+- `DejaVu/DejaVu_Druid/Restoration`
+- `DejaVu/DejaVu_Druid/Guardian`
+- `DejaVu/DejaVu_DeathKnight/Blood`
+- `DejaVu/DejaVu_Priest/Discipline`
+- `DejaVu/DejaVu_DemonHunter/Devourer`
 - `Terminal/terminal/rotation/DruidRestoration.py`
 - `Terminal/terminal/rotation/DruidGuardian.py`
 - `Terminal/terminal/rotation/DeathKnightBlood.py`
@@ -118,7 +120,7 @@ All of these are mandatory. Missing any one means stop and return the template.
 
 ## 3. Call Existing Skills
 
-- **REQUIRED REPO SKILL:** Use `$adding-rotation-config` at `E:\Documents\GitHub\MIDNIGHT\.agents\skills\adding-rotation-config` once the input is complete.
+- **REQUIRED REPO SKILL:** Use `$adding-rotation-config` at `.agents\skills\adding-rotation-config` once the input is complete.
 - Use it to lock:
   - mirrored `spec/setting` slots
   - DejaVu `Config.lua` and `Spec.lua` encoding rules

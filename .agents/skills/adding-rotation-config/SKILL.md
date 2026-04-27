@@ -7,7 +7,7 @@ description: Use when adding or extending MIDNIGHT DejaVu and Terminal rotation 
 
 ## Overview
 
-Use this skill for MIDNIGHT tasks that add or expand mirrored rotation configuration between `DejaVu/DejaVu_<Spec>` and `Terminal/terminal/rotation/<Spec>.py`.
+Use this skill for MIDNIGHT tasks that add or expand mirrored rotation configuration between a DejaVu class/spec directory such as `DejaVu/DejaVu_Druid/Restoration` and `Terminal/terminal/rotation/<Spec>.py`.
 
 Treat `spec` and `setting` as protocol cells, not local implementation details. DejaVu writes brightness or color into cells; Terminal decodes those same cells back into business values.
 
@@ -20,7 +20,7 @@ Treat `spec` and `setting` as protocol cells, not local implementation details. 
 - Use `luacheck` for Lua verification.
 - Use `uv run` for Python commands.
 - If the task is a rotation script task, only edit `Terminal/terminal/rotation/`.
-- If the task is a DejaVu plugin task, only edit the target `DejaVu/DejaVu_<Spec>/` plugin.
+- If the task is a DejaVu plugin task, only edit the target class/spec directory under `DejaVu/`, for example `DejaVu/DejaVu_DeathKnight/Blood/`.
 - Only touch `.context/` or decode-layer files if the protocol meaning really changes.
 - One class/spec can have only one DejaVu plugin. Multiple Terminal rotation scripts are allowed, but they share the same DejaVu-side settings.
 - If the DejaVu plugin class is wrong, disable the addon. If the class is correct but spec is wrong, return immediately.
@@ -47,9 +47,11 @@ Always read:
 
 Study these repo examples before writing code:
 
-- `DejaVu/DejaVu_DruidRestoration`
-- `DejaVu/DejaVu_DruidGuardian`
-- `DejaVu/DejaVu_DeathKnightBlood`
+- `DejaVu/DejaVu_Druid/Restoration`
+- `DejaVu/DejaVu_Druid/Guardian`
+- `DejaVu/DejaVu_DeathKnight/Blood`
+- `DejaVu/DejaVu_Priest/Discipline`
+- `DejaVu/DejaVu_DemonHunter/Devourer`
 - `Terminal/terminal/rotation/DruidRestoration.py`
 - `Terminal/terminal/rotation/DruidGuardian.py`
 - `Terminal/terminal/rotation/DeathKnightBlood.py`
@@ -73,7 +75,7 @@ Then load [references/rotation-config-patterns.md](./references/rotation-config-
 ## 1. Preflight
 
 - Confirm the target spec and exact write scope first.
-- If the user asked for a new spec plugin, create or update only `DejaVu/DejaVu_<Spec>/`.
+- If the user asked for a new spec plugin, create or update only the relevant class/spec directory under `DejaVu/`.
 - If the user asked for a new rotation, create or update only `Terminal/terminal/rotation/<Spec>.py`.
 - If the task mentions spells, charges, or WoW API uncertainty, query `wow-api-mcp` first, then fall back to wiki guidance from `.context/DejaVu/06_wow_api_query_playbook.md`.
 

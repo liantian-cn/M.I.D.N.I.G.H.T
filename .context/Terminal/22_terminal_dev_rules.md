@@ -8,7 +8,8 @@
 - 开始任务前先看 `git status --short`。
 - 无论工作区是否干净，都先做一次 `backup` 提交。
 - 完成修改后，再提交一次这次任务的简要提交。
-- Python 命令统一使用 `uv run`。
+- Windows 下默认用 PowerShell。
+- Python 命令在 `Terminal/` 目录下统一使用 `uv run`。
 
 ## AI 侧规则
 
@@ -16,6 +17,7 @@
 - 以代码为准，但如果代码已经和 `.context/` 不一致，应在同一任务里把 `.context/` 补齐。
 - 不主动“优化”用户代码；只有用户明确要求，或已经指出实际异常，才处理。
 - 处理异常时，只改异常相关部分，不顺手扩散。
+- 用户要求“假设代码完美无暇”时，只整理文档或入口，不借机改业务代码。
 
 ## 文档优先级
 
@@ -49,3 +51,14 @@
 - 当前 decode 和 rotation 都采用“单飞行 + 只保留最新待处理项”的实时策略。
 - 如果改了这套调度，必须同步检查 `workers/`、`02_runtime_pipeline.md` 和日志行为。
 - `wait` 动作的效果是在主线程暂缓 rotation，不是暂停 capture / decode。
+
+## 常用命令
+
+从 `Terminal/` 目录执行：
+
+- 安装或同步依赖：`uv sync`
+- 启动程序：`uv run .\main.py`
+- 跑全部测试：`uv run python -m pytest`
+- 编译检查单个 rotation：`uv run python -m py_compile terminal\rotation\<Name>.py`
+
+不要把 `notes/` 下的手工实验脚本当成必须验证步骤；只有任务明确涉及对应实验时才运行。
