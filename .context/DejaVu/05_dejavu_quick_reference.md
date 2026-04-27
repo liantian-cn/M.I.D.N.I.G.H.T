@@ -12,9 +12,17 @@
 - 矩阵/单元格布局: 放 `DejaVu_Matrix`
 - 设置项和开关: 放 `DejaVu_Panel`
 - 直接显示某类单位、技能或 Aura: 放对应的 `DejaVu_Player` / `DejaVu_Party` / `DejaVu_Enemy` / `DejaVu_Spell` / `DejaVu_Aura`
-- 某个专精专属接线: 放对应专精目录, 如 `DejaVu_DeathKnightBlood`
+- 某个专精专属接线: 放职业目录下的专精目录, 如 `DejaVu_DeathKnight/Blood`
 
 简单说: **公共能力放 Common / Core, 显示放矩阵或直接输出模块, 职业差异放专精目录。**
+
+当前可参考的专精目录：
+
+- `DejaVu_DeathKnight/Blood`
+- `DejaVu_DemonHunter/Devourer`
+- `DejaVu_Druid/Guardian`
+- `DejaVu_Druid/Restoration`
+- `DejaVu_Priest/Discipline`
 
 ### 2. 想显示冷却、充能、剩余时间
 

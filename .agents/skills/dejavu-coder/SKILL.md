@@ -7,7 +7,7 @@ description: Use when working on MIDNIGHT DejaVu tasks in this repository, espec
 
 ## Overview
 
-Use this skill for `E:\Documents\GitHub\MIDNIGHT` tasks that are scoped to `DejaVu/` and its shared `.context` docs. This skill does not duplicate the project knowledge base; it tells you exactly which docs to load, which repo rules to enforce, and how to run the four-role workflow: `plan writer`, `coder`, `review`, `commiter`.
+Use this skill for tasks scoped to this repository's `DejaVu/` tree and its shared `.context` docs. This skill does not duplicate the project knowledge base; it tells you exactly which docs to load, which repo rules to enforce, and how to run the four-role workflow: `plan writer`, `coder`, `review`, `commiter`.
 
 ## Hard Gates
 
@@ -49,7 +49,7 @@ Load additional references from [dejavu-context-map.md](./references/dejavu-cont
 
 ### 1. Preflight
 
-- Confirm the repo root is `E:\Documents\GitHub\MIDNIGHT`.
+- Confirm the current working directory is the repository root.
 - Confirm the task belongs to `DejaVu/`.
 - Check `git branch --show-current` and `git status --short`.
 - Create the required `backup` commit before any file edits or new files.
@@ -108,6 +108,7 @@ When dispatching those roles on Codex, read the prompt file, wrap it as task ins
 Before claiming completion:
 
 - Run the relevant `luacheck` command from `DejaVu/` when Lua files changed.
+- Current first-party Lua check target list is `DejaVu_Common DejaVu_Core DejaVu_Matrix DejaVu_Panel DejaVu_Player DejaVu_Party DejaVu_Enemy DejaVu_Spell DejaVu_Aura DejaVu_DeathKnight DejaVu_DemonHunter DejaVu_Druid DejaVu_Priest`.
 - Run any task-specific verification required by the approved plan.
 - Re-read the final diff for cross-project leakage and style-rule violations.
 - Confirm `changelog.md` was updated before the final task commit.
@@ -116,4 +117,4 @@ Before claiming completion:
 
 Use this skill explicitly by path:
 
-`Use $dejavu-coder at E:\Documents\GitHub\MIDNIGHT\.agents\skills\dejavu-coder ...`
+`Use $dejavu-coder at .agents\skills\dejavu-coder ...`

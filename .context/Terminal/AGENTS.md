@@ -53,8 +53,12 @@
 ## 开发边界
 
 - 如果只是协议、颜色、矩阵语义、线程链路要改，先改根 `.context/` 里的对应文档，再决定是否继续动代码。
+- Terminal 单项目 agent 入口在 `.agents/skills/terminal-coder/`。
+- 不要为了 Terminal 任务顺手修改 `DejaVu/`，除非用户明确要求跨项目任务。
 
 ## 开发规则
 
-- Python 命令统一用 `python main.py`（`main.py` 是项目入口文件，测试命令可以按任务调整）。
+- Python 命令在 `Terminal/` 目录下统一用 `uv run`。
+- 启动程序用 `uv run .\main.py`。
+- 测试用 `uv run python -m pytest`，或按任务缩小 pytest 范围。
 - 修改前先看 `git status --short`；无论是否脏工作区，都先按项目规则提交一次 `backup`。
