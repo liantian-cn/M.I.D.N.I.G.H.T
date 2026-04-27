@@ -1,7 +1,7 @@
-## Interface: 120001
+## Interface: 120005
 ## Title: DéjàVu 顺序加载器
 ## Author: Émile Boirac
-## Version: 12.0.1.66709
+## Version: 12.0.5.67165
 ## Dependencies: DejaVu_Core
 ## LoadWith: DejaVu_Core
 ## Group: DejaVu_Core
