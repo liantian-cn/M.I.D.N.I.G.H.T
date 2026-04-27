@@ -52,22 +52,12 @@ class Context:
         ignore_usable=False,
     ) -> bool:
         spell = self.spell(spell_name)
-        # if spell_name == "虚空射线":
-        #     print(f"虚空射线冷却时间剩余：{spell.cooldown}")
-        # if spell_name == "吞噬":
-        #     print(f"吞噬冷却时间剩余：{spell.cooldown}")
         if spell is None:
-            # if spell_name == "虚空射线":
-            #     print(f"虚空射线技能不存在")
             return False
-        # if not spell.is_known:
-        #     # if spell_name == "虚空射线":
-        #     #     print(f"虚空射线技能没学会")
-        #     return False
-        # if not (spell.is_usable or ignore_usable):
-        #     # if spell_name == "虚空射线":
-        #     #     print(f"虚空射线不可用")
-        #     return False
+        if not spell.is_known:
+            return False
+        if not (spell.is_usable or ignore_usable):
+            return False
         if spell.cooldown <= queue_window:
             return ignore_gcd or self.gcd_ready(queue_window)
         return False

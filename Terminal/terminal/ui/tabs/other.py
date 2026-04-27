@@ -4,15 +4,7 @@ from typing import Any
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QTextOption
-from PySide6.QtWidgets import (
-    QHBoxLayout,
-    QLabel,
-    QLineEdit,
-    QPlainTextEdit,
-    QScrollArea,
-    QVBoxLayout,
-    QWidget,
-)
+from PySide6.QtWidgets import QHBoxLayout, QLabel, QLineEdit, QPlainTextEdit, QScrollArea, QVBoxLayout, QWidget
 
 from .status_tab_style import (
     apply_status_tab_skin,
@@ -37,7 +29,6 @@ class OtherTab(QWidget):
         ("burst_time", "爆发状态倒计时"),
         ("UTF_hash", "UTF_hash"),
         ("UTF_string", "UTF_string"),
-        ("latest_succeeded_cast", "最后的施法技能"),
     ]
     BLACKLIST_FIELD_DEFINITIONS = [
         ("dispel_blacklist", "驱散黑名单"),
@@ -90,11 +81,7 @@ class OtherTab(QWidget):
             self.status_label.setText("暂无其他数据。")
             return
 
-        misc_data = (
-            decoded_data.get("misc")
-            if isinstance(decoded_data.get("misc"), dict)
-            else {}
-        )
+        misc_data = decoded_data.get("misc") if isinstance(decoded_data.get("misc"), dict) else {}
         runtime_data = {
             "combat_time": misc_data.get("combat_time"),
             "use_mouse": misc_data.get("use_mouse"),
@@ -106,18 +93,11 @@ class OtherTab(QWidget):
             "burst_time": decoded_data.get("burst_time"),
             "UTF_hash": decoded_data.get("UTF_hash"),
             "UTF_string": decoded_data.get("UTF_string"),
-            "latest_succeeded_cast": decoded_data.get("latest_succeeded_cast"),
         }
         self._fill_scalar_values(runtime_data)
-        self._fill_blacklist_value(
-            "dispel_blacklist", decoded_data.get("dispel_blacklist")
-        )
-        self._fill_blacklist_value(
-            "interrupt_blacklist", decoded_data.get("interrupt_blacklist")
-        )
-        self._fill_blacklist_value(
-            "spell_stop_list", decoded_data.get("spell_stop_list")
-        )
+        self._fill_blacklist_value("dispel_blacklist", decoded_data.get("dispel_blacklist"))
+        self._fill_blacklist_value("interrupt_blacklist", decoded_data.get("interrupt_blacklist"))
+        self._fill_blacklist_value("spell_stop_list", decoded_data.get("spell_stop_list"))
 
         if stale:
             self.status_label.setText("当前显示的是旧数据，最新帧还没解码成功。")
@@ -145,9 +125,7 @@ class OtherTab(QWidget):
             value_input.setLineWrapMode(QPlainTextEdit.LineWrapMode.WidgetWidth)
             value_input.setWordWrapMode(QTextOption.WrapMode.WrapAnywhere)
             value_input.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-            value_input.setHorizontalScrollBarPolicy(
-                Qt.ScrollBarPolicy.ScrollBarAlwaysOff
-            )
+            value_input.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
             value_input.setMinimumHeight(86)
             mark_status_multiline_value_input(value_input)
 
@@ -163,9 +141,7 @@ class OtherTab(QWidget):
             "layout": layout,
         }
 
-    def _build_scalar_section(
-        self, title_text: str, field_definitions: list[tuple[str, str]]
-    ) -> dict[str, Any]:
+    def _build_scalar_section(self, title_text: str, field_definitions: list[tuple[str, str]]) -> dict[str, Any]:
         container = QWidget()
         layout = QVBoxLayout()
         container.setLayout(layout)
@@ -176,9 +152,7 @@ class OtherTab(QWidget):
 
         for field_name, label_text in field_definitions:
             field_label = QLabel(label_text)
-            field_label.setAlignment(
-                Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
-            )
+            field_label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
             mark_status_field_label(field_label)
 
             value_input = QLineEdit("None")
@@ -211,9 +185,7 @@ class OtherTab(QWidget):
 
     def _fill_scalar_values(self, values: dict[str, Any]) -> None:
         for field_name, _label_text in self.SCALAR_FIELD_DEFINITIONS:
-            self.value_inputs[field_name].setText(
-                self._format_value(values.get(field_name))
-            )
+            self.value_inputs[field_name].setText(self._format_value(values.get(field_name)))
 
     def _fill_blacklist_value(self, field_name: str, value: Any) -> None:
         if isinstance(value, list):

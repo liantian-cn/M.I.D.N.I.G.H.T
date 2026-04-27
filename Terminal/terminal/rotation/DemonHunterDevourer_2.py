@@ -1,7 +1,8 @@
 """
-本循环适用于35魂噬灭歼灭者
+本循环适用于50魂噬灭歼灭者
 天赋代码如下：
-CgcBG5bbocFKcv+yIq8fPd6ORBA2mxMzMzMzMGmBAAAAAAgxsNYGAAAAAAAAmxMMmZmZmZmZGzsZGjFtswMzMzWbzMzAYYAIwMGMmB
+CgcBG5bbocFKcv+yIq8fPd6ORBA2mxMzMzMzMGmBAAAAAAgxsNYGAAAAAAAAmxMMzMzMzMzMDzsYGjFZhZmZmt2mZmBwwMzsMzMNLzsMjBjZA
+该版本不再考虑施放收割
 """
 
 # from __future__ import annotations
@@ -11,8 +12,8 @@ from terminal.context import Context
 from .base import BaseRotation
 
 
-class DemonHunterDevourer(BaseRotation):
-    name = "噬灭歼灭者DH"
+class DemonHunterDevourer_2(BaseRotation):
+    name = "50魂噬灭歼灭者DH"
     desc = "目前只适配歼灭者，奥达奇可能会有问题"
 
     def __init__(self) -> None:
@@ -69,7 +70,7 @@ class DemonHunterDevourer(BaseRotation):
         fury_max = 120 if fury_max_cell is None else fury_max_cell.mean
         fury = int(ctx.player.powerPercent * fury_max / 100)
 
-        # 收割/根除 血量阈值（默认15%）
+        # 斩杀血量阈值（默认15%）
         reaper_health_threshold_cell = ctx.setting.cell(4)
         reaper_health_threshold = (
             15
@@ -88,7 +89,7 @@ class DemonHunterDevourer(BaseRotation):
         spell_stop_list = ctx.spell_stop_list
         range_spell_stop_list = ctx.range_spell_stop_list
 
-        # 疾影保命血量阈值（默认60%）
+        # 开启保命血量阈值（默认60%）
         dh_health_threshold_cell = ctx.setting.cell(2)
         dh_health_threshold = (
             60
@@ -166,14 +167,14 @@ class DemonHunterDevourer(BaseRotation):
         # 灵魂献祭
         soul_immolation_exists = player.hasBuff("灵魂献祭")
 
-        # ── 保命：疾影 ──────────────────────────────────────────────
+        # ── 保命：献祭 ──────────────────────────────────────────────
 
         if (
-            not phase_shift_buff_exists
+            not soul_immolation_exists
             and player.healthPercent < dh_health_threshold
-            and ctx.spell_cooldown_ready("疾影", spell_queue_window)
+            and ctx.spell_cooldown_ready("灵魂献祭", spell_queue_window)
         ):
-            return self.cast("疾影")
+            return self.cast("灵魂献祭")
 
         # ── 打断逻辑 ────────────────────────────────────────────────
         # print(f"打断黑名单：{interrupt_blacklist}")
@@ -239,6 +240,7 @@ class DemonHunterDevourer(BaseRotation):
             and soul_fragments >= 35
             # and soul_fragments >= 50  # 团本用
             and moment_of_craving_exists
+            and main_target.healthPercent >= reaper_health_threshold
             and ctx.spell_cooldown_ready("虚空变形", spell_queue_window)
         ):
             # 当敌人数量 >= 8 时，先额外使用“圣光潜力”
@@ -357,6 +359,17 @@ class DemonHunterDevourer(BaseRotation):
         # 常态段逻辑（collapsing_star_exists == False）
         # ══════════════════════════════════════════════════════════════
 
+        # ── 常态：献祭强制条件 ────────────────────────────────────────
+        if ctx.spell_cooldown_ready("灵魂献祭", spell_queue_window):
+            if (
+                soul_fragments <= 47
+                and fury <= 84
+                # and ctx.spell_charges_ready("灵魂献祭", 2, spell_queue_window)
+                and not soul_immolation_exists
+                # and scattered_souls_fragments_count <= 6
+            ):
+                return self.cast("灵魂献祭")
+
         # ── 常态：泄能打虚空射线（怒气溢出保护）──────────────────────
         # print(
         #     f"虚空射线是否冷却：{ctx.spell_cooldown_ready("虚空射线", spell_queue_window)}"
@@ -389,17 +402,6 @@ class DemonHunterDevourer(BaseRotation):
         #         "收割", spell_queue_window
         #     ):
         #         return self.cast("target收割")
-
-        # ── 常态：献祭强制条件 ────────────────────────────────────────
-        if ctx.spell_cooldown_ready("灵魂献祭", spell_queue_window):
-            print("献祭冷却完成，进入释放判断")
-            if (
-                soul_fragments <= 32
-                and fury <= 75
-                and ctx.spell_charges_ready("灵魂献祭", 2, spell_queue_window)
-                # and scattered_souls_fragments_count <= 6
-            ):
-                return self.cast("灵魂献祭")
 
         # ── 常态：根除强制条件 ────────────────────────────────────────
         # 地上 >= 8 魂，或噬欲时刻快消失，或目标低血量执行

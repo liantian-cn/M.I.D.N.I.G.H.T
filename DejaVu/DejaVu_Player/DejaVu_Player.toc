@@ -12,5 +12,4 @@ libs\load_libs.xml
 
 Status.lua
 Absorbs.lua
-LatestSucceededCast.lua
 DejaVu_Player.lua
