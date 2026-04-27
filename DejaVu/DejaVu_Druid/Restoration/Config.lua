@@ -383,7 +383,7 @@ do
         end
 
         restoration_regrowth_hp_threshold:register_callback(set_restoration_regrowth_hp_threshold)
-        set_restoration_regrowth_hp_threshold(restoration_regrowth_hp_threshold:get_value())
+        set_restoration_regrowth_hp_threshold(restoration_regrowth_hp_threshold:get_value() or 85)
     end
     insert(MartixInitFuncs, InitFrame)
 end

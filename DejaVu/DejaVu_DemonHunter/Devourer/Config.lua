@@ -47,7 +47,7 @@ do
         end
 
         fury_max_config:register_callback(set_fury_max)
-        set_fury_max(fury_max_config:get_value())
+        set_fury_max(fury_max_config:get_value() or 120) -- 初始化时根据当前配置值更新显示
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -86,7 +86,7 @@ do
 
         dh_interrupt_mode:register_callback(set_dh_interrupt_mode)
 
-        set_dh_interrupt_mode(dh_interrupt_mode:get_value())
+        set_dh_interrupt_mode(dh_interrupt_mode:get_value() or "blacklist")
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -116,7 +116,7 @@ do
         end
 
         phase_shift_threshold:register_callback(set_phase_shift_threshold)
-        set_phase_shift_threshold(phase_shift_threshold:get_value())
+        set_phase_shift_threshold(phase_shift_threshold:get_value() or 60)
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -150,7 +150,7 @@ do
 
         void_Ray_fury_overflow_threshold:register_callback(set_void_Ray_fury_overflow_threshold)
 
-        set_void_Ray_fury_overflow_threshold(void_Ray_fury_overflow_threshold:get_value())
+        set_void_Ray_fury_overflow_threshold(void_Ray_fury_overflow_threshold:get_value() or 100)
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -184,7 +184,7 @@ do
 
         slider_enemy_health_threshold:register_callback(set_slider_enemy_health_threshold)
 
-        set_slider_enemy_health_threshold(slider_enemy_health_threshold:get_value())
+        set_slider_enemy_health_threshold(slider_enemy_health_threshold:get_value() or 15)
     end
     insert(MartixInitFuncs, InitFrame)
 end

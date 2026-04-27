@@ -56,7 +56,7 @@ do
 
         use_mana_balance:register_callback(set_use_mana_balance)
 
-        set_use_mana_balance(use_mana_balance:get_value())
+        set_use_mana_balance(use_mana_balance:get_value() or "no") -- 初始化时根据当前配置值更新显示
     end
     insert(MartixInitFuncs, InitFrame)
 end

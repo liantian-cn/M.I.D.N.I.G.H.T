@@ -159,7 +159,7 @@ do
 
         blood_death_strike_runic_power_overflow_threshold:register_callback(set_blood_death_strike_runic_power_overflow_threshold)
 
-        set_blood_death_strike_runic_power_overflow_threshold(blood_death_strike_runic_power_overflow_threshold:get_value())
+        set_blood_death_strike_runic_power_overflow_threshold(blood_death_strike_runic_power_overflow_threshold:get_value() or 100)
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -193,7 +193,7 @@ do
 
         reaper_mark_health_threshold:register_callback(set_reaper_mark_health_threshold)
 
-        set_reaper_mark_health_threshold(reaper_mark_health_threshold:get_value())
+        set_reaper_mark_health_threshold(reaper_mark_health_threshold:get_value() or 20)
     end
     insert(MartixInitFuncs, InitFrame)
 end
