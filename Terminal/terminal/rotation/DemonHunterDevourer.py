@@ -237,7 +237,6 @@ class DemonHunterDevourer(BaseRotation):
         if (
             not player.isMoving
             and soul_fragments >= 35
-            # and soul_fragments >= 50  # 团本用
             and moment_of_craving_exists
             and ctx.spell_cooldown_ready("虚空变形", spell_queue_window)
         ):

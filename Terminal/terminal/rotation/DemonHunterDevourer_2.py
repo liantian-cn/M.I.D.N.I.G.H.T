@@ -2,7 +2,7 @@
 本循环适用于50魂噬灭歼灭者
 天赋代码如下：
 CgcBG5bbocFKcv+yIq8fPd6ORBA2mxMzMzMzMGmBAAAAAAgxsNYGAAAAAAAAmxMMzMzMzMzMDzsYGjFZhZmZmt2mZmBwwMzsMzMNLzsMjBjZA
-该版本不再考虑施放收割
+该版本不再考虑施放收割，目前按照单体模拟改
 """
 
 # from __future__ import annotations
@@ -237,9 +237,9 @@ class DemonHunterDevourer_2(BaseRotation):
         # )
         if (
             not player.isMoving
-            and soul_fragments >= 35
-            # and soul_fragments >= 50  # 团本用
-            and moment_of_craving_exists
+            # and soul_fragments >= 35
+            and soul_fragments >= 50
+            and not moment_of_craving_exists
             and main_target.healthPercent >= reaper_health_threshold
             and ctx.spell_cooldown_ready("虚空变形", spell_queue_window)
         ):
