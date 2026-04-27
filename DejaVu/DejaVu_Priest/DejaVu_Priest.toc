@@ -1,7 +1,7 @@
-## Interface: 120001
+## Interface: 120005
 ## Title: DéjàVu 牧师
 ## Author: Émile Boirac
-## Version: 12.0.1.66709
+## Version: 12.0.5.67165
 ## LoadOnDemand: 1
 ## Dependencies: DejaVu_Core, DejaVu_Matrix, DejaVu_Panel, DejaVu_Spell, DejaVu_Aura, DejaVu_Common
 ## Group: DejaVu_Core
