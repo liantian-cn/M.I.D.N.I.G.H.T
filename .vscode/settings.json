@@ -18,7 +18,8 @@
         "PanelTemplates_TabResize",
         "PanelTemplates_SelectTab",
         "StaticPopup_Show",
-        "COLOR"
+        "COLOR",
+        "OKAY"
     ],
     "python-envs.defaultEnvManager": "ms-python.python:venv"
 }
