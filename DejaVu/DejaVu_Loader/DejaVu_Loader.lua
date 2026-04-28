@@ -1,5 +1,11 @@
 local addonName, addonTable = ... -- 插件入口固定写法
+-- 官方API
 local LoadAddOn = C_AddOns.LoadAddOn
+local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
+local DisableAddOn = C_AddOns.DisableAddOn
+
+
+-- DejaVu Core
 local DejaVu = _G["DejaVu"]
 local logging = DejaVu.Logging
 logging(addonName .. " loaded.")
@@ -24,3 +30,6 @@ elseif classFilename == "PRIEST" then
 elseif classFilename == "DEMONHUNTER" then
     LoadAddOn("DejaVu_DemonHunter")
 end
+
+DisableAddOn("163UI_Info", UnitName("player"))
+DisableAddOn("HeyboxPlayerInfo", UnitName("player"))
