@@ -26,6 +26,9 @@ __all__ = ["PriestDiscipline",]
 # 痛         |  Pain
 # 圣光涌动   |  Surge of Light
 
+# changelog
+# 2026-04-29 目标是友方，不浪费防御苦修。
+
 
 class DisciplinePartyMember(Unit):
     # 只在当前 rotation 内补充类型信息，不改 Unit 本体。
@@ -252,7 +255,7 @@ class PriestDiscipline(BaseRotation):
         # 暗影愈合阈值基线
         shadow_mend_baseline_threshold = self.threshold_calculator(use_cale, 60, 70, powerpercent)
         # 苦修补血阈值
-        penance_heal_hp_threshold = self.threshold_calculator(use_cale, 70, 80, powerpercent)
+        penance_heal_hp_threshold = self.threshold_calculator(use_cale, 75, 85, powerpercent)
         # 快速治疗干拉阈值
         flash_heal_hp_threshold = self.threshold_calculator(use_cale, 30, 40, powerpercent)
         # 技能队列窗口，施法中剩余时间小于这个值就算技能快要好了，可以提前衔接施放下一个技能，单位是秒
@@ -420,6 +423,12 @@ class PriestDiscipline(BaseRotation):
             if lowest_health_percent.healthPercent < flash_heal_hp_threshold:
                 return self.cast(f"{lowest_health_percent.unitToken}快速治疗")
 
+        # 目标是友方，不浪费防御苦修。
+        if main_enemy is None:
+            if ctx.spell_charges_ready("苦修", 2, spell_queue_window):
+                if target.exists and target.isInCombat and (not target.isEnemy):
+                    return self.cast(f"target苦修")
+
         # 20. 如果当前有敌对目标且在战斗中，进入 Atonement 输出补伤阶段：
         if main_enemy is not None:
 
@@ -441,7 +450,7 @@ class PriestDiscipline(BaseRotation):
                     if not player.isMoving:
                         return self.cast(f"{main_enemy.unitToken}心灵震爆")
             # 23. 否则，苦修 可用、且 有救赎数量 > 0，放 苦修。
-            if ctx.spell_charges_ready("苦修", 1, spell_queue_window):
+            if ctx.spell_charges_ready("苦修", 2, spell_queue_window):
                 if with_atonement_count > 0:
                     return self.cast(f"{main_enemy.unitToken}苦修")
 
