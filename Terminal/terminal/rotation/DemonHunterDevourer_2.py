@@ -365,8 +365,10 @@ class DemonHunterDevourer_2(BaseRotation):
 
         # ── 7. 收割：地上>=4魂 且 本次收割可触发虚空变形 ───────────────
         # （用于为下次爆发蓄势）
-        if scattered_souls_fragments_count >= 4 and ctx.spell_cooldown_ready(
-            "收割", spell_queue_window
+        if (
+            scattered_souls_fragments_count >= 4
+            and soul_fragments >= 46
+            and ctx.spell_cooldown_ready("收割", spell_queue_window)
         ):
             return self.cast("target收割")
 
