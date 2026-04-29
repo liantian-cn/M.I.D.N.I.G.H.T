@@ -1,5 +1,6 @@
 """
-天赋：CgcBAAAAAAAAAAAAAAAAAAAAAAA2mxMzMzMzMGzMAAAAAAAMmtBDAAAAAAAAmxMMzMzMzMzMDzsYGjFZhZmZmt2mZmBwwAAwMGMmB
+35魂
+天赋：CgcBG5bbocFKcv+yIq8fPd6ORBA2mxMzMzMzMGzMAAAAAAAMmtBDAAAAAAAAmxMMzMzMzMzMzYmNzYsolFmZmZ2abmZGADDABMGMmB
 这套天赋在团本中除了鲁拉战斗外都可以适用，这套build可以应对所有需要顺劈的Boss场景。
 """
 
