@@ -1,7 +1,0 @@
-interface:
-  display_name: "Adding Rotation Config"
-  short_description: "Mirror DejaVu and Terminal rotation config"
-  default_prompt: "Use $adding-rotation-config to add or extend a MIDNIGHT DejaVu plugin and Terminal rotation with mirrored spec, setting, spell, and macro config."
-
-policy:
-  allow_implicit_invocation: false

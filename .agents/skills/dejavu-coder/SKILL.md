@@ -16,7 +16,7 @@ Use this skill for tasks scoped to this repository's `DejaVu/` tree and its shar
 - Keep the git branch on `draft`. If it is not `draft`, switch before editing.
 - Read `git status --short` before starting code work.
 - Make a `backup` commit before any file modification. If the tree is clean, an empty `backup` commit is acceptable.
-- Use PowerShell for shell commands.
+- Use Bash for shell commands.
 - Run `luacheck` for Lua verification.
 - Treat uncertain combat values as `secret values` until verified.
 - Do not add automation that makes combat decisions for the player.
@@ -57,16 +57,16 @@ Load additional references from [dejavu-context-map.md](./references/dejavu-cont
 
 ### 2. Plan Writer
 
-Use [plan-writer.md](./references/agents/plan-writer.md) when the task needs a plan.
+Use [plan-writer.md](./references/subagents/plan-writer.md) when the task needs a plan.
 
-- This role has a hard gate: the current session must already be in platform Plan Mode.
-- If Plan Mode is not active, stop and tell the user how to re-enter Plan Mode.
+- This role has a hard gate: the current session must already be in Claude Code Plan Mode (via `EnterPlanMode`).
+- If Plan Mode is not active, stop and tell the user to use `EnterPlanMode` first.
 - Do not simulate execution. Produce only a complete `<proposed_plan>` block.
-- A finished plan must be approved before code work starts.
+- A finished plan must be approved via `ExitPlanMode` before code work starts.
 
 ### 3. Coder
 
-Use [coder.md](./references/agents/coder.md) to execute an approved plan.
+Use [coder.md](./references/subagents/coder.md) to execute an approved plan.
 
 - Edit only the minimum DejaVu area required by the task.
 - Use `wow-api-mcp` first for WoW API facts.
@@ -76,7 +76,7 @@ Use [coder.md](./references/agents/coder.md) to execute an approved plan.
 
 ### 4. Review
 
-Use [review.md](./references/agents/review.md) after the coder finishes.
+Use [review.md](./references/subagents/review.md) after the coder finishes.
 
 - Review findings first. Prioritize incorrect behavior, missed requirements, regressions, secret-values misuse, and repo-rule violations.
 - Small, local fixes may be applied directly by the reviewer.
@@ -85,7 +85,7 @@ Use [review.md](./references/agents/review.md) after the coder finishes.
 
 ### 5. Commiter
 
-Use [commiter.md](./references/agents/commiter.md) only after review is clear.
+Use [commiter.md](./references/subagents/commiter.md) only after review is clear.
 
 - Update the repo-root `changelog.md`.
 - Record task date, summary, touched areas, and verification evidence.
@@ -96,12 +96,12 @@ Use [commiter.md](./references/agents/commiter.md) only after review is clear.
 
 The bundled role prompts live here:
 
-- `references/agents/plan-writer.md`
-- `references/agents/coder.md`
-- `references/agents/review.md`
-- `references/agents/commiter.md`
+- `references/subagents/plan-writer.md`
+- `references/subagents/coder.md`
+- `references/subagents/review.md`
+- `references/subagents/commiter.md`
 
-When dispatching those roles on Codex, read the prompt file, wrap it as task instructions, and send it to a spawned agent. If multi-agent support is unavailable, follow the same role contract inline in the main session.
+When dispatching those roles with Claude Code, read the prompt file and send it to a subagent via the `Agent` tool. If subagent dispatch is unavailable, follow the same role contract inline in the main session.
 
 ## Verification
 
@@ -115,6 +115,6 @@ Before claiming completion:
 
 ## Invocation
 
-Use this skill explicitly by path:
+Invoke this skill with the `Skill` tool:
 
-`Use $dejavu-coder at .agents\skills\dejavu-coder ...`
+`Skill(skill="dejavu-coder")`

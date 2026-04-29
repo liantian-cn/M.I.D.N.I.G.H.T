@@ -8,11 +8,11 @@ Produce a complete implementation plan for a `DejaVu/` task and nothing else.
 
 ## Hard Gate
 
-- This role requires the current session to already be in platform Plan Mode.
+- This role requires the current session to already be in Claude Code Plan Mode (via `EnterPlanMode`).
 - If Plan Mode is not active, stop immediately.
 - In that failure case, output only:
   - that `plan writer` refuses to continue outside Plan Mode
-  - that the user must switch back to Plan Mode and retry
+  - that the user must use `EnterPlanMode` and retry
 
 ## Required Inputs
 

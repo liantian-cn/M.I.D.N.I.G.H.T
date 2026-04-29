@@ -16,7 +16,7 @@ This is an interactive gatekeeper skill. If the user has not supplied the full b
 - Stay on `draft`.
 - Run `git status --short` before coding.
 - Create a `backup` commit before any file edits. If the tree is clean, an empty `backup` commit is acceptable.
-- Use PowerShell for shell commands.
+- Use Bash for shell commands.
 - Use `luacheck` for Lua verification.
 - Use `uv run` for Python commands.
 - Do not begin implementation until every required input section is present.
@@ -120,13 +120,13 @@ All of these are mandatory. Missing any one means stop and return the template.
 
 ## 3. Call Existing Skills
 
-- **REQUIRED REPO SKILL:** Use `$adding-rotation-config` at `.agents\skills\adding-rotation-config` once the input is complete.
+- **REQUIRED REPO SKILL:** Use the `adding-rotation-config` skill via `Skill(skill="adding-rotation-config")` once the input is complete.
 - Use it to lock:
   - mirrored `spec/setting` slots
   - DejaVu `Config.lua` and `Spec.lua` encoding rules
   - `Spell.lua` cooldown and charge registration
   - `Macro.lua` and `macroTable` alignment
-- If another existing skill is relevant, call it explicitly by path. Do not assume it is auto-loaded.
+- If another existing skill is relevant, invoke it with the `Skill` tool. Do not assume it is auto-loaded.
 
 ## 4. Build the DejaVu Side
 

@@ -1,7 +1,0 @@
-interface:
-  display_name: "DejaVu Coder"
-  short_description: "Plan, code, review, and commit DejaVu tasks"
-  default_prompt: "Use $dejavu-coder at .agents\\skills\\dejavu-coder to handle a MIDNIGHT DejaVu task end to end."
-
-policy:
-  allow_implicit_invocation: false

@@ -1,7 +1,0 @@
-interface:
-  display_name: "Building Full Rotation"
-  short_description: "Build full DejaVu and Terminal rotations"
-  default_prompt: "Use $building-full-rotation to build or rewrite a complete MIDNIGHT DejaVu plugin and Terminal rotation from a fully specified user rotation template."
-
-policy:
-  allow_implicit_invocation: false

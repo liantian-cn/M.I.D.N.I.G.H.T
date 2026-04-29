@@ -16,7 +16,7 @@ Treat `spec` and `setting` as protocol cells, not local implementation details. 
 - Stay on `draft`.
 - Run `git status --short` before coding.
 - Create a `backup` commit before any file edits. If the tree is clean, an empty `backup` commit is acceptable.
-- Use PowerShell for shell commands.
+- Use Bash for shell commands.
 - Use `luacheck` for Lua verification.
 - Use `uv run` for Python commands.
 - If the task is a rotation script task, only edit `Terminal/terminal/rotation/`.

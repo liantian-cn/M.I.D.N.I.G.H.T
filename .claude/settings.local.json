@@ -1,0 +1,6 @@
+{
+  "enabledMcpjsonServers": [
+    "wow-api"
+  ],
+  "enableAllProjectMcpServers": true
+}

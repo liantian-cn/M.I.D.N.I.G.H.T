@@ -18,7 +18,7 @@ The code is the source of truth. `.context/Terminal/` is the compact map that ke
 - Keep git on the lowercase `draft` branch.
 - Read `git status --short` before work.
 - Create a `backup` commit before any file modification. If the tree is clean, an empty `backup` commit is acceptable.
-- Use PowerShell on Windows.
+- Use Bash for shell commands.
 - Run Python commands from `Terminal/` through `uv run`.
 - Do not optimize unrelated user code.
 - When the user says to assume code is correct, update docs or workflow files to match code; do not rewrite runtime code.
