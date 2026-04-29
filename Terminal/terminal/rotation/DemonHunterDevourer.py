@@ -1,17 +1,17 @@
-# from __future__ import annotations
+"""
+天赋：CgcBAAAAAAAAAAAAAAAAAAAAAAA2mxMzMzMzMGzMAAAAAAAMmtBDAAAAAAAAmxMMzMzMzMzMDzsYGjFZhZmZmt2mZmBwwAAwMGMmB
+这套天赋在团本中除了鲁拉战斗外都可以适用，这套build可以应对所有需要顺劈的Boss场景。
+"""
+
 from datetime import datetime
 
 from terminal.context import Context
 from .base import BaseRotation
 
 
-class DemonHunterDevourer(BaseRotation):
-    name = "噬灭DH"
-    desc = (
-        "目前只适配歼灭者，奥达奇可能会有问题\n"
-        "作者：Alex-coder251\n"
-        "Repo:https://github.com/Alex-coder251/"
-    )
+class DemonHunterDevourer_2(BaseRotation):
+    name = "50魂噬灭歼灭者DH"
+    desc = "目前只适配歼灭者"
 
     def __init__(self) -> None:
         super().__init__()
@@ -32,8 +32,28 @@ class DemonHunterDevourer(BaseRotation):
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
 
-        # 设置项 #
-        # 获取灵魂碎片
+        if not ctx.enable:
+            return self.idle("总开关未开启")
+
+        if ctx.delay:
+            return self.idle("延迟开关开启")
+
+        is_opener = float(ctx.combat_time) <= 10
+        spell_queue_window = float(ctx.spell_queue_window or 0.3)
+        player = ctx.player
+        target = ctx.target
+        focus = ctx.focus
+        mouseover = ctx.mouseover
+
+        # ── 设置项读取 ──────────────────────────────────────────────
+
+        # AOE敌人数量阈值 min:2 max:10 default:4 step:1
+        aoe_enemy_count_cell = ctx.setting.cell(5)
+        aoe_enemy_count = (
+            4 if aoe_enemy_count_cell is None else round(aoe_enemy_count_cell.mean / 10)
+        )
+
+        # 灵魂碎片（玩家身上）
         soul_fragments_cell = ctx.spec.cell(0)
         if soul_fragments_cell is None:
             soul_fragments = 0
@@ -53,8 +73,7 @@ class DemonHunterDevourer(BaseRotation):
             fury_max = fury_max_cell.mean
         fury = int(ctx.player.powerPercent * fury_max / 100)
 
-        # 设置项 #
-        # 收割血量阈值，默认15%，当目标血量低于这个值时才使用根除。
+        # 斩杀血量阈值（默认15%）
         reaper_health_threshold_cell = ctx.setting.cell(4)
         if reaper_health_threshold_cell is None:
             reaper_health_threshold = 15
@@ -74,8 +93,7 @@ class DemonHunterDevourer(BaseRotation):
         interrupt_blacklist = ctx.interrupt_blacklist
         spell_stop_list = ctx.spell_stop_list
 
-        # 设置项 #
-        # 疾影的血量阈值，默认60%，当目标血量低于这个值时才使用疾影来保命。
+        # 开启保命血量阈值（默认60%）
         dh_health_threshold_cell = ctx.setting.cell(2)
         if dh_health_threshold_cell is None:
             dh_health_threshold = 60
@@ -85,43 +103,13 @@ class DemonHunterDevourer(BaseRotation):
         # 设置项 #
         # 虚空射线符能溢出阈值，默认100，当符
         fury_overflow_threshold_cell = ctx.setting.cell(3)
-        if fury_overflow_threshold_cell is None:
-            fury_overflow_threshold = 100
-        else:
-            fury_overflow_threshold = int(fury_overflow_threshold_cell.mean)
+        fury_overflow_threshold = (
+            100
+            if fury_overflow_threshold_cell is None
+            else int(fury_overflow_threshold_cell.mean)
+        )
 
-        # 设置项 #
-        # 变身的血量阈值，默认30%，当目标血量高于这个值时才使用虚空变身。
-        void_metamorphosis_health_threshold_cell = ctx.setting.cell(4)
-        if void_metamorphosis_health_threshold_cell is None:
-            void_metamorphosis_health_threshold = 30
-        else:
-            void_metamorphosis_health_threshold = int(
-                void_metamorphosis_health_threshold_cell.mean
-            )
-
-        is_opener = float(ctx.combat_time) <= 10
-        # print(f"游戏读取到的延迟容限{ctx.spell_queue_window}")
-        spell_queue_window = float(ctx.spell_queue_window or 0.3)
-        player = ctx.player
-        target = ctx.target
-        focus = ctx.focus
-        mouseover = ctx.mouseover
-        # print(interrupt_blacklist)
-        # print(
-        #     f"当前符文数量: {fury}, 当前符能: {fury}, 打断模式: {dh_interrupt_mode}, 疾影生命值阈值: {dh_health_threshold}, 虚空射线恶魔之怒溢出阈值: {fury_overflow_threshold}   "
-        # )
-
-        # print(f"ctx.combat_time -> {ctx.combat_time:.1f}s", end="; ")
-        # print(f"ctx.burst_time -> {ctx.burst_time:.1f}s", end="; ")
-        # print(f"dancing_rune_mode -> {dancing_rune_mode}")
-
-        if not ctx.enable:
-            return self.idle("总开关未开启")
-
-        if ctx.delay:
-            # print("延迟开关开启，当前不执行任何技能", end="; ")
-            return self.idle("延迟开关开启")
+        # ── 基础状态检查 ────────────────────────────────────────────
 
         if not player.alive:
             return self.idle("玩家已死亡")
@@ -156,40 +144,53 @@ class DemonHunterDevourer(BaseRotation):
         elif target.exists and target.canAttack and target.isInRangedRange:
             main_target = target
 
-        # 如果没有主目标，当前目标也不再远程范围，也不可以攻击，那么就什么都做不了。
-        if main_target is None:
-            if target.exists and target.canAttack and target.isInRangedRange:
-                pass
-            else:
-                # print("当前目标不可攻击或不在远程范围，且焦点也不可攻击或不在近战范围，无法使用技能")
-                return self.idle("没有合适的目标")
-        # print(main_target.unitToken)
-        # print(player.enemyCount)
+        # ── AOE判断 ─────────────────────────────────────────────────
+        is_aoe = player.enemyCount >= aoe_enemy_count
 
-        # 基础保命逻辑
-        # 如果玩家生命值低于设定的阈值，就优先使用疾影来保命
-        phase_shift_buff_exists = ctx.player.hasBuff("疾影")
+        # ── Buff/状态读取 ───────────────────────────────────────────
+
+        # 疾影
+        phase_shift_buff_exists = player.hasBuff("疾影")
+
+        # 虚落层数
+        voidfall_count = player.buffStack("虚落")
+
+        # 地上的灵魂碎片（散落）
+        scattered_souls_fragments_count = player.buffStack("灵魂残片")
+
+        # 噬欲时刻
+        moment_of_craving_exists = player.hasBuff("噬欲时刻")
+        moment_of_craving_remaining = player.buffRemain("噬欲时刻")
+
+        # 坍缩之星（爆发变身标志）
+        collapsing_star_exists = player.hasBuff("坍缩之星")
+
+        # 灵魂献祭
+        soul_immolation_exists = player.hasBuff("灵魂献祭")
+
+        # ── 保命：献祭（应急，忽略常规优先级限制）──────────────────
+        # 注意：灵魂献祭在持续时间内可回复24%最大生命值，应急时可在变身内外使用
         if (
-            (not phase_shift_buff_exists)
-            and (player.healthPercent < dh_health_threshold)
-            and ctx.spell_cooldown_ready("疾影", spell_queue_window)
+            not soul_immolation_exists
+            and player.healthPercent < dh_health_threshold
+            and ctx.spell_cooldown_ready("灵魂献祭", spell_queue_window)
         ):
-            return self.cast("疾影")
+            return self.cast("灵魂献祭")
 
         # ── 打断逻辑 ────────────────────────────────────────────────
 
         focus_need_interrupt = False
         # 打断逻辑
         # 停止施法名单检查：如果目标或焦点正在释放名单上的法术，则停止施法
-        if spell_stop_blacklist:
+        if spell_stop_list:
             if focus.exists and focus.canAttack and focus.isInRangedRange:
                 if (focus.anyCastIcon is not None) and (
-                    focus.anyCastIcon in spell_stop_blacklist
+                    focus.anyCastIcon in spell_stop_list
                 ):
                     return self.idle(f"目标释放停止施法法术: {focus.anyCastIcon}")
             if target.exists and target.canAttack and target.isInRangedRange:
                 if (target.anyCastIcon is not None) and (
-                    target.anyCastIcon in spell_stop_blacklist
+                    target.anyCastIcon in spell_stop_list
                 ):
                     return self.idle(f"目标释放停止施法法术: {target.anyCastIcon}")
 
@@ -244,10 +245,7 @@ class DemonHunterDevourer(BaseRotation):
             # 这里的日志会动态显示到底是哪个技能触发的
             return self.idle(f"检测到黑名单技能 [{trigger_spell}]，停止施法")
 
-        # ── 大范围技能停止施法黑名单检查 ──────────────────────────────────────
-
-        # print(f"目标施放法术：{target.anyCastIcon}")
-        # print(f"停止施法黑名单列表：{range_spell_stop_list}")
+        # ── 大范围技能停止施法黑名单检查 ──────────────────────────────
 
         range_trigger_spell = None
         player_need_specific_spell_stop = False
@@ -258,162 +256,152 @@ class DemonHunterDevourer(BaseRotation):
             range_trigger_spell = focus.anyCastIcon
             player_need_specific_spell_stop = True
 
-        if player_need_specific_spell_stop:
-            return self.idle(
-                f"检测到黑名单大范围技能 [{range_trigger_spell}]，停止特定施法"
+        # ══════════════════════════════════════════════════════════════
+        # 爆发段逻辑（虚空变形内，collapsing_star_exists == True）
+        #
+        # AOE优先级：
+        #   1. 坍缩之星
+        #   2. 根除（噬欲时刻激活 且 地上>=10魂）
+        #   3. 虚空射线
+        #   4. 吞噬
+        #
+        # 单体优先级：
+        #   1. 虚空射线（上调至最高）
+        #   2. 坍缩之星
+        #   3. 根除（噬欲时刻激活 且 地上>=10魂）
+        #   4. 吞噬
+        # ══════════════════════════════════════════════════════════════
+        if collapsing_star_exists:
+
+            # 预先计算各技能是否就绪
+            star_ready = (
+                not player_need_specific_spell_stop
+                and soul_fragments >= 30
+                and ctx.spell_cooldown_ready("坍缩之星", spell_queue_window)
+            )
+            void_ray_ready = (
+                not player_need_specific_spell_stop
+                and not player.isMoving
+                and target.isInRangedRange
+                and ctx.spell_cooldown_ready("虚空射线", spell_queue_window)
+            )
+            eradication_craving_ready = (
+                moment_of_craving_exists
+                and scattered_souls_fragments_count >= 10
+                and ctx.spell_cooldown_ready("根除", spell_queue_window)
             )
 
-        # ── 爆发触发：虚空变形 ──────────────────────────────────────
-        # 条件：不在移动 + 身上魂 >= 48 + 有噬欲时刻
-        if (
-            not player.isMoving
-            and soul_fragments >= 48
-        # 泄能打虚空射线
-        if (
-            (fury >= fury_overflow_threshold)
-            and (not player.isMoving)
-            and ctx.spell_cooldown_ready("虚空射线", spell_queue_window)
-        ):
-            if target.isInRangedRange:
-                return self.cast("虚空射线")
+            # ── 单体模式：虚空射线优先级上调至最高 ─────────────────────
+            if not is_aoe:
+                # 1. 虚空射线（单体最高优先）
+                if void_ray_ready:
+                    return self.cast("虚空射线")
 
-        # # 近战范围有敌人，就积极用吞噬
-        # if ctx.spell_charges_ready("吞噬", 2, spell_queue_window):
-        #     if player.enemyCount >= 1:
-        #         return self.cast("吞噬")
-        #         # print("吞噬", end="; ")
+                # 2. 坍缩之星
+                if star_ready:
+                    return self.cast("target坍缩之星")
 
-        # 散落的灵魂碎片
-        scattered_souls_fragments_Count = ctx.player.buffStack("灵魂残片")
-
-        moment_of_craving_RemainingTime = ctx.player.buffRemain("噬欲时刻")
-
-        moment_of_craving_exists = ctx.player.hasBuff("噬欲时刻")
-
-        # 开启爆发逻辑
-        if (
-            (not player.isMoving)
-            and (soul_fragments >= 48)
-            # and main_target.healthPercent > void_metamorphosis_health_threshold
-            and moment_of_craving_exists
-        ):
-            if ctx.spell_cooldown_ready("虚空变形", spell_queue_window):
-                return self.cast("虚空变形")
-
-        # 常态聚能打收割
-        if (
-            (fury >= 70)
-            and (scattered_souls_fragments_Count >= 4)
-            and (main_target is not None)
-        ):
-            # 1. 优先检查“收割”
-            if ctx.spell_cooldown_ready("收割", spell_queue_window):
-                return self.cast("target收割")
-            # 2. 如果“收割”没好，且“没有噬欲时刻buff”，则检查“根除”
-            if not moment_of_craving_exists:
-                if ctx.spell_cooldown_ready("根除", spell_queue_window):
+                # 3. 根除（噬欲时刻激活 且 地上>=10魂）
+                if eradication_craving_ready:
                     return self.cast("target根除")
 
-        # 常态聚能打根除
-        # 优先处理“根除”逻辑 (优先级最高)
-        # 条件：(碎片 >= 8 且 怒气 >= 54) 或者 (时间快到了 <= 1)
-        if ctx.spell_cooldown_ready("根除", spell_queue_window):
-            if (
-                (scattered_souls_fragments_Count >= 8 and fury >= 50)
-                or (0 < moment_of_craving_RemainingTime <= 1)
-                or (main_target.healthPercent < reaper_health_threshold)
-            ):
-                return self.cast("target根除")
+                # 4. 吞噬
+                if ctx.spell_cooldown_ready("吞噬", spell_queue_window):
+                    if main_target is focus:
+                        return self.cast("focus吞噬")
+                    elif main_target is target:
+                        return self.cast("target吞噬")
+                    elif player.enemyCount >= 1:
+                        return self.cast("就近吞噬")
 
-        # if (
-        #     (fury >= 50)
-        #     and (scattered_souls_fragments_Count >= 8)
-        #     and (moment_of_craving_RemainingTime >= 1)
-        # ):
-        #     if ctx.spell_cooldown_ready("根除", spell_queue_window):
-        #         return self.cast("target根除")
+            # ── AOE模式：坍缩之星 > 根除 > 虚空射线 > 吞噬 ─────────────
+            else:
+                # 1. 坍缩之星
+                if star_ready:
+                    return self.cast("target坍缩之星")
 
-        collapsing_star_exists = ctx.player.hasBuff("坍缩之星")
+                # 2. 根除（噬欲时刻激活 且 地上>=10魂）
+                if eradication_craving_ready:
+                    return self.cast("target根除")
 
-        # 爆发打根除
-        if collapsing_star_exists and moment_of_craving_exists:
-            if ctx.spell_cooldown_ready("根除", spell_queue_window):
-                return self.cast("target根除")
+                # # 收割：有噬欲时刻时
+                # if (
+                #     fury >= 70
+                #     and scattered_souls_fragments_count >= 4
+                #     and moment_of_craving_exists
+                #     and ctx.spell_cooldown_ready("收割", spell_queue_window)
+                # ):
+                #     return self.cast("target收割")
 
-            # 收割：有噬欲时刻时
-            if (
-                fury >= 70
-                and scattered_souls_fragments_count >= 4
-                and moment_of_craving_exists
-                and ctx.spell_cooldown_ready("收割", spell_queue_window)
-            ):
-                return self.cast("target收割")
-
-            # 吞噬：产魂 + 堆怒气
-            if ctx.spell_cooldown_ready("吞噬", spell_queue_window):
-                if main_target is focus:
-                    return self.cast("focus吞噬")
-                elif main_target is target:
-                    return self.cast("target吞噬")
-                elif player.enemyCount >= 1:
-                    return self.cast("就近吞噬")
+                # 4. 吞噬
+                if ctx.spell_cooldown_ready("吞噬", spell_queue_window):
+                    if main_target is focus:
+                        return self.cast("focus吞噬")
+                    elif main_target is target:
+                        return self.cast("target吞噬")
+                    elif player.enemyCount >= 1:
+                        return self.cast("就近吞噬")
 
             return self.idle("爆发中：等待CD")
-        # 爆发泄魂打坍缩之星，打坍缩之心前利用疾速多攒点魂
-        if collapsing_star_exists and soul_fragments >= 28:
-            # 1. 只有同时满足这些条件，才执行“吞噬”
-            if (fury >= 80) and (scattered_souls_fragments_Count < 8):
-                return self.cast("target吞噬")
 
-            # 2. 只要上述条件有一个不满足（即：怒气不足 80 OR 地上碎片 >= 10）
-            # 且 CD 好了，就执行“坍缩之星”
-            if ctx.spell_cooldown_ready("坍缩之星", spell_queue_window):
-                return self.cast("target坍缩之星")
+        # ══════════════════════════════════════════════════════════════
+        # 常态段逻辑（虚空变形外，collapsing_star_exists == False）
+        #
+        # 优先级：
+        #   1. 收割/根除 - 如果已经拥有3层虚落
+        #   2. 虚空变形  - 如虚空变形可用
+        #   3. 根除      - 噬欲时刻激活 且 地上>=10魂
+        #   4. 虚空射线
+        #   5. 灵魂献祭  - 如果未激活（理想情况下仅在变身外使用）
+        #   6. 吞噬
+        #   7. 收割      - 地上>=4魂 且 本次收割可触发虚空变形
+        # ══════════════════════════════════════════════════════════════
 
-        # 大米逻辑，有了就打
-        # if (
-        #     collapsing_star_exists
-        #     and soul_fragments >= 28
-        #     and ctx.spell_cooldown_ready("坍缩之星", spell_queue_window)
-        # ):
-        #     return self.cast("target坍缩之星")
-
-        # 爆发时在没有噬欲时刻时虚空射线好了就用
-        if (
-            collapsing_star_exists
-            and (not player.isMoving)
-            and ctx.spell_cooldown_ready("虚空射线", spell_queue_window)
-        ):
-            if target.isInRangedRange:
-                return self.cast("虚空射线")
-
-        # ── 常态：高怒气 + 足够地面魂 → 收割/根除 ───────────────────
-        if fury >= 70 and scattered_souls_fragments_count >= 4:
-            # 优先根除（有噬欲时刻时）
+        # ── 1. 收割/根除：已拥有3层虚落 ────────────────────────────────
+        if voidfall_count >= 3:
+            # 优先根除（若噬欲时刻激活且地上>=10魂）
             if (
                 moment_of_craving_exists
+                and scattered_souls_fragments_count >= 10
                 and ctx.spell_cooldown_ready("根除", spell_queue_window)
-                and scattered_souls_fragments_count >= 8
             ):
                 return self.cast("target根除")
-            # 没有噬欲时刻时考虑根除
-            if not moment_of_craving_exists and ctx.spell_cooldown_ready(
-                "收割", spell_queue_window
-            ):
+            # 否则施放收割
+            if ctx.spell_cooldown_ready("收割", spell_queue_window):
                 return self.cast("target收割")
 
-        # ── 常态：根除强制条件 ────────────────────────────────────────
-        # 地上 >= 8 魂，或噬欲时刻快消失，或目标低血量执行
-        if ctx.spell_cooldown_ready("根除", spell_queue_window):
-            if (
-                (scattered_souls_fragments_count >= 8 and fury >= 50)
-                or (moment_of_craving_exists and 0 < moment_of_craving_remaining <= 1)
-                or main_target.healthPercent < reaper_health_threshold
-            ):
-                return self.cast("target根除")
+        # ── 2. 虚空变形：可用时立即触发 ────────────────────────────────
+        if ctx.spell_cooldown_ready("虚空变形", spell_queue_window):
+            # 当敌人数量 >= 8 时，先额外使用"圣光潜力"
+            if player.enemyCount >= 8:
+                self.cast("圣光潜力")
+            return self.cast("虚空变形")
 
-        # ── 常态：吞噬作为填充技能 ────────────────────────────────────
-        # 吞噬作为填充技能。
+        # ── 3. 根除：噬欲时刻激活 且 地上>=10魂 ───────────────────────
+        if (
+            moment_of_craving_exists
+            and scattered_souls_fragments_count >= 10
+            and ctx.spell_cooldown_ready("根除", spell_queue_window)
+        ):
+            return self.cast("target根除")
+
+        # ── 4. 虚空射线 ──────────────────────────────────────────────
+        if (
+            not player_need_specific_spell_stop
+            and not player.isMoving
+            and target.isInRangedRange
+            and ctx.spell_cooldown_ready("虚空射线", spell_queue_window)
+        ):
+            return self.cast("虚空射线")
+
+        # ── 5. 灵魂献祭：未激活时使用（理想情况下仅在变身外使用）────────
+        # 注意：灵魂献祭在持续时间内可回复24%最大生命值，应急时可忽略此优先级限制
+        if not soul_immolation_exists and ctx.spell_cooldown_ready(
+            "灵魂献祭", spell_queue_window
+        ):
+            return self.cast("灵魂献祭")
+
+        # ── 6. 吞噬：主要填充技能 ────────────────────────────────────
         if ctx.spell_cooldown_ready("吞噬", spell_queue_window):
             if main_target is focus:
                 return self.cast("focus吞噬")
@@ -421,5 +409,14 @@ class DemonHunterDevourer(BaseRotation):
                 return self.cast("target吞噬")
             elif player.enemyCount >= 1:
                 return self.cast("就近吞噬")
-        # print("end")
+
+        # ── 7. 收割：地上>=4魂 且 本次收割可触发虚空变形 ───────────────
+        # （用于为下次爆发蓄势）
+        if (
+            scattered_souls_fragments_count >= 4
+            and soul_fragments >= 31
+            and ctx.spell_cooldown_ready("收割", spell_queue_window)
+        ):
+            return self.cast("target收割")
+
         return self.idle("当前没有合适动作")
