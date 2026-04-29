@@ -154,6 +154,9 @@ class DemonHunterDevourer_2(BaseRotation):
         # 疾影
         phase_shift_buff_exists = player.hasBuff("疾影")
 
+        # 虚落层数
+        voidfall_count = player.buffStack("虚落")
+
         # 地上的灵魂碎片（散落）
         scattered_souls_fragments_count = player.buffStack("灵魂残片")
 
