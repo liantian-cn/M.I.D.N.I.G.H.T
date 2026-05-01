@@ -18,10 +18,10 @@ insert(ConfigRows, {
     key = "spell_queue_window", -- 行标识
     name = "延迟窗口", -- 标题文本
     tooltip = "延迟窗口的时间, 单位ms, 这个值越小, 按键越晚", -- 提示信息
-    min_value = 200, -- 最小值
-    max_value = 400, -- 最大值
+    min_value = 250, -- 最小值
+    max_value = 550, -- 最大值
     step = 10, -- 步进
-    default_value = 300, -- 默认值
+    default_value = 400, -- 默认值
     bind_config = spell_queue_window, -- 绑定的配置对象
 })
 

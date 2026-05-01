@@ -38,7 +38,7 @@ local function CreateMatrixFrame() -- 创建矩阵框架
     frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
     frame:SetSize(SIZE.CELL * SIZE.MATRIX.Width, SIZE.CELL * SIZE.MATRIX.Height)
     frame:SetFrameStrata("TOOLTIP")
-    frame:SetFrameLevel(900)
+    frame:SetFrameLevel(9000)
     frame:Show()
 
     local bg = frame:CreateTexture(nil, "BACKGROUND")
