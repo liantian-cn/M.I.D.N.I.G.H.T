@@ -289,7 +289,7 @@ class DruidGuardian(BaseRotation):
 
         # 优先使用痛击。
         # 痛击盾是目前版本的主要治疗
-        if ctx.spell_cooldown_ready("痛击", spell_queue_window):
+        if ctx.spell_cooldown_ready("痛击", spell_queue_window, ignore_usable=True):
             # print(f"痛击 ready {datetime.now().strftime('%H:%M:%S')}")
             if enemy_in_range or (main_target is not None):
                 return self.cast("痛击")
@@ -357,6 +357,14 @@ class DruidGuardian(BaseRotation):
                 if ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True):
                     return self.cast("泻怒铁鬃")
 
+            if ctx.spell_known("毁灭"):
+                return self.cast("毁灭")
+
+            if (main_target is not None) and ctx.spell_known("摧折"):
+                return self.cast(f"{main_target.unitToken}摧折")
+
+        # 在怒气较高时，如果铁鬃逻辑是bypass，那么就直接用毁灭或者摧折，不考虑铁鬃的层数和剩余时间。
+        if (rage > 60) and (ironfur_logic == "bypass"):
             if ctx.spell_known("毁灭"):
                 return self.cast("毁灭")
 

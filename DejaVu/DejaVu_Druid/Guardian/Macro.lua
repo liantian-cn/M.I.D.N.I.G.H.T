@@ -41,7 +41,7 @@ insert(macroList, { title = "enemy横扫", key = "ALT-F7", text = "/cast 横扫"
 insert(macroList, { title = "any切换目标", key = "ALT-F8", text = "/targetenemy\n/focus\n/targetlasttarget" })
 insert(macroList, { title = "player狂暴", key = "ALT-F9", text = "/cast 狂暴" })
 insert(macroList, { title = "player化身：乌索克的守护者", key = "SHIFT-NUMPAD1", text = "/cast 化身：乌索克的守护者" })
-insert(macroList, { title = "player铁鬃", key = "SHIFT-NUMPAD2", text = "/castsequence reset=0.5 铁鬃,0" })
+insert(macroList, { title = "player铁鬃", key = "SHIFT-NUMPAD2", text = "/castsequence reset=1 铁鬃,0" })
 insert(macroList, { title = "player狂暴回复", key = "SHIFT-NUMPAD3", text = "/cast 狂暴回复" })
 insert(macroList, { title = "player树皮术", key = "SHIFT-NUMPAD4", text = "/cast 树皮术" })
 insert(macroList, { title = "player生存本能", key = "SHIFT-NUMPAD5", text = "/cast 生存本能" })
