@@ -66,6 +66,12 @@ class Context:
             return ignore_gcd or self.gcd_ready(queue_window)
         return False
 
+    def spell_known(self, spell_name: str) -> bool:
+        spell = self.spell(spell_name)
+        if spell is None:
+            return False
+        return spell.is_known
+
     @property
     def player(self) -> Unit:
         return Unit(self.decoded_data["player"])

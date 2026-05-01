@@ -31,6 +31,7 @@ class DruidGuardian(BaseRotation):
             "填充明月普照": "ALT-F3",
             "focus明月普照": "ALT-F5",
             "开怪痛击": "ALT-F6",
+            "痛击": "ALT-F6",
             "补痛击": "ALT-F6",
             "AOE痛击": "ALT-F6",
             "填充痛击": "ALT-F6",
@@ -264,10 +265,6 @@ class DruidGuardian(BaseRotation):
                 if not player.hasBuff("生存本能"):
                     return self.cast("player生存本能")
 
-        if ironfur_logic == "bypass":
-            if ctx.spell_cooldown_ready("毁灭", spell_queue_window):
-                return self.cast("毁灭")
-
         # print(f"{ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True)=}")
         # print(f"{rage=}")
         if ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True) and (rage > 41):
@@ -290,11 +287,15 @@ class DruidGuardian(BaseRotation):
             # print(buff_type_list)
             # print("安抚好了")
 
-        # 开怪阶段，优先使用痛击。
+        # 优先使用痛击。
+        # 痛击盾是目前版本的主要治疗
         if ctx.spell_cooldown_ready("痛击", spell_queue_window):
-            if is_opener:
-                if enemy_in_range:
-                    return self.cast("开怪痛击")
+            # print(f"痛击 ready {datetime.now().strftime('%H:%M:%S')}")
+            if enemy_in_range or (main_target is not None):
+                return self.cast("痛击")
+        if ctx.assisted_combat == "痛击":
+            return self.cast("痛击")
+
         # 化身的爆发逻辑
         if ctx.spell_cooldown_ready("化身", spell_queue_window, ignore_gcd=True) or ctx.spell_cooldown_ready("狂暴", spell_queue_window):
             if incarnation_logic == "manual":
@@ -355,26 +356,23 @@ class DruidGuardian(BaseRotation):
             if (player.buffRemain("铁鬃") < 4) or (player.buffStack("铁鬃") <= 2):
                 if ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True):
                     return self.cast("泻怒铁鬃")
-            # print("100怒了，没铁鬃可打了")
-            if (main_target is not None) and ctx.spell_cooldown_ready("摧折", spell_queue_window):
+
+            if ctx.spell_known("毁灭"):
+                return self.cast("毁灭")
+
+            if (main_target is not None) and ctx.spell_known("摧折"):
                 return self.cast(f"{main_target.unitToken}摧折")
 
+        if ctx.assisted_combat == "毁灭":
+            return self.cast("毁灭")
         # 60怒才用毁灭
-        if ctx.spell_cooldown_ready("毁灭", spell_queue_window):
-            if rage > 60:
-                return self.cast("毁灭")
+
+        if ctx.assisted_combat == "裂伤":
+            return self.cast("裂伤")
 
         # 2层裂伤优先打出去。
         if ctx.spell_charges_ready("裂伤", 2, spell_queue_window) and (main_target is not None):
             return self.cast("溢出裂伤")
-
-        # AOE痛击多大，单体则补痛击
-        if ctx.spell_cooldown_ready("痛击", spell_queue_window) and (main_target is not None):
-            if enemy_in_range:
-                if main_target.debuffStack("痛击") < 3 or main_target.debuffRemain("痛击") < 4:
-                    return self.cast("补痛击")
-                if is_aoe:
-                    return self.cast("AOE痛击")
 
         # 裂伤一层时，没2层优先那么高。
         if ctx.spell_charges_ready("裂伤", 1, spell_queue_window):
@@ -390,6 +388,9 @@ class DruidGuardian(BaseRotation):
             # 目标没月火，补
             if not main_target.hasDebuff("月火术"):
                 return self.cast(f"{main_target.unitToken}月火术")
+
+        if ctx.assisted_combat == "月火术" and (main_target is not None):
+            return self.cast(f"{main_target.unitToken}月火术")
 
         if ctx.gcd_ready():
             if ctx.spell_cooldown_ready("痛击", spell_queue_window) and (main_target is not None):
