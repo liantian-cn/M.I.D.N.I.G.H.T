@@ -66,6 +66,7 @@ SetCVar("secretPvPMatchRestrictionsForced", 0)
 SetCVar("secretAuraDataRestrictionsForced", 0)
 SetCVar("scriptErrors", 1);
 SetCVar("doNotFlashLowHealthWarning", 1);
+SetCVar("lossOfControl", 0);
 SetCVar("cameraIndirectVisibility", 1);
 SetCVar("cameraIndirectOffset", 10);
 SetCVar("SpellQueueWindow", 150);

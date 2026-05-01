@@ -191,73 +191,73 @@ do
     insert(MartixInitFuncs, InitFrame)
 end
 
-do
-    local guardian_rage_overflow_threshold = Config("guardian_rage_overflow_threshold")
-    insert(ConfigRows, {
-        type = "slider",
-        key = "guardian_rage_overflow_threshold",
-        name = "怒气溢出阈值",
-        tooltip = "高于该怒气时，不再使用攒怒技能。",
-        min_value = 60,
-        max_value = 120,
-        step = 5,
-        default_value = 100,
-        bind_config = guardian_rage_overflow_threshold,
-    })
+-- do
+--     local guardian_rage_overflow_threshold = Config("guardian_rage_overflow_threshold")
+--     insert(ConfigRows, {
+--         type = "slider",
+--         key = "guardian_rage_overflow_threshold",
+--         name = "怒气溢出阈值",
+--         tooltip = "高于该怒气时，不再使用攒怒技能。",
+--         min_value = 60,
+--         max_value = 120,
+--         step = 5,
+--         default_value = 100,
+--         bind_config = guardian_rage_overflow_threshold,
+--     })
 
-    local function InitFrame()
-        -- x:60 y:12
-        -- 用途：显示怒气溢出阈值配置。
-        -- 更新函数：set_guardian_rage_overflow_threshold
-        local guardian_rage_overflow_threshold_cell = Cell:New(60, 12)
+--     local function InitFrame()
+--         -- x:60 y:12
+--         -- 用途：显示怒气溢出阈值配置。
+--         -- 更新函数：set_guardian_rage_overflow_threshold
+--         local guardian_rage_overflow_threshold_cell = Cell:New(60, 12)
 
-        -- 说明：根据怒气溢出阈值配置更新显示强度。
-        -- 依赖事件更新：无
-        -- 依赖定时刷新：无
-        local function set_guardian_rage_overflow_threshold(value)
-            guardian_rage_overflow_threshold_cell:setCellRGBA(value / 255)
-        end
+--         -- 说明：根据怒气溢出阈值配置更新显示强度。
+--         -- 依赖事件更新：无
+--         -- 依赖定时刷新：无
+--         local function set_guardian_rage_overflow_threshold(value)
+--             guardian_rage_overflow_threshold_cell:setCellRGBA(value / 255)
+--         end
 
-        guardian_rage_overflow_threshold:register_callback(set_guardian_rage_overflow_threshold)
+--         guardian_rage_overflow_threshold:register_callback(set_guardian_rage_overflow_threshold)
 
-        set_guardian_rage_overflow_threshold(guardian_rage_overflow_threshold:get_value() or 100)
-    end
-    insert(MartixInitFuncs, InitFrame)
-end
+--         set_guardian_rage_overflow_threshold(guardian_rage_overflow_threshold:get_value() or 100)
+--     end
+--     insert(MartixInitFuncs, InitFrame)
+-- end
 
-do
-    local guardian_rage_maul_threshold = Config("guardian_rage_maul_threshold")
-    insert(ConfigRows, {
-        type = "slider",
-        key = "guardian_rage_maul_threshold",
-        name = "重殴怒气下限",
-        tooltip = "当玩家怒气高于该值时，才会使用重殴泄怒",
-        min_value = 90,
-        max_value = 130,
-        step = 5,
-        default_value = 120,
-        bind_config = guardian_rage_maul_threshold,
-    })
+-- do
+-- local guardian_rage_maul_threshold = Config("guardian_rage_maul_threshold")
+-- insert(ConfigRows, {
+--     type = "slider",
+--     key = "guardian_rage_maul_threshold",
+--     name = "重殴怒气下限",
+--     tooltip = "当玩家怒气高于该值时，才会使用重殴泄怒",
+--     min_value = 90,
+--     max_value = 130,
+--     step = 5,
+--     default_value = 120,
+--     bind_config = guardian_rage_maul_threshold,
+-- })
 
-    local function InitFrame()
-        -- x:61 y:12
-        -- 用途：显示重殴怒气下限配置。
-        -- 更新函数：set_guardian_rage_maul_threshold
-        local guardian_rage_maul_threshold_cell = Cell:New(61, 12)
+-- local function InitFrame()
+--     -- x:61 y:12
+--     -- 用途：显示重殴怒气下限配置。
+--     -- 更新函数：set_guardian_rage_maul_threshold
+--     local guardian_rage_maul_threshold_cell = Cell:New(61, 12)
 
-        -- 说明：根据重殴怒气下限配置更新显示强度。
-        -- 依赖事件更新：无
-        -- 依赖定时刷新：无
-        local function set_guardian_rage_maul_threshold(value)
-            guardian_rage_maul_threshold_cell:setCellRGBA(value / 255)
-        end
+--     -- 说明：根据重殴怒气下限配置更新显示强度。
+--     -- 依赖事件更新：无
+--     -- 依赖定时刷新：无
+--     local function set_guardian_rage_maul_threshold(value)
+--         guardian_rage_maul_threshold_cell:setCellRGBA(value / 255)
+--     end
 
-        guardian_rage_maul_threshold:register_callback(set_guardian_rage_maul_threshold)
+--     guardian_rage_maul_threshold:register_callback(set_guardian_rage_maul_threshold)
 
-        set_guardian_rage_maul_threshold(guardian_rage_maul_threshold:get_value() or 120)
-    end
-    insert(MartixInitFuncs, InitFrame)
-end
+--     set_guardian_rage_maul_threshold(guardian_rage_maul_threshold:get_value() or 120)
+-- end
+-- insert(MartixInitFuncs, InitFrame)
+-- end
 
 do
     local guardian_interrupt_logic = Config("guardian_interrupt_logic")

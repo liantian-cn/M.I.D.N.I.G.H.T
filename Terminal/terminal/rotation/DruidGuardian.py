@@ -13,7 +13,9 @@ class DruidGuardian(BaseRotation):
 
         self.macroTable = {
             "target月火术": "ALT-NUMPAD1",
+            "填充月火术": "ALT-NUMPAD1",
             "focus月火术": "ALT-NUMPAD2",
+            "填充裂伤": "ALT-NUMPAD3",
             "target裂伤": "ALT-NUMPAD3",
             "focus裂伤": "ALT-NUMPAD4",
             "target毁灭": "ALT-NUMPAD5",
@@ -21,20 +23,24 @@ class DruidGuardian(BaseRotation):
             "target摧折": "ALT-NUMPAD7",
             "focus摧折": "ALT-NUMPAD8",
             "target重殴": "ALT-NUMPAD9",
+            "填充毁灭": "ALT-NUMPAD9",
             "focus重殴": "ALT-NUMPAD0",
             "target赤红之月": "ALT-F1",
             "focus赤红之月": "ALT-F2",
             "target明月普照": "ALT-F3",
+            "填充明月普照": "ALT-F3",
             "focus明月普照": "ALT-F5",
             "开怪痛击": "ALT-F6",
             "补痛击": "ALT-F6",
             "AOE痛击": "ALT-F6",
+            "填充痛击": "ALT-F6",
             "填充横扫": "ALT-F7",
             "any切换目标": "ALT-F8",
             "狂暴": "ALT-F9",
             "化身": "SHIFT-NUMPAD1",
             "低保铁鬃": "SHIFT-NUMPAD2",
             "泻怒铁鬃": "SHIFT-NUMPAD2",
+            "填充铁鬃": "SHIFT-NUMPAD2",
             "狂暴回复": "SHIFT-NUMPAD3",
             "树皮术": "SHIFT-NUMPAD4",
             "player生存本能": "SHIFT-NUMPAD5",
@@ -47,6 +53,7 @@ class DruidGuardian(BaseRotation):
             "毁灭": "SHIFT-NUMPAD0",
             "target安抚": "SHIFT-F1",
             "focus安抚": "SHIFT-F2",
+            "野性之心": "SHIFT-F3",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
@@ -58,7 +65,8 @@ class DruidGuardian(BaseRotation):
         if ctx.delay:
             return self.idle("延迟开关开启")
 
-        spell_queue_window = float(ctx.spell_queue_window or 0.3)
+        spell_queue_window = float(ctx.spell_queue_window or 0.4)
+        # print(f"{spell_queue_window=}")
         player = ctx.player
         target = ctx.target
         focus = ctx.focus
@@ -106,19 +114,19 @@ class DruidGuardian(BaseRotation):
 
         # 怒气溢出阈值 min: 60 max: 120 default: 100 step: 5
         # 高于该怒气时，不再使用攒怒技能。
-        guardian_rage_overflow_threshold_cell = ctx.setting.cell(5)
-        if guardian_rage_overflow_threshold_cell is None:
-            rage_overflow_threshold = 100.0  # 默认值，100
-        else:
-            rage_overflow_threshold = float(guardian_rage_overflow_threshold_cell.mean)
+        # guardian_rage_overflow_threshold_cell = ctx.setting.cell(5)
+        # if guardian_rage_overflow_threshold_cell is None:
+        #     rage_overflow_threshold = 100.0  # 默认值，100
+        # else:
+        #     rage_overflow_threshold = float(guardian_rage_overflow_threshold_cell.mean)
 
         # 重殴怒气下限 min: 90 max: 130 default: 120 step: 5
         # 当玩家怒气高于该值时，才会使用重殴泄怒
-        guardian_rage_threshold_cell = ctx.setting.cell(6)
-        if guardian_rage_threshold_cell is None:
-            rage_threshold = 120.0  # 默认值，120
-        else:
-            rage_threshold = float(guardian_rage_threshold_cell.mean)
+        # guardian_rage_threshold_cell = ctx.setting.cell(6)
+        # if guardian_rage_threshold_cell is None:
+        #     rage_threshold = 120.0  # 默认值，120
+        # else:
+        #     rage_threshold = float(guardian_rage_threshold_cell.mean)
 
         # 打断逻辑  blacklist = 使用黑名单 all = 任意打断, default: blacklist
         guardian_interrupt_logic_cell = ctx.setting.cell(7)
@@ -193,6 +201,12 @@ class DruidGuardian(BaseRotation):
         if player.hasBuff("旅行形态"):
             return self.idle("旅行形态中")
 
+        if player.hasBuff("枭兽形态"):
+            if ctx.spell_cooldown_ready("野性之心", spell_queue_window, ignore_gcd=True):
+                return self.cast("野性之心")
+            else:
+                return self.cast("any熊形态")
+
         if not player.hasBuff("熊形态"):
             return self.cast("any熊形态")
 
@@ -210,7 +224,7 @@ class DruidGuardian(BaseRotation):
                 # print("当前目标不可攻击或不在远程范围，且焦点也不可攻击或不在近战范围，无法使用技能")
                 return self.idle("没有合适的目标")
         # print(f"{player.powerPercent=}")
-        print(f"{rage_limit=}")
+        # print(f"{rage_limit=}")
         rage = float(player.powerPercent) * rage_limit / 100.0
         # print(f"main_target: {main_target.unitToken if main_target else None}, rage: {rage:.1f}")
         is_opener = float(ctx.combat_time) <= opener_time
@@ -249,8 +263,6 @@ class DruidGuardian(BaseRotation):
             if (player.healthPercent < survival_instincts_threshold):
                 if not player.hasBuff("生存本能"):
                     return self.cast("player生存本能")
-        if (rage > 100) and ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True):
-            return self.cast("泻怒铁鬃")
 
         if ironfur_logic == "bypass":
             if ctx.spell_cooldown_ready("毁灭", spell_queue_window):
@@ -259,6 +271,7 @@ class DruidGuardian(BaseRotation):
         # print(f"{ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True)=}")
         # print(f"{rage=}")
         if ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True) and (rage > 41):
+            # 如果没有铁鬃，或者铁鬃剩余时间不足2秒，那么就先用一个铁鬃。
             if (not player.hasBuff("铁鬃")) or (player.buffRemain("铁鬃") < 2):
                 return self.cast("低保铁鬃")
 
@@ -328,8 +341,23 @@ class DruidGuardian(BaseRotation):
         # 开怪阶段优先使用明月普照
         # 玩家站定才用
         if ctx.spell_cooldown_ready("明月普照", spell_queue_window) and (main_target is not None):
-            if is_opener and player_is_stand:
-                return self.cast(f"{main_target.unitToken}明月普照")
+            if main_target.healthPercent > 50:  # 目标血量高于30%时才用明月普照开怪
+                if player_is_stand:
+                    return self.cast(f"{main_target.unitToken}明月普照")
+
+        # 泄怒逻辑：
+        # 泄怒逻辑：
+        if (rage > 110):
+            if ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True):
+                return self.cast("泻怒铁鬃")
+
+        if (rage > 90):
+            if (player.buffRemain("铁鬃") < 4) or (player.buffStack("铁鬃") <= 2):
+                if ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True):
+                    return self.cast("泻怒铁鬃")
+            # print("100怒了，没铁鬃可打了")
+            if (main_target is not None) and ctx.spell_cooldown_ready("摧折", spell_queue_window):
+                return self.cast(f"{main_target.unitToken}摧折")
 
         # 60怒才用毁灭
         if ctx.spell_cooldown_ready("毁灭", spell_queue_window):
@@ -338,8 +366,7 @@ class DruidGuardian(BaseRotation):
 
         # 2层裂伤优先打出去。
         if ctx.spell_charges_ready("裂伤", 2, spell_queue_window) and (main_target is not None):
-            if rage < rage_overflow_threshold:
-                return self.cast("溢出裂伤")
+            return self.cast("溢出裂伤")
 
         # AOE痛击多大，单体则补痛击
         if ctx.spell_cooldown_ready("痛击", spell_queue_window) and (main_target is not None):
@@ -351,11 +378,7 @@ class DruidGuardian(BaseRotation):
 
         # 裂伤一层时，没2层优先那么高。
         if ctx.spell_charges_ready("裂伤", 1, spell_queue_window):
-            if is_aoe:
-                if rage <= rage_overflow_threshold:
-                    return self.cast("补怒裂伤")
-            else:
-                return self.cast("裂伤")
+            return self.cast("裂伤")
 
         # 星河守护者时，优先用掉月火。
         if ctx.spell_cooldown_ready("月火术", spell_queue_window) and (main_target is not None):
@@ -368,22 +391,24 @@ class DruidGuardian(BaseRotation):
             if not main_target.hasDebuff("月火术"):
                 return self.cast(f"{main_target.unitToken}月火术")
 
-        # 泄怒
-        if (rage > rage_threshold):
-            if is_aoe and ctx.spell_cooldown_ready("摧折", spell_queue_window):
-                return self.cast("enemy摧折")
-            elif (main_target is not None) and ctx.spell_cooldown_ready("重殴", spell_queue_window):
-                return self.cast(f"{main_target.unitToken}重殴")
+        if ctx.gcd_ready():
+            if ctx.spell_cooldown_ready("痛击", spell_queue_window) and (main_target is not None):
+                if enemy_in_range:
+                    return self.cast("AOE痛击")
 
-        # 填充
-        # 优先痛击
-        if ctx.spell_cooldown_ready("痛击", spell_queue_window) and (main_target is not None):
+            if ctx.spell_cooldown_ready("月火术", spell_queue_window) and (main_target is not None):
+                if player.hasBuff("星河守护者"):
+                    return self.cast(f"{main_target.unitToken}月火术")
+
+            if rage > 80 and (main_target is not None) and ctx.spell_cooldown_ready("摧折", spell_queue_window):
+                return self.cast(f"{main_target.unitToken}摧折")
+
             if enemy_in_range:
-                return self.cast("AOE痛击")
+                return self.cast("填充横扫")
 
-        if ctx.spell_cooldown_ready("月火术", spell_queue_window) and (main_target is not None):
-            if player.hasBuff("星河守护者"):
+            if ctx.spell_cooldown_ready("月火术", spell_queue_window) and (main_target is not None):
                 return self.cast(f"{main_target.unitToken}月火术")
-            return self.cast("填充横扫")
 
-        return self.idle("当前没有合适动作")
+            return self.idle("当前没有合适动作")
+        else:
+            return self.idle("公共CD中")
