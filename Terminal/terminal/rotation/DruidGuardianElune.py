@@ -4,9 +4,9 @@ from terminal.context import Context
 from .base import BaseRotation
 
 
-class DruidGuardian(BaseRotation):
-    name = "熊德"
-    desc = "利爪，兼容月光。"
+class DruidGuardianElune(BaseRotation):
+    name = "熊(艾露恩)"
+    desc = "适配5.7更新"
 
     def __init__(self) -> None:
         super().__init__()
@@ -341,8 +341,9 @@ class DruidGuardian(BaseRotation):
 
         # 开怪阶段优先使用明月普照
         # 玩家站定才用
-        if ctx.spell_cooldown_ready("明月普照", spell_queue_window) and (main_target is not None):
-            if main_target.healthPercent > 50:  # 目标血量高于30%时才用明月普照开怪
+        # print(f"{main_target.unitToken if main_target else None} {ctx.assisted_combat}")
+        if ctx.assisted_combat == "明月普照" and (main_target is not None):
+            if main_target.healthPercent > 30:  # 目标血量高于30%时才用明月普照开怪
                 if player_is_stand:
                     return self.cast(f"{main_target.unitToken}明月普照")
 
@@ -353,7 +354,7 @@ class DruidGuardian(BaseRotation):
                 return self.cast("泻怒铁鬃")
 
         if (rage > 90):
-            if (player.buffRemain("铁鬃") < 4) or (player.buffStack("铁鬃") <= 2):
+            if (player.buffRemain("铁鬃") < 3) or (player.buffStack("铁鬃") <= 2):
                 if ctx.spell_cooldown_ready("铁鬃", 0.1, ignore_gcd=True):
                     return self.cast("泻怒铁鬃")
 
@@ -401,9 +402,15 @@ class DruidGuardian(BaseRotation):
             return self.cast(f"{main_target.unitToken}月火术")
 
         if ctx.gcd_ready():
+            # print(f"{rage=}")
 
-            if rage > 80 and (main_target is not None) and ctx.spell_cooldown_ready("摧折", spell_queue_window):
+            if rage > 60 and (main_target is not None) and ctx.spell_cooldown_ready("摧折", spell_queue_window):
                 return self.cast(f"{main_target.unitToken}摧折")
+
+            if rage > 40 and (main_target is not None) and ctx.spell_cooldown_ready("摧折", spell_queue_window):
+                if (player.buffRemain("铁鬃") > 4) or (player.buffStack("铁鬃") >= 2):
+                    return self.cast(f"{main_target.unitToken}摧折")
+
             if ctx.spell_cooldown_ready("痛击", spell_queue_window) and (main_target is not None):
                 if enemy_in_range:
                     return self.cast("AOE痛击")
