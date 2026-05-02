@@ -30,6 +30,7 @@ class DemonHunterDevourer(BaseRotation):
             "疾影": "SHIFT-NUMPAD1",
             "灵魂献祭": "SHIFT-NUMPAD2",
             "鲁莽药水": "SHIFT-NUMPAD3",
+            "停止施法": "SHIFT-NUMPAD4",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
@@ -395,6 +396,13 @@ class DemonHunterDevourer(BaseRotation):
             and ctx.spell_cooldown_ready("虚空射线", spell_queue_window)
         ):
             return self.cast("虚空射线")
+
+        # ── 引导中断：虚空射线目标丢失时停止引导 ───────────────────────
+        if player.channelIcon is not None:
+            if player.channelIcon == "虚空射线" and player.enemyCount == 0:
+                # 目标已全部死亡，停止引导虚空射线
+                return self.cast("停止施法")  # 或使用对应的取消宏
+            return self.idle("正在引导")
 
         # ── 5. 灵魂献祭：未激活时使用（理想情况下仅在变身外使用）────────
         # 注意：灵魂献祭在持续时间内可回复24%最大生命值，应急时可忽略此优先级限制
