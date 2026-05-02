@@ -129,8 +129,8 @@ class DemonHunterDevourer_2(BaseRotation):
         elif target.exists and target.canAttack and target.isInRangedRange:
             main_target = target
 
-        if main_target is None:
-            return self.idle("没有合适的目标")
+        # if main_target is None:
+        #     return self.idle("没有合适的目标")
 
         # ── AOE判断 ─────────────────────────────────────────────────
         is_aoe = player.enemyCount >= aoe_enemy_count
@@ -238,8 +238,7 @@ class DemonHunterDevourer_2(BaseRotation):
                 and not player.isMoving
                 and soul_fragments >= 30
                 and ctx.spell_cooldown_ready("坍缩之星", spell_queue_window)
-                and main_target.healthPercent
-                >= reaper_mark_health_thresholdreaper_health_threshold
+                and main_target.healthPercent >= reaper_health_threshold
             )
             void_ray_ready = (
                 not player_need_specific_spell_stop

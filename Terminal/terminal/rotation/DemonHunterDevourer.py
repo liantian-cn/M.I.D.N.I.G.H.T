@@ -47,6 +47,7 @@ class DemonHunterDevourer(BaseRotation):
         target = ctx.target
         focus = ctx.focus
         mouseover = ctx.mouseover
+        # print(f"上一次施法：{ctx.latest_succeeded_cast}")
 
         # ── 设置项读取 ──────────────────────────────────────────────
 
@@ -95,6 +96,7 @@ class DemonHunterDevourer(BaseRotation):
             )
         interrupt_blacklist = ctx.interrupt_blacklist
         spell_stop_list = ctx.spell_stop_list
+        range_spell_stop_list = ctx.range_spell_stop_list
 
         # 开启保命血量阈值（默认60%）
         dh_health_threshold_cell = ctx.setting.cell(2)
@@ -225,16 +227,12 @@ class DemonHunterDevourer(BaseRotation):
         if ctx.spell_cooldown_ready("瓦解", spell_queue_window, ignore_gcd=True):
             if focus_need_interrupt:
                 return self.cast("focus瓦解")
-                # print("focus迎头痛击")
             elif target_need_interrupt:
                 return self.cast("target瓦解")
-                # print("target迎头痛击")
 
         # 停止施法名单检查：如果目标或焦点正在释放名单上的法术，则停止施法
         player_need_spell_stop = False
         trigger_spell = None  # 初始化一个变量来记录是谁触发了黑名单
-        print(f"目标施放法术：{target.anyCastIcon}")
-        print(f"停止施法黑名单列表：{spell_stop_list}")
 
         if target.exists and (target.anyCastIcon in spell_stop_list):
             trigger_spell = target.anyCastIcon
