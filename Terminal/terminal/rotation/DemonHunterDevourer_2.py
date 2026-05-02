@@ -235,8 +235,11 @@ class DemonHunterDevourer_2(BaseRotation):
             # 预先计算各技能是否就绪
             star_ready = (
                 not player_need_specific_spell_stop
+                and not player.isMoving
                 and soul_fragments >= 30
                 and ctx.spell_cooldown_ready("坍缩之星", spell_queue_window)
+                and main_target.healthPercent
+                >= reaper_mark_health_thresholdreaper_health_threshold
             )
             void_ray_ready = (
                 not player_need_specific_spell_stop
