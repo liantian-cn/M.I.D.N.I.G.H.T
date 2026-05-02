@@ -23,6 +23,10 @@ local function InitFrame()
 
     local function updateCell()
         local spellID = GetNextCastSpell(false)
+        if spellID == nil then
+            cell:clearCell()
+            return
+        end
         local iconID = GetSpellTexture(spellID)
         local spellName = GetSpellName(spellID)
         cell:setCell(iconID, COLOR.SPELL_TYPE.PLAYER_SPELL, spellName)
