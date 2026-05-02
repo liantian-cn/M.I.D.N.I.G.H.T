@@ -267,7 +267,7 @@ class DruidGuardian(BaseRotation):
 
         # print(f"{ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True)=}")
         # print(f"{rage=}")
-        if ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True) and (rage > 41):
+        if ctx.spell_cooldown_ready("铁鬃", 0.1, ignore_gcd=True) and (rage > 41):
             # 如果没有铁鬃，或者铁鬃剩余时间不足2秒，那么就先用一个铁鬃。
             if (not player.hasBuff("铁鬃")) or (player.buffRemain("铁鬃") < 2):
                 return self.cast("低保铁鬃")
@@ -276,7 +276,7 @@ class DruidGuardian(BaseRotation):
                 if player.buffStack("铁鬃") < 2:
                     return self.cast("低保铁鬃")
 
-        if ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True) and (rage > 51):
+        if ctx.spell_cooldown_ready("铁鬃", 0.1, ignore_gcd=True) and (rage > 51):
             if ironfur_logic == "more":
                 return self.cast("低保铁鬃")
 
@@ -349,12 +349,12 @@ class DruidGuardian(BaseRotation):
         # 泄怒逻辑：
         # 泄怒逻辑：
         if (rage > 110):
-            if ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True):
+            if ctx.spell_cooldown_ready("铁鬃", 0.1, ignore_gcd=True):
                 return self.cast("泻怒铁鬃")
 
         if (rage > 90):
             if (player.buffRemain("铁鬃") < 4) or (player.buffStack("铁鬃") <= 2):
-                if ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True):
+                if ctx.spell_cooldown_ready("铁鬃", 0.1, ignore_gcd=True):
                     return self.cast("泻怒铁鬃")
 
             if ctx.spell_known("毁灭"):

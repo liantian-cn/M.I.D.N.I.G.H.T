@@ -52,7 +52,7 @@ do
 
         runic_power_max:register_callback(set_runic_power_max)
 
-        set_runic_power_max(runic_power_max:get_value())
+        set_runic_power_max(runic_power_max:get_value() or 125)
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -91,7 +91,7 @@ do
 
         dk_interrupt_mode:register_callback(set_dk_interrupt_mode)
 
-        set_dk_interrupt_mode(dk_interrupt_mode:get_value())
+        set_dk_interrupt_mode(dk_interrupt_mode:get_value() or "blacklist")
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -125,7 +125,7 @@ do
 
         blood_death_strike_health_threshold:register_callback(set_blood_death_strike_health_threshold)
 
-        set_blood_death_strike_health_threshold(blood_death_strike_health_threshold:get_value())
+        set_blood_death_strike_health_threshold(blood_death_strike_health_threshold:get_value() or 55)
     end
     insert(MartixInitFuncs, InitFrame)
 end
