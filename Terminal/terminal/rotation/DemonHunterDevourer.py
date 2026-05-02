@@ -1,7 +1,6 @@
 """
 35魂
 天赋：CgcBG5bbocFKcv+yIq8fPd6ORBA2mxMzMzMzMGzMAAAAAAAMmtBDAAAAAAAAmxMMzMzMzMzMzYmNzYsolFmZmZ2abmZGADDABMGMmB
-这套天赋在团本中除了鲁拉战斗外都可以适用，这套build可以应对所有需要顺劈的Boss场景。
 """
 
 from datetime import datetime
@@ -10,8 +9,8 @@ from terminal.context import Context
 from .base import BaseRotation
 
 
-class DemonHunterDevourer_2(BaseRotation):
-    name = "50魂噬灭歼灭者DH"
+class DemonHunterDevourer(BaseRotation):
+    name = "35魂噬灭歼灭者DH"
     desc = "目前只适配歼灭者"
 
     def __init__(self) -> None:
@@ -30,7 +29,7 @@ class DemonHunterDevourer_2(BaseRotation):
             "focus瓦解": "ALT-NUMPAD0",
             "疾影": "SHIFT-NUMPAD1",
             "灵魂献祭": "SHIFT-NUMPAD2",
-            "圣光潜力": "SHIFT-NUMPAD3",
+            "鲁莽药水": "SHIFT-NUMPAD3",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
@@ -326,9 +325,9 @@ class DemonHunterDevourer_2(BaseRotation):
 
         # ── 2. 虚空变形：可用时立即触发 ────────────────────────────────
         if ctx.spell_cooldown_ready("虚空变形", spell_queue_window):
-            # 当敌人数量 >= 8 时，先额外使用"圣光潜力"
+            # 当敌人数量 >= 8 时，先额外使用"鲁莽药水"
             if player.enemyCount >= 8:
-                self.cast("圣光潜力")
+                self.cast("鲁莽药水")
             return self.cast("虚空变形")
 
         # ── 3. 根除：噬欲时刻激活 且 地上>=10魂 ───────────────────────
