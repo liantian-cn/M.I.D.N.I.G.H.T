@@ -380,12 +380,12 @@ class DruidGuardianElune(BaseRotation):
             return self.cast("裂伤")
 
         # 2层裂伤优先打出去。
-        if ctx.spell_charges_ready("裂伤", 2, spell_queue_window) and (main_target is not None):
+        if ctx.spell_charges_ready("裂伤", 1, spell_queue_window) and (main_target is not None):
             return self.cast("溢出裂伤")
 
-        # 裂伤一层时，没2层优先那么高。
-        if ctx.spell_charges_ready("裂伤", 1, spell_queue_window):
-            return self.cast("裂伤")
+        # # 裂伤一层时，没2层优先那么高。
+        # if ctx.spell_charges_ready("裂伤", 1, spell_queue_window):
+        #     return self.cast("裂伤")
 
         # 星河守护者时，优先用掉月火。
         if ctx.spell_cooldown_ready("月火术", spell_queue_window) and (main_target is not None):
