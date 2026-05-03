@@ -47,6 +47,7 @@ class DemonHunterDevourer_2(BaseRotation):
         target = ctx.target
         focus = ctx.focus
         mouseover = ctx.mouseover
+        latest_succeeded_cast = ctx.latest_succeeded_cast
 
         # ── 设置项读取 ──────────────────────────────────────────────
 
@@ -62,12 +63,12 @@ class DemonHunterDevourer_2(BaseRotation):
             0 if soul_fragments_cell is None else int(soul_fragments_cell.mean / 5)
         )
 
-        # 恶魔之怒
+        # 获取恶魔之怒最大值，默认120，恶魔之怒是根据这个值来计算的。因为不同版本恶魔之怒的最大值可能不同，所以让用户自己设置这个值。
         fury_max_cell = ctx.setting.cell(0)
         fury_max = 120 if fury_max_cell is None else fury_max_cell.mean
         fury = int(ctx.player.powerPercent * fury_max / 100)
 
-        # 斩杀血量阈值（默认15%）
+        # 斩杀血量阈值（默认10%）
         reaper_health_threshold_cell = ctx.setting.cell(4)
         reaper_health_threshold = (
             10
@@ -159,6 +160,9 @@ class DemonHunterDevourer_2(BaseRotation):
 
         # 灵魂献祭
         soul_immolation_exists = player.hasBuff("灵魂献祭")
+
+        # 鲁莽药水
+        potion_of_recklessness_exists = player.hasBuff("鲁莽药水")
 
         # ── 保命：献祭（应急，忽略常规优先级限制）──────────────────
         # 注意：灵魂献祭在持续时间内可回复24%最大生命值，应急时可在变身内外使用
@@ -256,8 +260,12 @@ class DemonHunterDevourer_2(BaseRotation):
                 and ctx.spell_cooldown_ready("根除", spell_queue_window)
             )
 
-            # 虚空变形后紧接着使用使用"鲁莽药水"
-            if latest_succeeded_cast == "虚空变形":
+            # 虚空变形后紧接着使用"鲁莽药水"
+            if (
+                latest_succeeded_cast == "虚空变形"
+                and not potion_of_recklessness_exists
+                and ctx.spell_cooldown_ready("鲁莽药水", spell_queue_window)
+            ):
                 return self.cast("鲁莽药水")
 
             # ── 单体模式：虚空射线优先级上调至最高 ─────────────────────
