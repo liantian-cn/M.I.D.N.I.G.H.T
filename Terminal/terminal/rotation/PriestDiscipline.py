@@ -194,7 +194,7 @@ class PriestDiscipline(BaseRotation):
             member.health_deficit = health_deficit  # 血量缺口，数值越高说明越缺治疗
             member.health_base = health_base  # 当前血量减治疗吸收后的基线，数值越低越危险
             member.dispel_list = dispel_list  # 可驱散debuff列表
-            member.debuff_list = debuff_list  # debuff列表
+            # member.debuff_list = debuff_list  # debuff列表
             member.buff_list = buff_list  # buff列表
             member.can_dispel = can_dispel  # 是否有可驱散的debuff
         #     print(f"{member.unitToken}的状态: 血量基线={health_base:.2f}%", end="; ")
