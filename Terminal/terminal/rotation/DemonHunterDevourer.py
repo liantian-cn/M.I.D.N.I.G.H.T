@@ -262,7 +262,7 @@ class DemonHunterDevourer(BaseRotation):
                 and ctx.spell_cooldown_ready("根除", spell_queue_window)
             )
 
-            # 虚空变形后紧接着使用使用"鲁莽药水"
+            # 虚空变形后紧接着使用"鲁莽药水"
             if (
                 latest_succeeded_cast == "虚空变形"
                 and player.burstPotionCooldownUsable
