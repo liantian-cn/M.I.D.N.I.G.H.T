@@ -144,10 +144,12 @@ class PriestDiscipline(BaseRotation):
 
             health_offset = 0    # 血量偏移，数值越高说明实际血量比显示的血量更安全，越低说明更危险。比如正在被治疗但治疗还没生效，或者正在被伤害但伤害还没生效。
             # debuff修正，每个debuff，积分-15分
-            debuff_list = [debuff.title for debuff in member.debuff if (debuff.title not in ["嗜血", "英勇", "赛季词缀", "良性Debuff"])]
+            debuff_list = [debuff for debuff in member.debuff if (debuff.title not in ["嗜血", "英勇", "赛季词缀", "良性Debuff"])]
+            debuff_count = sum([debuff.count for debuff in debuff_list])
+            debuff_count = min(debuff_count, 5)  # 最多算5层debuff，超过5层的debuff不再增加危险度了。
             # 记录完整 buff 列表，方便调试和后续扩展判断。
             buff_list = [buff.title for buff in member.buff]
-            health_offset += -10 * len(debuff_list)
+            health_offset += -10 * debuff_count
 
             # 血量基线使用“当前血量 - 治疗吸收”，数值越低说明越危险。
             health_base = health_percent - heal_absorbs + health_offset

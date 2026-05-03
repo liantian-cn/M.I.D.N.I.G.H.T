@@ -6,7 +6,7 @@ __all__ = [
 
 
 class Aura:
-    def __init__(self, spell: dict[str, Any]) -> None:
+    def __init__(self, aura: dict[str, Any]) -> None:
         """
         aura的结构如下: 
         auraData = {
@@ -17,27 +17,30 @@ class Aura:
             "count": count_cell,
         }
         """
-        self.spell = spell
+        self.aura = aura
 
     def __str__(self) -> str:
-        return self.spell["title"]
+        return self.aura["title"]
 
     @property
     def title(self) -> str:
-        return self.spell["title"]
+        return self.aura["title"]
 
     @property
     def remain(self) -> float:
-        return float(self.spell.get("remain", 999.0))
+        return float(self.aura.get("remain", 999.0))
 
     @property
     def type(self) -> str:
-        return self.spell.get("type", "UNKNOWN")
+        return self.aura.get("type", "UNKNOWN")
 
     @property
     def count(self) -> int:
-        return self.spell.get("count", 1)
+        count = self.aura.get("count", 1)
+        if count == 0:
+            return 1
+        return count
 
     @property
     def color_string(self) -> str:
-        return self.spell.get("color_string", "0,0,0")
+        return self.aura.get("color_string", "0,0,0")
