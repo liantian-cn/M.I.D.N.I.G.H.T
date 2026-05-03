@@ -13,7 +13,7 @@ DejaVu_Core.DEBUG = true             -- 是否开启调试模式
 DejaVu_Core.Enable = true            -- 是否开启插件
 DejaVu_Core.VERSION = "12.0.5.67165" -- 插件版本
 DejaVu_Core.RangedRange = 40         -- 默认的远程检测范围
-DejaVu_Core.MeleeRange = 5           -- 默认的近战检测范围
+DejaVu_Core.MeleeRange = 25           -- 默认的中近程检测范围
 DejaVu_Core.BadgeTitleTable = {}     -- 脚标提示表（key格式: icon_r_g_b, value格式: {icon=图标路径或ID, color=脚标颜色, title=提示文本}）
 -- /dump DejaVu.BadgeTitleTable
 
