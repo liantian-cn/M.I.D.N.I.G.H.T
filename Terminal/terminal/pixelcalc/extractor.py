@@ -314,6 +314,7 @@ def extract_all_data(matrix: MatrixDecoder) -> dict[str, Any]:
         "spell_queue_window": matrix.getCell(57, 9).mean
         / 100,  # 映射到秒，游戏内的毫秒/10。
         "burst_time": matrix.getCell(82, 0).decimal * 60,
+        "latest_succeeded_cast": matrix.getBadgeCell(82, 17).title,  # 最后的施法技能
     }
 
     target_exists = matrix.getCell(55, 10).is_not_black
