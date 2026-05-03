@@ -90,6 +90,9 @@ def get_player_status(matrix: MatrixDecoder) -> dict[str, Any]:
     status["isPlayerCastingTarget"] = matrix.getCell(
         61, 14
     ).is_not_black  # 玩家正在被施法选中
+    status["unitBurstPotionCooldownUsable"] = matrix.getCell(
+        61, 15
+    ).is_not_black  # 爆发药水可用
 
     status["damage_absorbs"] = matrix.readBarValue(43, 16, 20)  # 伤害吸收
     status["heal_absorbs"] = matrix.readBarValue(64, 14, 20)  # 治疗吸收

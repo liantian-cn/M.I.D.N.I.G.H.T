@@ -171,7 +171,10 @@ local function InitFrame()
     -- 用途：治疗药水是否可用
     -- 更新函数：updateHealingItemUsable
     cell.healingPotionCooldownUsable = Cell:New(60, 15)
-
+    -- x:61 y:15
+    -- 用途：爆发药水是否可用
+    -- 更新函数：updateBurstPotionUsable
+    cell.burstPotionCooldownUsable = Cell:New(61, 15)
 
 
 
@@ -274,6 +277,13 @@ local function InitFrame()
     local function updateHealingItemUsable()
         cell.healthstoneCooldownUsable:setCellBoolean(itemUsable(224464), COLOR.STATUS_BOOLEAN.HEALTHSTONE_USABLE, COLOR.BLACK)
         cell.healingPotionCooldownUsable:setCellBoolean(itemUsable(258138), COLOR.STATUS_BOOLEAN.HEALING_POTION_USABLE, COLOR.BLACK)
+    end
+
+    -- 说明：更新爆发药水（鲁莽药水）的可用状态。
+    -- 依赖事件更新：无。
+    -- 依赖定时刷新：2秒。
+    local function updateBurstPotionUsable()
+        cell.burstPotionCooldownUsable:setCellBoolean(itemUsable(241289), COLOR.STATUS_BOOLEAN.HEALING_POTION_USABLE, COLOR.BLACK)
     end
 
     -- 说明：更新近战范围内的敌人数量。
@@ -528,6 +538,7 @@ local function InitFrame()
             updateUnitGroupStatus()
             updateTrinketUsable()
             updateHealingItemUsable()
+            updateBurstPotionUsable()
             updateCastAndChannel()
             updateMovement_fix()
         end

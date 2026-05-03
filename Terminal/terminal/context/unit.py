@@ -370,6 +370,14 @@ class Unit:
         raise ContextError("field is not available for this unit type")
 
     @property
+    def burstPotionCooldownUsable(self) -> bool:
+        if not self.exists:
+            raise ContextError("unit does not exist")
+        if self.unitType == "player":
+            return bool(self.status["unitBurstPotionCooldownUsable"])
+        raise ContextError("field is not available for this unit type")
+
+    @property
     def damageAbsorbs(self) -> float:
         if not self.exists:
             raise ContextError("unit does not exist")

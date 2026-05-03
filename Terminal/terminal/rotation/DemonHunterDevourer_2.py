@@ -161,9 +161,6 @@ class DemonHunterDevourer_2(BaseRotation):
         # 灵魂献祭
         soul_immolation_exists = player.hasBuff("灵魂献祭")
 
-        # 鲁莽药水
-        potion_of_recklessness_exists = player.hasBuff("鲁莽药水")
-
         # ── 保命：献祭（应急，忽略常规优先级限制）──────────────────
         # 注意：灵魂献祭在持续时间内可回复24%最大生命值，应急时可在变身内外使用
         if (
@@ -260,11 +257,11 @@ class DemonHunterDevourer_2(BaseRotation):
                 and ctx.spell_cooldown_ready("根除", spell_queue_window)
             )
 
-            # 虚空变形后紧接着使用"鲁莽药水"
+            # 虚空变形后紧接着使用使用"鲁莽药水"
             if (
                 latest_succeeded_cast == "虚空变形"
-                and not potion_of_recklessness_exists
-                and ctx.spell_cooldown_ready("鲁莽药水", spell_queue_window)
+                and player.burstPotionCooldownUsable
+                and ctx.gcd_ready(spell_queue_window)
             ):
                 return self.cast("鲁莽药水")
 
