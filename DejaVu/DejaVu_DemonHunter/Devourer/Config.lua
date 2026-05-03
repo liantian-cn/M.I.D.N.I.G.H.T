@@ -162,10 +162,10 @@ do
         key = "slider_enemy_health_threshold",
         name = "收割血量阈值",
         tooltip = "当敌人生命值低于此值时, 就不会再使用坍缩之星，立即使用根除",
-        min_value = 5,
+        min_value = 0,
         max_value = 30,
-        step = 10,
-        default_value = 15,
+        step = 1,
+        default_value = 10,
         bind_config = slider_enemy_health_threshold,
     })
 

@@ -70,7 +70,7 @@ class DemonHunterDevourer_2(BaseRotation):
         # 斩杀血量阈值（默认15%）
         reaper_health_threshold_cell = ctx.setting.cell(4)
         reaper_health_threshold = (
-            15
+            10
             if reaper_health_threshold_cell is None
             else int(reaper_health_threshold_cell.mean)
         )
@@ -113,6 +113,10 @@ class DemonHunterDevourer_2(BaseRotation):
         if player.castIcon is not None:
             return self.idle("正在施法")
         if player.channelIcon is not None:
+            # 引导中断：虚空射线目标丢失时停止引导
+            if player.channelIcon == "虚空射线" and player.enemyCount == 0:
+                # 目标已全部死亡，停止引导虚空射线
+                return self.cast("停止施法")  # 或使用对应的取消宏
             return self.idle("正在引导")
         if player.isEmpowering:
             return self.idle("正在蓄力")
@@ -252,6 +256,10 @@ class DemonHunterDevourer_2(BaseRotation):
                 and ctx.spell_cooldown_ready("根除", spell_queue_window)
             )
 
+            # 虚空变形后紧接着使用使用"鲁莽药水"
+            if latest_succeeded_cast == "虚空变形":
+                return self.cast("鲁莽药水")
+
             # ── 单体模式：虚空射线优先级上调至最高 ─────────────────────
             if not is_aoe:
                 # 1. 虚空射线（单体最高优先）
@@ -329,8 +337,12 @@ class DemonHunterDevourer_2(BaseRotation):
             if ctx.spell_cooldown_ready("收割", spell_queue_window):
                 return self.cast("target收割")
 
-        # ── 2. 虚空变形：可用时立即触发 ────────────────────────────────
-        if ctx.spell_cooldown_ready("虚空变形", spell_queue_window):
+        # ── 2. 虚空变形：怪物血量充足且可用时立即触发 ────────────────────────────────
+        if (
+            ctx.spell_cooldown_ready("虚空变形", spell_queue_window)
+            and main_target.healthPercent > reaper_health_threshold
+            and not player.isMoving
+        ):
             return self.cast("虚空变形")
 
         # ── 3. 根除：噬欲时刻激活 且 地上>=10魂 ───────────────────────
@@ -345,17 +357,11 @@ class DemonHunterDevourer_2(BaseRotation):
         if (
             not player_need_specific_spell_stop
             and not player.isMoving
+            and fury >= fury_overflow_threshold
             and target.isInRangedRange
             and ctx.spell_cooldown_ready("虚空射线", spell_queue_window)
         ):
             return self.cast("虚空射线")
-
-        # ── 引导中断：虚空射线目标丢失时停止引导 ───────────────────────
-        if player.channelIcon is not None:
-            if player.channelIcon == "虚空射线" and player.enemyCount == 0:
-                # 目标已全部死亡，停止引导虚空射线
-                return self.cast("停止施法")  # 或使用对应的取消宏
-            return self.idle("正在引导")
 
         # ── 5. 灵魂献祭：未激活时使用（理想情况下仅在变身外使用）────────
         # 注意：灵魂献祭在持续时间内可回复24%最大生命值，应急时可忽略此优先级限制
