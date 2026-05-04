@@ -103,6 +103,8 @@ class DemonHunterDevourer(BaseRotation):
             else int(fury_overflow_threshold_cell.mean)
         )
 
+        # enemy_count = 4 if player.enemyCount is None else player.enemyCount
+
         # ── 基础状态检查 ────────────────────────────────────────────
 
         if not player.alive:
@@ -119,9 +121,9 @@ class DemonHunterDevourer(BaseRotation):
 
         if player.channelIcon is not None:
             # 引导中断：虚空射线目标丢失时停止引导
-            if player.channelIcon == "虚空射线" and player.enemyCount == 0:
-                # 目标已全部死亡，停止引导虚空射线
-                return self.cast("停止施法")  # 或使用对应的取消宏
+            # if player.channelIcon == "虚空射线" and enemy_count == 0:
+            #     # 目标已全部死亡，停止引导虚空射线
+            #     return self.cast("停止施法")  # 或使用对应的取消宏
             return self.idle("正在引导")
 
         if player.isEmpowering:
@@ -247,7 +249,7 @@ class DemonHunterDevourer(BaseRotation):
             # 预先计算各技能是否就绪
             star_ready = (
                 not player_need_specific_spell_stop
-                and soul_fragments >= 30
+                # and soul_fragments >= 30
                 and ctx.spell_cooldown_ready("坍缩之星", spell_queue_window)
             )
             void_ray_ready = (
@@ -267,6 +269,7 @@ class DemonHunterDevourer(BaseRotation):
                 latest_succeeded_cast == "虚空变形"
                 and player.burstPotionCooldownUsable
                 and ctx.gcd_ready(spell_queue_window)
+                and player.enemyCount >= 8
             ):
                 return self.cast("鲁莽药水")
 
