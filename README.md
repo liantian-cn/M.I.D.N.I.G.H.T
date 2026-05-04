@@ -70,6 +70,10 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 /delay 1
 ```
 
+戒律牧目前足够一周到3400..
+
+![戒律.png](https://github.com/user-attachments/assets/18f08227-ce39-4ea7-a176-b38fbde6d299)
+
 ## 开发属于自己的循环
 
 1. 插件端参考 `DejaVu\DejaVu_DruidRestoration`、`DejaVu\DejaVu_DruidGuardian`、`DejaVu\DejaVu_DeathKnightBlood`，在游戏内枚举需要检测的技能、充能技能。再SPEC区域增加需要检测的特色职业属性。添加宏绑定。增加设置项。
