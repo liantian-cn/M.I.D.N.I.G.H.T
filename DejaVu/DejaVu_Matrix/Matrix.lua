@@ -35,7 +35,7 @@ local function CreateMatrixFrame() -- 创建矩阵框架
     InitializeSize()
 
     local frame = CreateFrame("Frame", addonName .. "MartixFrame", UIParent)
-    frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
+    frame:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 100)
     frame:SetSize(SIZE.CELL * SIZE.MATRIX.Width, SIZE.CELL * SIZE.MATRIX.Height)
     frame:SetFrameStrata("TOOLTIP")
     frame:SetFrameLevel(9000)
@@ -49,7 +49,7 @@ local function CreateMatrixFrame() -- 创建矩阵框架
 end
 
 
-C_Timer.After(0, function()
+C_Timer.After(1, function()
     CreateMatrixFrame()
     for _, func in ipairs(DejaVu.MartixInitFuncs) do
         func()

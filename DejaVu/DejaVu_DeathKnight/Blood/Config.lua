@@ -52,7 +52,7 @@ do
 
         runic_power_max:register_callback(set_runic_power_max)
 
-        set_runic_power_max(runic_power_max:get_value() or 125)
+        set_runic_power_max(runic_power_max:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -91,7 +91,7 @@ do
 
         dk_interrupt_mode:register_callback(set_dk_interrupt_mode)
 
-        set_dk_interrupt_mode(dk_interrupt_mode:get_value() or "blacklist")
+        set_dk_interrupt_mode(dk_interrupt_mode:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -125,7 +125,7 @@ do
 
         blood_death_strike_health_threshold:register_callback(set_blood_death_strike_health_threshold)
 
-        set_blood_death_strike_health_threshold(blood_death_strike_health_threshold:get_value() or 55)
+        set_blood_death_strike_health_threshold(blood_death_strike_health_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -159,7 +159,7 @@ do
 
         blood_death_strike_runic_power_overflow_threshold:register_callback(set_blood_death_strike_runic_power_overflow_threshold)
 
-        set_blood_death_strike_runic_power_overflow_threshold(blood_death_strike_runic_power_overflow_threshold:get_value() or 100)
+        set_blood_death_strike_runic_power_overflow_threshold(blood_death_strike_runic_power_overflow_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
@@ -171,10 +171,10 @@ do
         key = "reaper_mark_health_threshold",
         name = "死神印记血量阈值",
         tooltip = "当敌人生命值低于此值时, 就不会再使用死神印记",
-        min_value = 0,
-        max_value = 40,
+        min_value = 10,
+        max_value = 60,
         step = 10,
-        default_value = 20,
+        default_value = 30,
         bind_config = reaper_mark_health_threshold,
     })
 
@@ -193,7 +193,7 @@ do
 
         reaper_mark_health_threshold:register_callback(set_reaper_mark_health_threshold)
 
-        set_reaper_mark_health_threshold(reaper_mark_health_threshold:get_value() or 20)
+        set_reaper_mark_health_threshold(reaper_mark_health_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end

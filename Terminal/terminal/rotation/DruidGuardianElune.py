@@ -55,6 +55,7 @@ class DruidGuardianElune(BaseRotation):
             "target安抚": "SHIFT-F1",
             "focus安抚": "SHIFT-F2",
             "野性之心": "SHIFT-F3",
+            "愈合": "SHIFT-F4",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
@@ -79,7 +80,7 @@ class DruidGuardianElune(BaseRotation):
         if guardian_aoe_enemy_count_cell is None:
             aoe_enemy_count = 4  # 默认值，10级别
         else:
-            aoe_enemy_count = round(guardian_aoe_enemy_count_cell.mean/10)
+            aoe_enemy_count = round(guardian_aoe_enemy_count_cell.mean / 10)
 
         # 起手时间判定 min: 5 max: 45 default: 10 step: 5
         # 即脱离战斗后多长时间内再次进入战斗时认为是起手阶段
@@ -95,7 +96,9 @@ class DruidGuardianElune(BaseRotation):
         if guardian_frenzied_regeneration_threshold_cell is None:
             frenzied_regeneration_threshold = 50.0  # 默认值，50%
         else:
-            frenzied_regeneration_threshold = float(guardian_frenzied_regeneration_threshold_cell.mean)
+            frenzied_regeneration_threshold = float(
+                guardian_frenzied_regeneration_threshold_cell.mean
+            )
 
         # 树皮阈值 min: 20 max: 60 default: 40 step: 2
         # 当玩家生命值低于该值时优先使用树皮术
@@ -111,7 +114,9 @@ class DruidGuardianElune(BaseRotation):
         if guardian_survival_instincts_threshold_cell is None:
             survival_instincts_threshold = 30.0  # 默认值，30%
         else:
-            survival_instincts_threshold = float(guardian_survival_instincts_threshold_cell.mean)
+            survival_instincts_threshold = float(
+                guardian_survival_instincts_threshold_cell.mean
+            )
 
         # 怒气溢出阈值 min: 60 max: 120 default: 100 step: 5
         # 高于该怒气时，不再使用攒怒技能。
@@ -134,7 +139,9 @@ class DruidGuardianElune(BaseRotation):
         if guardian_interrupt_logic_cell is None:
             interrupt_logic = "blacklist"  # 默认值，使用黑名单
         else:
-            interrupt_logic = "blacklist" if guardian_interrupt_logic_cell.mean >= 200 else "any"
+            interrupt_logic = (
+                "blacklist" if guardian_interrupt_logic_cell.mean >= 200 else "any"
+            )
         interrupt_blacklist = ctx.interrupt_blacklist
 
         # 化身逻辑  manual=手动 burst_mode=爆发模式 combat_mode = 战斗时间模式 default:burst_mode
@@ -158,11 +165,17 @@ class DruidGuardianElune(BaseRotation):
         if guardian_ironfur_logic_cell is None:
             ironfur_logic = "two"  # 默认值，保持2层
         else:
-            if (guardian_ironfur_logic_cell.mean > 120) and (guardian_ironfur_logic_cell.mean <= 134):
+            if (guardian_ironfur_logic_cell.mean > 120) and (
+                guardian_ironfur_logic_cell.mean <= 134
+            ):
                 ironfur_logic = "one"
-            elif (guardian_ironfur_logic_cell.mean > 56) and (guardian_ironfur_logic_cell.mean <= 70):
+            elif (guardian_ironfur_logic_cell.mean > 56) and (
+                guardian_ironfur_logic_cell.mean <= 70
+            ):
                 ironfur_logic = "two"
-            elif (guardian_ironfur_logic_cell.mean > 184) and (guardian_ironfur_logic_cell.mean <= 198):
+            elif (guardian_ironfur_logic_cell.mean > 184) and (
+                guardian_ironfur_logic_cell.mean <= 198
+            ):
                 ironfur_logic = "bypass"
             else:
                 ironfur_logic = "more"
@@ -203,7 +216,9 @@ class DruidGuardianElune(BaseRotation):
             return self.idle("旅行形态中")
 
         if player.hasBuff("枭兽形态"):
-            if ctx.spell_cooldown_ready("野性之心", spell_queue_window, ignore_gcd=True):
+            if ctx.spell_cooldown_ready(
+                "野性之心", spell_queue_window, ignore_gcd=True
+            ):
                 return self.cast("野性之心")
             else:
                 return self.cast("any熊形态")
@@ -234,19 +249,23 @@ class DruidGuardianElune(BaseRotation):
         player_is_stand = not player.isMoving
 
         # 开怪使用赤红之月
-        if ctx.spell_cooldown_ready("赤红之月", spell_queue_window) and (main_target is not None):
+        if ctx.spell_cooldown_ready("赤红之月", spell_queue_window) and (
+            main_target is not None
+        ):
             if is_opener:
                 return self.cast(f"{main_target.unitToken}赤红之月")
 
         # 开怪优先补月火
-        if ctx.spell_cooldown_ready("月火术", spell_queue_window) and (main_target is not None):
+        if ctx.spell_cooldown_ready("月火术", spell_queue_window) and (
+            main_target is not None
+        ):
             if not main_target.hasDebuff("月火术"):
                 if is_opener:
                     return self.cast(f"{main_target.unitToken}月火术")
 
         # 低于 狂暴回复阈值且有怒气时优先使用狂暴回复
         if (rage > 10) and ctx.spell_charges_ready("狂暴回复", 1, spell_queue_window):
-            if (player.healthPercent < frenzied_regeneration_threshold):
+            if player.healthPercent < frenzied_regeneration_threshold:
                 if not player.hasBuff("狂暴回复"):
                     return self.cast("狂暴回复")
 
@@ -254,16 +273,21 @@ class DruidGuardianElune(BaseRotation):
         # 树皮术不受公共CD限制，所以即使在公共CD内也可以使用，除非设置了忽略公共CD。
         # 不和生存本能叠加，所以当生存本能未准备好时才使用树皮术。
         if ctx.spell_cooldown_ready("树皮术", spell_queue_window, ignore_gcd=True):
-            if (player.healthPercent < barkskin_threshold):
+            if player.healthPercent < barkskin_threshold:
                 if not player.hasBuff("树皮术"):
                     if not player.hasBuff("生存本能"):
                         return self.cast("树皮术")
 
         # 低于生存本能阈值时优先使用生存本能
         if ctx.spell_charges_ready("生存本能", 1, spell_queue_window):
-            if (player.healthPercent < survival_instincts_threshold):
+            if player.healthPercent < survival_instincts_threshold:
                 if not player.hasBuff("生存本能"):
                     return self.cast("player生存本能")
+        if ctx.spell_cooldown_ready("愈合", spell_queue_window):
+            # survival_instincts_threshold返回值为0
+            if player.healthPercent < 30:
+                print("符合施放愈合条件")
+                return self.cast("愈合")
 
         # print(f"{ctx.spell_cooldown_ready("铁鬃", spell_queue_window, ignore_gcd=True)=}")
         # print(f"{rage=}")
@@ -280,7 +304,9 @@ class DruidGuardianElune(BaseRotation):
             if ironfur_logic == "more":
                 return self.cast("低保铁鬃")
 
-        if ctx.spell_cooldown_ready("安抚", spell_queue_window) and (main_target is not None):
+        if ctx.spell_cooldown_ready("安抚", spell_queue_window) and (
+            main_target is not None
+        ):
             buff_type_list = [debuff.type for debuff in main_target.debuff]
             if "ENRAGE" in buff_type_list:
                 return self.cast(f"{main_target.unitToken}安抚")
@@ -297,7 +323,9 @@ class DruidGuardianElune(BaseRotation):
             return self.cast("痛击")
 
         # 化身的爆发逻辑
-        if ctx.spell_cooldown_ready("化身", spell_queue_window, ignore_gcd=True) or ctx.spell_cooldown_ready("狂暴", spell_queue_window):
+        if ctx.spell_cooldown_ready(
+            "化身", spell_queue_window, ignore_gcd=True
+        ) or ctx.spell_cooldown_ready("狂暴", spell_queue_window):
             if incarnation_logic == "manual":
                 pass
             elif incarnation_logic == "burst_mode":
@@ -349,11 +377,11 @@ class DruidGuardianElune(BaseRotation):
 
         # 泄怒逻辑：
         # 泄怒逻辑：
-        if (rage > 110):
+        if rage > 110:
             if ctx.spell_cooldown_ready("铁鬃", 0.1, ignore_gcd=True):
                 return self.cast("泻怒铁鬃")
 
-        if (rage > 90):
+        if rage > 90:
             if (player.buffRemain("铁鬃") < 3) or (player.buffStack("铁鬃") <= 2):
                 if ctx.spell_cooldown_ready("铁鬃", 0.1, ignore_gcd=True):
                     return self.cast("泻怒铁鬃")
@@ -380,7 +408,9 @@ class DruidGuardianElune(BaseRotation):
             return self.cast("裂伤")
 
         # 2层裂伤优先打出去。
-        if ctx.spell_charges_ready("裂伤", 1, spell_queue_window) and (main_target is not None):
+        if ctx.spell_charges_ready("裂伤", 1, spell_queue_window) and (
+            main_target is not None
+        ):
             return self.cast("溢出裂伤")
 
         # # 裂伤一层时，没2层优先那么高。
@@ -388,7 +418,9 @@ class DruidGuardianElune(BaseRotation):
         #     return self.cast("裂伤")
 
         # 星河守护者时，优先用掉月火。
-        if ctx.spell_cooldown_ready("月火术", spell_queue_window) and (main_target is not None):
+        if ctx.spell_cooldown_ready("月火术", spell_queue_window) and (
+            main_target is not None
+        ):
             if player.hasBuff("星河守护者"):
                 if not is_aoe:
                     return self.cast(f"{main_target.unitToken}月火术")
@@ -404,25 +436,39 @@ class DruidGuardianElune(BaseRotation):
         if ctx.gcd_ready():
             # print(f"{rage=}")
 
-            if rage > 60 and (main_target is not None) and ctx.spell_cooldown_ready("摧折", spell_queue_window):
+            if (
+                rage > 60
+                and (main_target is not None)
+                and ctx.spell_cooldown_ready("摧折", spell_queue_window)
+            ):
                 return self.cast(f"{main_target.unitToken}摧折")
 
-            if rage > 40 and (main_target is not None) and ctx.spell_cooldown_ready("摧折", spell_queue_window):
+            if (
+                rage > 40
+                and (main_target is not None)
+                and ctx.spell_cooldown_ready("摧折", spell_queue_window)
+            ):
                 if (player.buffRemain("铁鬃") > 4) or (player.buffStack("铁鬃") >= 2):
                     return self.cast(f"{main_target.unitToken}摧折")
 
-            if ctx.spell_cooldown_ready("痛击", spell_queue_window) and (main_target is not None):
+            if ctx.spell_cooldown_ready("痛击", spell_queue_window) and (
+                main_target is not None
+            ):
                 if enemy_in_range:
                     return self.cast("AOE痛击")
 
-            if ctx.spell_cooldown_ready("月火术", spell_queue_window) and (main_target is not None):
+            if ctx.spell_cooldown_ready("月火术", spell_queue_window) and (
+                main_target is not None
+            ):
                 if player.hasBuff("星河守护者"):
                     return self.cast(f"{main_target.unitToken}月火术")
 
             if enemy_in_range:
                 return self.cast("填充横扫")
 
-            if ctx.spell_cooldown_ready("月火术", spell_queue_window) and (main_target is not None):
+            if ctx.spell_cooldown_ready("月火术", spell_queue_window) and (
+                main_target is not None
+            ):
                 return self.cast(f"{main_target.unitToken}月火术")
 
             return self.idle("当前没有合适动作")

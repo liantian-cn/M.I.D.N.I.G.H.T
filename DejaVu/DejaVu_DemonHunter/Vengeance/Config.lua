@@ -14,7 +14,7 @@ if classFilename ~= "DEMONHUNTER" then
     C_AddOns.DisableAddOn(addonName)
     return
 end                                 -- 不是恶魔猎手则停止
-if currentSpec ~= 3 then return end -- 不是噬灭专精则停止
+if currentSpec ~= 2 then return end -- 不是复仇专精则停止
 
 local DejaVu = _G["DejaVu"]
 local Config = DejaVu.Config

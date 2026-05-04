@@ -48,6 +48,7 @@ class PlayerStatusTab(QWidget):
         ("unitTrinket2CooldownUsable", "饰品 2可用"),
         ("unitHealthstoneCooldownUsable", "生命石可用"),
         ("unitHealingPotionCooldownUsable", "治疗药水可用"),
+        ("unitBurstPotionCooldownUsable", "爆发药水可用"),
         ("damage_absorbs", "伤害吸收"),
         ("heal_absorbs", "治疗吸收"),
     ]
@@ -102,6 +103,7 @@ class PlayerStatusTab(QWidget):
                 "unitTrinket2CooldownUsable",
                 "unitHealthstoneCooldownUsable",
                 "unitHealingPotionCooldownUsable",
+                "unitBurstPotionCooldownUsable",
             ],
         ),
     ]

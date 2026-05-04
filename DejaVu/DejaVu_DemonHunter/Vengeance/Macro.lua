@@ -17,25 +17,24 @@ if classFilename ~= "DEMONHUNTER" then
     C_AddOns.DisableAddOn(addonName)
     return
 end                                 -- 不是恶魔猎手则停止
-if currentSpec ~= 3 then return end -- 不是噬灭专精则停止
+if currentSpec ~= 2 then return end -- 不是复仇专精则停止
 
 
 local macroList = {}
 insert(macroList, { title = "reloadUI", key = "CTRL-F12", text = "/reload" })
-insert(macroList, { title = "target吞噬", key = "ALT-NUMPAD1", text = "/cast [@target] 吞噬" })
-insert(macroList, { title = "focus吞噬", key = "ALT-NUMPAD2", text = "/cast [@focus] 吞噬" })
-insert(macroList, { title = "就近吞噬", key = "ALT-NUMPAD3", text = "/cleartarget \n/targetenemy [noharm][dead][noexists][help] \n/cast [nocombat] 就近吞噬 \n/stopmacro [channeling] \n/startattack \n/cast [harm]就近吞噬 \n/targetlasttarget" })
-insert(macroList, { title = "target收割", key = "ALT-NUMPAD4", text = "/cast [@target] 收割" })
-insert(macroList, { title = "虚空射线", key = "ALT-NUMPAD5", text = "/cast 虚空射线" })
-insert(macroList, { title = "target根除", key = "ALT-NUMPAD6", text = "/cast [@target] 根除" })
-insert(macroList, { title = "虚空变形", key = "ALT-NUMPAD7", text = "/cast 虚空变形" })
-insert(macroList, { title = "target坍缩之星", key = "ALT-NUMPAD8", text = "/cast [@target] 坍缩之星" })
+insert(macroList, { title = "target幽魂炸弹", key = "ALT-NUMPAD1", text = "/cast [@target] 幽魂炸弹" })
+insert(macroList, { title = "target怨念咒符", key = "ALT-NUMPAD2", text = "/cast [@cursor] 怨念咒符" })
+insert(macroList, { title = "target灵魂裂劈", key = "ALT-NUMPAD3", text = "/cast [@target] 灵魂裂劈" })
+insert(macroList, { title = "target烈焰咒符", key = "ALT-NUMPAD4", text = "/cast [@cursor] 烈焰咒符" })
+insert(macroList, { title = "邪能毁灭", key = "ALT-NUMPAD5", text = "/cast 邪能毁灭" })
+insert(macroList, { title = "献祭光环", key = "ALT-NUMPAD6", text = "/cast 献祭光环" })
+insert(macroList, { title = "恶魔变形", key = "ALT-NUMPAD7", text = "/cast 恶魔变形" })
+insert(macroList, { title = "target投掷利刃", key = "ALT-NUMPAD8", text = "/cast [@target] 投掷利刃" })
 insert(macroList, { title = "target瓦解", key = "ALT-NUMPAD9", text = "/cast [@target] 瓦解" })
 insert(macroList, { title = "focus瓦解", key = "ALT-NUMPAD0", text = "/cast [@focus] 瓦解" })
-insert(macroList, { title = "疾影", key = "SHIFT-NUMPAD1", text = "/cast 疾影" })
-insert(macroList, { title = "灵魂献祭", key = "SHIFT-NUMPAD2", text = "/cast 灵魂献祭" })
-insert(macroList, { title = "鲁莽药水", key = "SHIFT-NUMPAD3", text = "/cast 鲁莽药水" })
-insert(macroList, { title = "停止施法", key = "SHIFT-NUMPAD4", text = "/stopcasting" })
+insert(macroList, { title = "鲁莽药水", key = "SHIFT-NUMPAD1", text = "/cast 鲁莽药水" })
+insert(macroList, { title = "target破裂", key = "SHIFT-NUMPAD2", text = "/cast [@target] 破裂" })
+insert(macroList, { title = "停止施法", key = "SHIFT-NUMPAD3", text = "/stopcasting" })
 
 
 for _, macro in pairs(macroList) do

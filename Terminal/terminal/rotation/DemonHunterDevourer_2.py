@@ -1,6 +1,6 @@
 """
-35魂
-天赋：CgcBG5bbocFKcv+yIq8fPd6ORBA2mxMzMzMzMGzMAAAAAAAMmtBDAAAAAAAAmxMMzMzMzMzMzYmNzYsolFmZmZ2abmZGADDABMGMmB
+天赋：CgcBAAAAAAAAAAAAAAAAAAAAAAA2mxMzMzMzMGzMAAAAAAAMmtBDAAAAAAAAmxMMzMzMzMzMDzsYGjFZhZmZmt2mZmBwwAAwMGMmB
+这套天赋在团本中除了鲁拉战斗外都可以适用，这套build可以应对所有需要顺劈的Boss场景。
 """
 
 from datetime import datetime
@@ -9,8 +9,8 @@ from terminal.context import Context
 from .base import BaseRotation
 
 
-class DemonHunterDevourer(BaseRotation):
-    name = "35魂噬灭歼灭者DH"
+class DemonHunterDevourer_2(BaseRotation):
+    name = "50魂噬灭歼灭者DH"
     desc = "目前只适配歼灭者"
 
     def __init__(self) -> None:
@@ -103,35 +103,26 @@ class DemonHunterDevourer(BaseRotation):
             else int(fury_overflow_threshold_cell.mean)
         )
 
-        # enemy_count = 4 if player.enemyCount is None else player.enemyCount
-
         # ── 基础状态检查 ────────────────────────────────────────────
 
         if not player.alive:
             return self.idle("玩家已死亡")
-
         if player.isChatInputActive:
             return self.idle("正在聊天输入")
-
         if player.isMounted:
             return self.idle("骑乘中")
-
         if player.castIcon is not None:
             return self.idle("正在施法")
-
         if player.channelIcon is not None:
             # 引导中断：虚空射线目标丢失时停止引导
-            # if player.channelIcon == "虚空射线" and enemy_count == 0:
-            #     # 目标已全部死亡，停止引导虚空射线
-            #     return self.cast("停止施法")  # 或使用对应的取消宏
+            if player.channelIcon == "虚空射线" and player.enemyCount == 0:
+                # 目标已全部死亡，停止引导虚空射线
+                return self.cast("停止施法")  # 或使用对应的取消宏
             return self.idle("正在引导")
-
         if player.isEmpowering:
             return self.idle("正在蓄力")
-
         if player.hasBuff("食物和饮料"):
             return self.idle("正在吃喝")
-
         if not player.isInCombat:
             return self.idle("未进入战斗")
 
@@ -249,8 +240,10 @@ class DemonHunterDevourer(BaseRotation):
             # 预先计算各技能是否就绪
             star_ready = (
                 not player_need_specific_spell_stop
-                # and soul_fragments >= 30
+                and not player.isMoving
+                and soul_fragments >= 30
                 and ctx.spell_cooldown_ready("坍缩之星", spell_queue_window)
+                and main_target.healthPercent >= reaper_health_threshold
             )
             void_ray_ready = (
                 not player_need_specific_spell_stop
@@ -269,7 +262,6 @@ class DemonHunterDevourer(BaseRotation):
                 latest_succeeded_cast == "虚空变形"
                 and player.burstPotionCooldownUsable
                 and ctx.gcd_ready(spell_queue_window)
-                and player.enemyCount >= 8
             ):
                 return self.cast("鲁莽药水")
 
@@ -281,6 +273,9 @@ class DemonHunterDevourer(BaseRotation):
 
                 # 2. 坍缩之星
                 if star_ready:
+                    # 当敌人数量 >= 8 时，先额外使用"鲁莽药水"
+                    if player.enemyCount >= 8:
+                        self.cast("鲁莽药水")
                     return self.cast("target坍缩之星")
 
                 # 3. 根除（噬欲时刻激活 且 地上>=10魂）
@@ -393,7 +388,7 @@ class DemonHunterDevourer(BaseRotation):
         # （用于为下次爆发蓄势）
         if (
             scattered_souls_fragments_count >= 4
-            and soul_fragments >= 31
+            and soul_fragments >= 46
             and ctx.spell_cooldown_ready("收割", spell_queue_window)
         ):
             return self.cast("target收割")

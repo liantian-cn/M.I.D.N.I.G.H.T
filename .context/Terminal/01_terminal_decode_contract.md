@@ -93,6 +93,7 @@
 
 `target` / `focus` / `mouseover` 当前包含：
 
+<<<<<<< HEAD
 - `unitToken`
 - `exists`
 - `debuff`
@@ -126,6 +127,12 @@
 - `latest_succeeded_cast`: `getBadgeCell(82, 17).title`。
 - `UTF_hash` / `UTF_string`: 测试和标题回填辅助数据。
 
+=======
+- 这两块目前故意保持为“原始 Cell 字典”，不直接在 `pixelcalc` 层做业务语义命名。
+- `context/CellDict` 只是提供轻量读取接口，没有替你定义业务含义。
+- 如果要正式约定某个索引的意义，先补共享协议或这里，再决定要不要改 `context/`。
+
+>>>>>>> a255d42 (	modified:   .context/Terminal/01_terminal_decode_contract.md)
 ## 边界约束
 
 - `pixelcalc` 只负责从像素还原协议，不负责 rotation 决策。

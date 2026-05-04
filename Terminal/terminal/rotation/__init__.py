@@ -3,6 +3,17 @@ from .DeathKnightBlood import DeathKnightBlood
 from .DruidRestoration import DruidRestoration
 from .PriestDiscipline import PriestDiscipline
 from .DruidGuardianElune import DruidGuardianElune
+from .DemonHunterDevourer import DemonHunterDevourer
+from .DemonHunterDevourer_2 import DemonHunterDevourer_2
+from .DemonHunterVengeance import DemonHunterVengeance
 
-
-ALL_ROTATIONS = [DruidGuardian, DeathKnightBlood, DruidRestoration, PriestDiscipline, DruidGuardianElune]
+ALL_ROTATIONS = [
+    DemonHunterDevourer_2,
+    DemonHunterDevourer,
+    DruidGuardian,
+    DeathKnightBlood,
+    DruidRestoration,
+    PriestDiscipline,
+    DruidGuardianElune,
+    DemonHunterVengeance,
+]
