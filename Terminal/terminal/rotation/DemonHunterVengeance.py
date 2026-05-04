@@ -1,6 +1,5 @@
 """
-35魂
-天赋：CgcBG5bbocFKcv+yIq8fPd6ORBA2mxMzMzMzMGzMAAAAAAAMmtBDAAAAAAAAmxMMzMzMzMzMzYmNzYsolFmZmZ2abmZGADDABMGMmB
+天赋：CUkAG5bbocFKcv+yIq8fPd6ORBAMjZmZMjZmMzMMWMjZwMjZGzYmZGDzsNzYzMjxwAAAAwsNDGGLLMhhZmxGAAAAGMzMzMzSbzMzAAAAAAMA
 """
 
 from datetime import datetime
