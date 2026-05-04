@@ -29,6 +29,8 @@ __all__ = ["PriestDiscipline",]
 # changelog
 # 2026-04-29 目标是友方，不浪费防御苦修。
 
+MINOR_DEBUFF = ["嗜血", "英勇", "赛季词缀", "良性Debuff", "中度醉拳", "轻度醉拳", "重度醉拳", "低温", "暗影愈合", "沙漏尽枯"]
+
 
 class DisciplinePartyMember(Unit):
     # 只在当前 rotation 内补充类型信息，不改 Unit 本体。
@@ -144,7 +146,7 @@ class PriestDiscipline(BaseRotation):
 
             health_offset = 0    # 血量偏移，数值越高说明实际血量比显示的血量更安全，越低说明更危险。比如正在被治疗但治疗还没生效，或者正在被伤害但伤害还没生效。
             # debuff修正，每个debuff，积分-15分
-            debuff_list = [debuff for debuff in member.debuff if (debuff.title not in ["嗜血", "英勇", "赛季词缀", "良性Debuff", "中度醉拳", "轻度醉拳", "重度醉拳"])]
+            debuff_list = [debuff for debuff in member.debuff if (debuff.title not in MINOR_DEBUFF)]
             debuff_count = sum([debuff.count for debuff in debuff_list])
             debuff_count = min(debuff_count, 5)  # 最多算5层debuff，超过5层的debuff不再增加危险度了。
             # 记录完整 buff 列表，方便调试和后续扩展判断。
@@ -300,7 +302,7 @@ class PriestDiscipline(BaseRotation):
 
         # 2. 绝望祷言 冷却好且自己血量 < 50，放 绝望祷言。
 
-        if player.healthPercent < desperate_prayer_hp_threshold and ctx.spell_cooldown_ready("绝望祷言", spell_queue_window, ignore_gcd=True):
+        if player.health_base < desperate_prayer_hp_threshold and ctx.spell_cooldown_ready("绝望祷言", spell_queue_window, ignore_gcd=True):
             return self.cast("绝望祷言")
 
         # 6. 纯净术 冷却好且存在 驱散单位，对该单位放 纯净术。
@@ -326,10 +328,10 @@ class PriestDiscipline(BaseRotation):
                 return self.cast(f"{main_enemy.unitToken}痛")
 
         # 无救赎且血量低于90的队友【默认阈值】
-        without_atonement_and_injured_unit = [member for member in party_members if (member.atonement_remaining <= 0 and member.healthPercent < injured_hp_threshold)]
+        without_atonement_and_injured_unit = [member for member in party_members if (member.atonement_remaining <= 0 and member.health_base < injured_hp_threshold)]
         without_atonement_and_injured_unit.sort(key=lambda m: m.health_score)
         # 血量低于受伤阈值的队友
-        injured_unit = [member for member in party_members if member.healthPercent < injured_hp_threshold]
+        injured_unit = [member for member in party_members if member.health_base < injured_hp_threshold]
         injured_unit.sort(key=lambda m: m.health_score)  # 按健康分数
         # 无救赎的队友
         without_atonement_unit = [member for member in party_members if member.atonement_remaining <= 0]
@@ -337,7 +339,7 @@ class PriestDiscipline(BaseRotation):
         # 最低健康分的队友
         lowest_health_score = sorted(party_members, key=lambda m: m.health_score)[0]
         # 最低血量的队友
-        lowest_health_percent = sorted(party_members, key=lambda m: m.healthPercent)[0]
+        lowest_health_percent = sorted(party_members, key=lambda m: m.health_base)[0]
         # 没有盾的队友
         without_shield_unit = [member for member in party_members if not member.has_shield]
         without_shield_unit.sort(key=lambda m: m.health_score)  # 按健康分数排序，数值越低优先级越高
@@ -350,16 +352,15 @@ class PriestDiscipline(BaseRotation):
                         if ctx.latest_succeeded_cast != "真言术：耀":
                             return self.cast(f"{without_atonement_and_injured_unit[0].unitToken}耀")
 
-        # 9. 无救赎90数量 >= 2、福音 可用，放 福音。
-        if len(without_atonement_and_injured_unit) >= 2:
+        # 9. 90数量 >= 2、
+        if len(injured_unit) >= 3:
+            # 福音 可用，放 福音。
             if player.buffStack("福音") == 0:
                 if ctx.spell_cooldown_ready("福音", spell_queue_window):
                     return self.cast(f"福音")
 
-        # 新增逻辑
-        # 如果耀层数 == 2，且受伤数量 > 2，放耀
-        if ctx.spell_charges_ready("真言术：耀", 2, spell_queue_window):
-            if len(injured_unit) > 2:
+            # 如果耀层数 == 2，且受伤数量 > 2，放耀
+            if ctx.spell_charges_ready("真言术：耀", 2, spell_queue_window):
                 if player.castIcon != "真言术：耀":
                     if ctx.latest_succeeded_cast != "真言术：耀":
                         if (player.buffStack("福音") > 0) or (not player.isMoving):
