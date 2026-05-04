@@ -133,6 +133,7 @@ class PriestDiscipline(BaseRotation):
 
         for member in party_members:
             unit_role = member.unitRole
+            unit_class = member.unitClass
             health_percent = member.healthPercent
             damage_absorbs = member.damageAbsorbs
             heal_absorbs = member.healAbsorbs
@@ -161,6 +162,8 @@ class PriestDiscipline(BaseRotation):
                     health_base = health_base + 10
                 elif ctx.player.castIcon == "暗影愈合":
                     health_base = health_base + 30
+            if unit_role == "TANK" and unit_class == "DEATHKNIGHT":
+                health_base = health_base + 20
 
             # 先找出单位身上可驱散的 debuff，再按黑名单过滤。
             dispel_list = [debuff.title for debuff in member.debuff if (debuff.type in self.dispel_types)]
