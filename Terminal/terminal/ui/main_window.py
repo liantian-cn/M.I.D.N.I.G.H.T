@@ -32,7 +32,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Transcendental Entelechy Revelation Machine for Instinct Neural Awakening Link")
         self._setup_window_flags()
-        self.setFixedSize(1600, 989)
+        self.setFixedSize(1600, 1200)
 
         self.is_running = False
         self.monitor_region: dict[str, int] | None = None
