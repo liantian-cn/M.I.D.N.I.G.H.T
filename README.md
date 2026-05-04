@@ -70,7 +70,7 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 /delay 1
 ```
 
-戒律牧目前足够一周到3400..
+戒律牧目前足够一周到3400，纯集合石上分。
 
 ![戒律.png](https://github.com/user-attachments/assets/18f08227-ce39-4ea7-a176-b38fbde6d299)
 
