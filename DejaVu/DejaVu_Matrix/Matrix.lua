@@ -35,7 +35,7 @@ local function CreateMatrixFrame() -- 创建矩阵框架
     InitializeSize()
 
     local frame = CreateFrame("Frame", addonName .. "MartixFrame", UIParent)
-    frame:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, -100)
+    frame:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 100)
     frame:SetSize(SIZE.CELL * SIZE.MATRIX.Width, SIZE.CELL * SIZE.MATRIX.Height)
     frame:SetFrameStrata("TOOLTIP")
     frame:SetFrameLevel(9000)

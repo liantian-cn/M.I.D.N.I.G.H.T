@@ -16,7 +16,7 @@ local BadgeCell = DejaVu.BadgeCell
 local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 -- 创建配置对象
-local spell_stop_list = Config("spell_stop_list")                  -- 敌方沉默技能黑名单配置项
+local spell_stop_list = Config("spell_stop_list")                  -- 驱散黑名单配置项
 local MAX_COUNT = 10                                               -- 最大数量
 local POS_X = 43                                                   -- X轴位置
 local POS_Y = 26                                                   -- Y轴位置
@@ -70,6 +70,6 @@ local function InitFrame()
 
     spell_stop_list:register_callback(updateCell)
 
-    updateCell(spell_stop_list:get_value())
+    updateCell(spell_stop_list:get_value() or {}) -- 初始化时根据当前配置值刷新图标槽位
 end
 insert(MartixInitFuncs, InitFrame)

@@ -13,44 +13,29 @@ if classFilename ~= "PRIEST" then
     C_AddOns.DisableAddOn(addonName)
     return
 end                                 -- 不是牧师则停止
-if currentSpec ~= 4 then return end -- 不是戒律专精则停止
+if currentSpec ~= 1 then return end -- 不是戒律专精则停止
 -- DejaVu Core
 local DejaVu = _G["DejaVu"]
 local cooldownSpells = DejaVu.cooldownSpells
 local chargeSpells = DejaVu.chargeSpells
 
+DejaVu.useCustomSpell = true
+
+insert(cooldownSpells, { spellID = 17, name = "真言术：盾" })
+insert(cooldownSpells, { spellID = 472433, name = "福音" })
+insert(cooldownSpells, { spellID = 10060, name = "能量灌注" })
+insert(cooldownSpells, { spellID = 589, name = "暗言术：痛" })
+insert(cooldownSpells, { spellID = 586, name = "渐隐术" })
+insert(cooldownSpells, { spellID = 19236, name = "绝望祷言" })
+insert(cooldownSpells, { spellID = 200829, name = "恳求" })
+insert(cooldownSpells, { spellID = 2061, name = "快速治疗" })
+insert(cooldownSpells, { spellID = 585, name = "惩击" })
 
 
--- insert(cooldownSpells, { spellID = 102793, name = "乌索尔旋风" }) --  [乌索尔旋风]
--- insert(cooldownSpells, { spellID = 474750, name = "共生关系" }) --  [共生关系]
--- insert(cooldownSpells, { spellID = 1079, name = "割裂" }) -- [割裂]
--- insert(cooldownSpells, { spellID = 132469, name = "台风" }) --  [台风]
--- insert(cooldownSpells, { spellID = 774, name = "回春术" }) --  [回春术]
--- insert(cooldownSpells, { spellID = 210053, name = "坐骑形态" }) --  [坐骑形态]
--- insert(cooldownSpells, { spellID = 20484, name = "复生" }) --  [复生]
--- insert(cooldownSpells, { spellID = 99, name = "夺魂咆哮" }) --  [夺魂咆哮]
--- insert(cooldownSpells, { spellID = 2908, name = "安抚" }) --  [安抚]
--- insert(cooldownSpells, { spellID = 1850, name = "急奔" }) --  [急奔]
--- insert(cooldownSpells, { spellID = 8936, name = "愈合" }) --  [愈合]
--- insert(cooldownSpells, { spellID = 5176, name = "愤怒" }) --  [愤怒]
--- insert(cooldownSpells, { spellID = 1822, name = "斜掠" }) --  [斜掠]
--- insert(cooldownSpells, { spellID = 5221, name = "撕碎" }) --  [撕碎]
--- insert(cooldownSpells, { spellID = 783, name = "旅行形态" }) --  [旅行形态]
--- insert(cooldownSpells, { spellID = 8921, name = "月火术" }) --  [月火术]
--- insert(cooldownSpells, { spellID = 22812, name = "树皮术" }) --  [树皮术]
--- insert(cooldownSpells, { spellID = 29166, name = "激活" }) --  [激活]
--- insert(cooldownSpells, { spellID = 5487, name = "熊形态" }) --  [熊形态]
--- insert(cooldownSpells, { spellID = 106898, name = "狂奔怒吼" }) --  [狂奔怒吼]
--- insert(cooldownSpells, { spellID = 1261867, name = "野性之心" }) --  [野性之心]
--- insert(cooldownSpells, { spellID = 1126, name = "野性印记" }) --  [野性印记]
--- insert(cooldownSpells, { spellID = 391528, name = "万灵之召" }) --  [万灵之召]
--- insert(cooldownSpells, { spellID = 740, name = "宁静" }) --  [宁静]
--- insert(cooldownSpells, { spellID = 33763, name = "生命绽放" }) --  [生命绽放]
--- insert(cooldownSpells, { spellID = 132158, name = "自然迅捷" }) --  [自然迅捷]
--- insert(cooldownSpells, { spellID = 102342, name = "铁木树皮" }) --  [铁木树皮]
--- insert(cooldownSpells, { spellID = 48438, name = "野性生长" }) --  [野性生长]
 
-
--- insert(chargeSpells, { spellID = 22842, name = "狂暴回复" }) --  [狂暴回复]
--- insert(chargeSpells, { spellID = 88423, name = "自然之愈" }) --  [自然之愈]
--- insert(chargeSpells, { spellID = 18562, name = "迅捷治愈" }) --  [迅捷治愈]
+insert(chargeSpells, { spellID = 47540, name = "苦修" })
+insert(chargeSpells, { spellID = 8092, name = "心灵震爆" })
+insert(chargeSpells, { spellID = 194509, name = "真言术：耀" })
+insert(chargeSpells, { spellID = 32379, name = "暗言术：灭" })
+insert(chargeSpells, { spellID = 527, name = "纯净术" })
+insert(chargeSpells, { spellID = 33206, name = "痛苦压制" })

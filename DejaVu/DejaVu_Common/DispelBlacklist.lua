@@ -69,6 +69,6 @@ local function InitFrame()
 
     dispel_blacklist:register_callback(updateCell)
 
-    updateCell(dispel_blacklist:get_value())
+    updateCell(dispel_blacklist:get_value() or {}) -- 初始化时根据当前配置值刷新图标槽位
 end
 insert(MartixInitFuncs, InitFrame)

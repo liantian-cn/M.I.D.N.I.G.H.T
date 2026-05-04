@@ -4,8 +4,9 @@ from .base import BaseRotation
 from terminal.context import Context, Unit
 from datetime import datetime
 
-
-__all__ = ["PriestDiscipline",]
+__all__ = [
+    "PriestDiscipline",
+]
 
 # 技能       | 英文                 | 定义
 # --------------------------------------------------------------
@@ -29,7 +30,18 @@ __all__ = ["PriestDiscipline",]
 # changelog
 # 2026-04-29 目标是友方，不浪费防御苦修。
 
-MINOR_DEBUFF = ["嗜血", "英勇", "赛季词缀", "良性Debuff", "中度醉拳", "轻度醉拳", "重度醉拳", "低温", "暗影愈合", "沙漏尽枯"]
+MINOR_DEBUFF = [
+    "嗜血",
+    "英勇",
+    "赛季词缀",
+    "良性Debuff",
+    "中度醉拳",
+    "轻度醉拳",
+    "重度醉拳",
+    "低温",
+    "暗影愈合",
+    "沙漏尽枯",
+]
 
 
 class DisciplinePartyMember(Unit):
@@ -56,7 +68,9 @@ class PriestDiscipline(BaseRotation):
     def __init__(self) -> None:
         super().__init__()
 
-        self.dispel_types = ["MAGIC", ]  # 可驱散的 debuff 类型  本赛季好像没有疾病
+        self.dispel_types = [
+            "MAGIC",
+        ]  # 可驱散的 debuff 类型  本赛季好像没有疾病
         self.dispel_blacklist: list[str] = []
 
         self.macroTable = {
@@ -119,7 +133,6 @@ class PriestDiscipline(BaseRotation):
             # 惩击
             "target惩击": "SHIFT-'",
             "focus惩击": "ALT-'",
-
         }
 
     def calculate_party_health_score(self, ctx: Context) -> list[DisciplinePartyMember]:
@@ -144,11 +157,15 @@ class PriestDiscipline(BaseRotation):
             else:
                 shield_remaining = member.buffRemain("真言术：盾")
 
-            health_offset = 0    # 血量偏移，数值越高说明实际血量比显示的血量更安全，越低说明更危险。比如正在被治疗但治疗还没生效，或者正在被伤害但伤害还没生效。
+            health_offset = 0  # 血量偏移，数值越高说明实际血量比显示的血量更安全，越低说明更危险。比如正在被治疗但治疗还没生效，或者正在被伤害但伤害还没生效。
             # debuff修正，每个debuff，积分-15分
-            debuff_list = [debuff for debuff in member.debuff if (debuff.title not in MINOR_DEBUFF)]
+            debuff_list = [
+                debuff for debuff in member.debuff if (debuff.title not in MINOR_DEBUFF)
+            ]
             debuff_count = sum([debuff.count for debuff in debuff_list])
-            debuff_count = min(debuff_count, 5)  # 最多算5层debuff，超过5层的debuff不再增加危险度了。
+            debuff_count = min(
+                debuff_count, 5
+            )  # 最多算5层debuff，超过5层的debuff不再增加危险度了。
             # 记录完整 buff 列表，方便调试和后续扩展判断。
             buff_list = [buff.title for buff in member.buff]
             health_offset += -10 * debuff_count
@@ -163,7 +180,11 @@ class PriestDiscipline(BaseRotation):
                     health_base = health_base + 30
 
             # 先找出单位身上可驱散的 debuff，再按黑名单过滤。
-            dispel_list = [debuff.title for debuff in member.debuff if (debuff.type in self.dispel_types)]
+            dispel_list = [
+                debuff.title
+                for debuff in member.debuff
+                if (debuff.type in self.dispel_types)
+            ]
             can_dispel = len(dispel_list) > 0
             for dispel in dispel_list:
                 if dispel in self.dispel_blacklist:
@@ -175,7 +196,9 @@ class PriestDiscipline(BaseRotation):
             # 积分计算过程
             # 积分是基于血量基线的，血量基线越低说明越危险，优先级越高。
             # 积分是后续所有判断的标准。
-            health_score = health_base + damage_absorbs  # 基础健康分数，治疗吸收越多越安全
+            health_score = (
+                health_base + damage_absorbs
+            )  # 基础健康分数，治疗吸收越多越安全
 
             # 角色修正
             # 坦克的积分视为身上有3个hot。
@@ -194,7 +217,9 @@ class PriestDiscipline(BaseRotation):
             member.shield_remaining = shield_remaining  # 盾剩余时间
             member.health_score = health_score  # 综合健康分数，数值越低越优先处理
             member.health_deficit = health_deficit  # 血量缺口，数值越高说明越缺治疗
-            member.health_base = health_base  # 当前血量减治疗吸收后的基线，数值越低越危险
+            member.health_base = (
+                health_base  # 当前血量减治疗吸收后的基线，数值越低越危险
+            )
             member.dispel_list = dispel_list  # 可驱散debuff列表
             # member.debuff_list = debuff_list  # debuff列表
             member.buff_list = buff_list  # buff列表
@@ -202,7 +227,9 @@ class PriestDiscipline(BaseRotation):
         #     print(f"{member.unitToken}的状态: 血量基线={health_base:.2f}%", end="; ")
         # print(f"{datetime.now().strftime('%H:%M:%S')}")
 
-        party_members.sort(key=lambda m: m.health_score)  # 按健康分数排序，数值越低优先级越高
+        party_members.sort(
+            key=lambda m: m.health_score
+        )  # 按健康分数排序，数值越低优先级越高
         return party_members
 
     def read_config(self, ctx: Context):
@@ -221,7 +248,9 @@ class PriestDiscipline(BaseRotation):
             self.dispel_types = ["MAGIC", "DISEASE"]
 
     # 阈值计算器
-    def threshold_calculator(self, use_calc, min_value, max_value, mana_percent) -> float:
+    def threshold_calculator(
+        self, use_calc, min_value, max_value, mana_percent
+    ) -> float:
         if not use_calc:
             return max_value
         # 线性插值计算当前阈值
@@ -254,13 +283,21 @@ class PriestDiscipline(BaseRotation):
         # 暗言术：灭血量阈值
         shadow_word_death_hp_threshold = 20
         # 圣光涌动阈值基线
-        surge_baseline_threshold = self.threshold_calculator(use_cale, 70, 80, powerpercent)
+        surge_baseline_threshold = self.threshold_calculator(
+            use_cale, 70, 80, powerpercent
+        )
         # 暗影愈合阈值基线
-        shadow_mend_baseline_threshold = self.threshold_calculator(use_cale, 60, 70, powerpercent)
+        shadow_mend_baseline_threshold = self.threshold_calculator(
+            use_cale, 60, 70, powerpercent
+        )
         # 苦修补血阈值
-        penance_heal_hp_threshold = self.threshold_calculator(use_cale, 75, 85, powerpercent)
+        penance_heal_hp_threshold = self.threshold_calculator(
+            use_cale, 75, 85, powerpercent
+        )
         # 快速治疗干拉阈值
-        flash_heal_hp_threshold = self.threshold_calculator(use_cale, 40, 50, powerpercent)
+        flash_heal_hp_threshold = self.threshold_calculator(
+            use_cale, 40, 50, powerpercent
+        )
         # 技能队列窗口，施法中剩余时间小于这个值就算技能快要好了，可以提前衔接施放下一个技能，单位是秒
         cast_queue_window_threshold = 90
         # 引导技能队列窗口，引导剩余时间小于这个值就算快要引导好了，可以提前衔接施放下一个技能，单位是秒
@@ -276,11 +313,17 @@ class PriestDiscipline(BaseRotation):
             return self.idle("骑乘中")
 
         if player.castIcon is not None:
-            if player.castDuration is None or player.castDuration < cast_queue_window_threshold:
+            if (
+                player.castDuration is None
+                or player.castDuration < cast_queue_window_threshold
+            ):
                 return self.idle("正在施法")
 
         if player.channelIcon is not None:
-            if player.channelDuration is None or player.channelDuration < channel_queue_window_threshold:
+            if (
+                player.channelDuration is None
+                or player.channelDuration < channel_queue_window_threshold
+            ):
                 return self.idle("正在引导")
 
         if player.isEmpowering:
@@ -302,7 +345,12 @@ class PriestDiscipline(BaseRotation):
 
         # 2. 绝望祷言 冷却好且自己血量 < 50，放 绝望祷言。
 
-        if player.health_base < desperate_prayer_hp_threshold and ctx.spell_cooldown_ready("绝望祷言", spell_queue_window, ignore_gcd=True):
+        if (
+            player.health_base < desperate_prayer_hp_threshold
+            and ctx.spell_cooldown_ready(
+                "绝望祷言", spell_queue_window, ignore_gcd=True
+            )
+        ):
             return self.cast("绝望祷言")
 
         # 6. 纯净术 冷却好且存在 驱散单位，对该单位放 纯净术。
@@ -328,21 +376,40 @@ class PriestDiscipline(BaseRotation):
                 return self.cast(f"{main_enemy.unitToken}痛")
 
         # 无救赎且血量低于90的队友【默认阈值】
-        without_atonement_and_injured_unit = [member for member in party_members if (member.atonement_remaining <= 0 and member.health_base < injured_hp_threshold)]
+        without_atonement_and_injured_unit = [
+            member
+            for member in party_members
+            if (
+                member.atonement_remaining <= 0
+                and member.health_base < injured_hp_threshold
+            )
+        ]
         without_atonement_and_injured_unit.sort(key=lambda m: m.health_score)
         # 血量低于受伤阈值的队友
-        injured_unit = [member for member in party_members if member.health_base < injured_hp_threshold]
+        injured_unit = [
+            member
+            for member in party_members
+            if member.health_base < injured_hp_threshold
+        ]
         injured_unit.sort(key=lambda m: m.health_score)  # 按健康分数
         # 无救赎的队友
-        without_atonement_unit = [member for member in party_members if member.atonement_remaining <= 0]
-        without_atonement_unit.sort(key=lambda m: m.health_score)  # 按健康分数排序，数值越低优先级越高
+        without_atonement_unit = [
+            member for member in party_members if member.atonement_remaining <= 0
+        ]
+        without_atonement_unit.sort(
+            key=lambda m: m.health_score
+        )  # 按健康分数排序，数值越低优先级越高
         # 最低健康分的队友
         lowest_health_score = sorted(party_members, key=lambda m: m.health_score)[0]
         # 最低血量的队友
         lowest_health_percent = sorted(party_members, key=lambda m: m.health_base)[0]
         # 没有盾的队友
-        without_shield_unit = [member for member in party_members if not member.has_shield]
-        without_shield_unit.sort(key=lambda m: m.health_score)  # 按健康分数排序，数值越低优先级越高
+        without_shield_unit = [
+            member for member in party_members if not member.has_shield
+        ]
+        without_shield_unit.sort(
+            key=lambda m: m.health_score
+        )  # 按健康分数排序，数值越低优先级越高
 
         # 8. 无救赎90数量 >= 2、真言术：耀 可用、且 福音层数 > 0，放 真言术：耀。
         if len(without_atonement_and_injured_unit) >= 2:
@@ -350,7 +417,9 @@ class PriestDiscipline(BaseRotation):
                 if player.castIcon != "真言术：耀":
                     if ctx.spell_charges_ready("真言术：耀", 1, spell_queue_window):
                         if ctx.latest_succeeded_cast != "真言术：耀":
-                            return self.cast(f"{without_atonement_and_injured_unit[0].unitToken}耀")
+                            return self.cast(
+                                f"{without_atonement_and_injured_unit[0].unitToken}耀"
+                            )
 
         # 9. 90数量 >= 2、
         if len(injured_unit) >= 3:
@@ -368,19 +437,31 @@ class PriestDiscipline(BaseRotation):
 
         # 灌注爆发逻辑
         # 如果有3个人，血量低于涌动血线，且灌注可用，给自己灌注。
-        lower_health_count = len([member for member in party_members if member.health_base < surge_baseline_threshold])
+        lower_health_count = len(
+            [
+                member
+                for member in party_members
+                if member.health_base < surge_baseline_threshold
+            ]
+        )
         if lower_health_count >= 3:
             if ctx.spell_cooldown_ready("灌注", spell_queue_window, ignore_gcd=True):
                 return self.cast(f"player灌注")
 
         # 涌动阈值 = 80 - 圣光涌动CD + 涌动层数*10
         if player.hasBuff("圣光涌动"):
-            surge_threshold = surge_baseline_threshold - player.buffRemain("圣光涌动") + player.buffStack("圣光涌动") * 10
+            surge_threshold = (
+                surge_baseline_threshold
+                - player.buffRemain("圣光涌动")
+                + player.buffStack("圣光涌动") * 10
+            )
 
             # 11. 圣光涌动 > 0 且 涌动层数 > 0，如果“无救赎最低”血量 < 90，对它放 快速治疗。
             if len(without_atonement_and_injured_unit) > 0:
                 if ctx.spell_cooldown_ready("快速治疗", spell_queue_window):
-                    return self.cast(f"{without_atonement_and_injured_unit[0].unitToken}快速治疗")
+                    return self.cast(
+                        f"{without_atonement_and_injured_unit[0].unitToken}快速治疗"
+                    )
             # 12. 同样要求 圣光涌动 > 0 且 涌动层数 > 0，如果全队最低血量 < 涌动阈值，对最低单位放 快速治疗。
             if lowest_health_percent.health_base < surge_threshold:
                 if ctx.spell_cooldown_ready("快速治疗", spell_queue_window):
@@ -389,7 +470,11 @@ class PriestDiscipline(BaseRotation):
         # 13. 暗影愈合 > 0、暗影层数 > 0、施法技能 != 34、且最低单位血量 < 暗影愈合阈值，代码标记为“放暗影愈合”。
         if ctx.spell_cooldown_ready("暗影愈合", spell_queue_window):
             # 暗影愈合阈值 = 70 - 暗影愈合*2 + 暗影层数*15
-            shadow_mend_threshold = shadow_mend_baseline_threshold - player.buffRemain("暗影愈合") * 2 + player.buffStack("暗影愈合") * 15
+            shadow_mend_threshold = (
+                shadow_mend_baseline_threshold
+                - player.buffRemain("暗影愈合") * 2
+                + player.buffStack("暗影愈合") * 15
+            )
             if lowest_health_percent.health_base < shadow_mend_threshold:
                 return self.cast(f"{lowest_health_percent.unitToken}快速治疗")
 
@@ -397,10 +482,16 @@ class PriestDiscipline(BaseRotation):
         # 优先给无救赎且血量 < 90 的队友上盾。
         # 其次自己没盾就上盾
         # 最后给无盾最低健康分的队友上盾。
-        if ctx.spell_cooldown_ready("真言术：盾", spell_queue_window) or ctx.spell_cooldown_ready("虚空之盾", spell_queue_window):
+        if ctx.spell_cooldown_ready(
+            "真言术：盾", spell_queue_window
+        ) or ctx.spell_cooldown_ready("虚空之盾", spell_queue_window):
             if len(without_atonement_and_injured_unit) > 0:
-                if without_atonement_and_injured_unit[0].health_base < injured_hp_threshold or player.hasBuff("虚空之盾"):
-                    return self.cast(f"{without_atonement_and_injured_unit[0].unitToken}真言术盾")
+                if without_atonement_and_injured_unit[
+                    0
+                ].health_base < injured_hp_threshold or player.hasBuff("虚空之盾"):
+                    return self.cast(
+                        f"{without_atonement_and_injured_unit[0].unitToken}真言术盾"
+                    )
 
             if not player.has_shield:
                 return self.cast(f"player真言术盾")
@@ -413,7 +504,9 @@ class PriestDiscipline(BaseRotation):
         if ctx.spell_charges_ready("真言术：耀", 1, spell_queue_window):
             if player.castIcon != "真言术：耀":
                 if len(without_atonement_and_injured_unit) >= 3:
-                    return self.cast(f"{without_atonement_and_injured_unit[0].unitToken}耀")
+                    return self.cast(
+                        f"{without_atonement_and_injured_unit[0].unitToken}耀"
+                    )
 
         # 19. 苦修 可用，且最低单位血量 < 75，对最低单位放 苦修。
         if ctx.spell_charges_ready("苦修", 1, spell_queue_window):
@@ -421,7 +514,9 @@ class PriestDiscipline(BaseRotation):
                 return self.cast(f"{lowest_health_percent.unitToken}苦修")
 
         # 没技能了，用快速技能干啦血线最低的单位
-        if ctx.spell_cooldown_ready("快速治疗", spell_queue_window) or ctx.spell_cooldown_ready("暗影愈合", spell_queue_window):
+        if ctx.spell_cooldown_ready(
+            "快速治疗", spell_queue_window
+        ) or ctx.spell_cooldown_ready("暗影愈合", spell_queue_window):
             if lowest_health_percent.health_base < flash_heal_hp_threshold:
                 return self.cast(f"{lowest_health_percent.unitToken}快速治疗")
 

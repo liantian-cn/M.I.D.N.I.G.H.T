@@ -42,7 +42,7 @@ local DejaVu = _G["DejaVu"]
 local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
 local BadgeCell = DejaVu.BadgeCell
-local MeleeRange = DejaVu.MeleeRange -- 默认的短中程检测范围
+local MeleeRange = DejaVu.MeleeRange -- 默认的近战检测范围
 local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 local function itemUsable(itemId)
