@@ -53,6 +53,7 @@ insert(macroList, { title = "nearest毁灭", key = "SHIFT-NUMPAD0", text = "/cle
 insert(macroList, { title = "target安抚", key = "SHIFT-F1", text = "/cast [@target] 安抚" })
 insert(macroList, { title = "focus安抚", key = "SHIFT-F2", text = "/cast [@focus] 安抚" })
 insert(macroList, { title = "野性之心", key = "SHIFT-F3", text = "/cast 野性之心" })
+insert(macroList, { title = "愈合", key = "SHIFT-F4", text = "/cast 愈合" })
 
 
 for _, macro in pairs(macroList) do
