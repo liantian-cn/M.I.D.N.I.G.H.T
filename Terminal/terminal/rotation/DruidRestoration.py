@@ -163,7 +163,7 @@ class DruidRestoration(BaseRotation):
                     break
 
             # 记录完整 debuff 列表，方便调试和后续扩展判断。
-            debuff_list = [debuff.title for debuff in member.debuff if (debuff.title not in ["嗜血", "英勇", "赛季词缀", "良性Debuff"])]
+            debuff_list = [debuff.title for debuff in member.debuff if (debuff.title not in ["嗜血", "英勇", "赛季词缀", "良性Debuff", "中度醉拳", "轻度醉拳", "重度醉拳"])]
             # print(f"{member.unitToken}的debuff列表: {debuff_list}")
 
             # 记录完整 buff 列表，方便调试和后续扩展判断。

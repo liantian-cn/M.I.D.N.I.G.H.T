@@ -45,7 +45,7 @@ class MainWindow(QMainWindow):
             "Transcendental Entelechy Revelation Machine for Instinct Neural Awakening Link"
         )
         self._setup_window_flags()
-        self.setFixedSize(800, 600)
+        self.setFixedSize(1600, 989)
 
         self.is_running = False
         self.monitor_region: dict[str, int] | None = None
