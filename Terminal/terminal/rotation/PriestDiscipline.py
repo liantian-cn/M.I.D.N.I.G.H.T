@@ -375,7 +375,7 @@ class PriestDiscipline(BaseRotation):
         # 无救赎且受伤数量 >= 3、真言术：耀 可用，放 真言术：耀。
         if len(without_atonement_and_injured_unit) >= 3:
             if player.castIcon != "真言术：耀":
-                if ctx.spell_charges_ready("真言术：耀", 1, spell_queue_window):
+                if ctx.spell_charges_ready("真言术：耀", 2, spell_queue_window):
                     if ctx.latest_succeeded_cast != "真言术：耀":
                         return self.cast(f"{without_atonement_and_injured_unit[0].unitToken}耀")
 
