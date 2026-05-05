@@ -65,7 +65,7 @@ class DemonHunterDevourer(BaseRotation):
 
         # 获取恶魔之怒最大值，默认120，恶魔之怒是根据这个值来计算的。因为不同版本恶魔之怒的最大值可能不同，所以让用户自己设置这个值。
         fury_max_cell = ctx.setting.cell(0)
-        fury_max = 120 if fury_max_cell is None else fury_max_cell.mean
+        fury_max = 120
         fury = int(ctx.player.powerPercent * fury_max / 100)
 
         # 斩杀血量阈值（默认10%）
@@ -86,6 +86,14 @@ class DemonHunterDevourer(BaseRotation):
         interrupt_blacklist = ctx.interrupt_blacklist
         spell_stop_list = ctx.spell_stop_list
         range_spell_stop_list = ctx.range_spell_stop_list
+
+        # 躺平模式（turn_on / turn_off）
+        lying_flat_mode_cell = ctx.setting.cell(0)
+        lying_flat_mode = (
+            "turn_off"
+            if lying_flat_mode_cell is None or lying_flat_mode_cell.mean >= 200
+            else "turn_on"
+        )
 
         # 开启保命血量阈值（默认60%）
         dh_health_threshold_cell = ctx.setting.cell(2)
@@ -243,8 +251,40 @@ class DemonHunterDevourer(BaseRotation):
         #   2. 坍缩之星
         #   3. 根除（噬欲时刻激活 且 地上>=10魂）
         #   4. 吞噬
+        #
+        # 躺平模式额外逻辑：
+        #   - 不释放坍缩之星和根除
+        #   - 仅用虚空射线和吞噬堆碎片
+        #   - 身上>=10魂 且 地上>=10魂后停手，等待变身自然结束
         # ══════════════════════════════════════════════════════════════
         if collapsing_star_exists:
+
+            # ── 躺平模式：变身中停止坍缩之星和根除，堆碎片等退出变身 ────
+            if lying_flat_mode == "turn_on":
+                # 身上和地上各>=10魂后停手，等待变身自然结束
+                if soul_fragments >= 10 and scattered_souls_fragments_count >= 10:
+                    return self.idle("躺平模式：碎片已就绪，等待退出变身")
+
+                # 仅使用虚空射线和吞噬来堆碎片
+                if (
+                    not player_need_specific_spell_stop
+                    and not player.isMoving
+                    and target.isInRangedRange
+                    and ctx.spell_cooldown_ready("虚空射线", spell_queue_window)
+                ):
+                    return self.cast("虚空射线")
+
+                if ctx.spell_cooldown_ready("吞噬", spell_queue_window):
+                    if main_target is focus:
+                        return self.cast("focus吞噬")
+                    elif main_target is target:
+                        return self.cast("target吞噬")
+                    elif player.enemyCount >= 1:
+                        return self.cast("就近吞噬")
+
+                return self.idle("躺平模式：爆发中堆碎片，等待CD")
+
+            # ── 正常爆发逻辑 ────────────────────────────────────────────
 
             # 预先计算各技能是否就绪
             star_ready = (
@@ -347,9 +387,10 @@ class DemonHunterDevourer(BaseRotation):
             if ctx.spell_cooldown_ready("收割", spell_queue_window):
                 return self.cast("target收割")
 
-        # ── 2. 虚空变形：怪物血量充足且可用时立即触发 ────────────────────────────────
+        # ── 2. 虚空变形：怪物血量充足且可用时立即触发（躺平模式下跳过）────
         if (
-            ctx.spell_cooldown_ready("虚空变形", spell_queue_window)
+            lying_flat_mode == "turn_off"
+            and ctx.spell_cooldown_ready("虚空变形", spell_queue_window)
             and main_target.healthPercent > reaper_health_threshold
             and not player.isMoving
         ):
