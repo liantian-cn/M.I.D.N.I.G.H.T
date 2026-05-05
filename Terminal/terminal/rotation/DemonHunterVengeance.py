@@ -29,6 +29,7 @@ class DemonHunterVengeance(BaseRotation):
             "鲁莽药水": "SHIFT-NUMPAD1",
             "target破裂": "SHIFT-NUMPAD2",
             "停止施法": "SHIFT-NUMPAD3",
+            "恶魔尖刺": "SHIFT-NUMPAD4",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
@@ -157,8 +158,8 @@ class DemonHunterVengeance(BaseRotation):
         # moment_of_craving_exists = player.hasBuff("噬欲时刻")
         # moment_of_craving_remaining = player.buffRemain("噬欲时刻")
 
-        # # 坍缩之星（爆发变身标志）
-        # collapsing_star_exists = player.hasBuff("坍缩之星")
+        # 恶魔尖刺
+        demonspikes_exists = player.hasBuff("恶魔尖刺")
 
         # # 灵魂献祭
         # soul_immolation_exists = player.hasBuff("灵魂献祭")
@@ -228,6 +229,12 @@ class DemonHunterVengeance(BaseRotation):
             "恶魔变形", spell_queue_window
         ):
             return self.cast("恶魔变形")
+
+        if (
+            ctx.spell_charges_ready("恶魔尖刺", 1, spell_queue_window)
+            and not demonspikes_exists
+        ):
+            return self.cast("恶魔尖刺")
 
         if main_enemy is not None:
             if ctx.assisted_combat == "幽魂炸弹":

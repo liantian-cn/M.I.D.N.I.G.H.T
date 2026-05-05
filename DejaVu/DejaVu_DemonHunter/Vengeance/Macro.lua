@@ -35,6 +35,7 @@ insert(macroList, { title = "focus瓦解", key = "ALT-NUMPAD0", text = "/cast [@
 insert(macroList, { title = "鲁莽药水", key = "SHIFT-NUMPAD1", text = "/cast 鲁莽药水" })
 insert(macroList, { title = "target破裂", key = "SHIFT-NUMPAD2", text = "/cast [@target] 破裂" })
 insert(macroList, { title = "停止施法", key = "SHIFT-NUMPAD3", text = "/stopcasting" })
+insert(macroList, { title = "恶魔尖刺", key = "SHIFT-NUMPAD4", text = "/cast 恶魔尖刺" })
 
 
 for _, macro in pairs(macroList) do

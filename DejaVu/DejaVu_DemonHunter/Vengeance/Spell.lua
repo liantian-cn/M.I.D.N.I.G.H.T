@@ -33,3 +33,4 @@ insert(cooldownSpells, { spellID = 212084, name = "邪能毁灭" })
 
 insert(chargeSpells, { spellID = 204157, name = "投掷利刃" })
 insert(chargeSpells, { spellID = 263642, name = "破裂" })
+insert(chargeSpells, { spellID = 203720, name = "恶魔尖刺" })
