@@ -371,6 +371,14 @@ class PriestDiscipline(BaseRotation):
                     if ctx.spell_charges_ready("真言术：耀", 1, spell_queue_window):
                         if ctx.latest_succeeded_cast != "真言术：耀":
                             return self.cast(f"{without_atonement_and_injured_unit[0].unitToken}耀")
+
+        # 无救赎且受伤数量 >= 3、真言术：耀 可用，放 真言术：耀。
+        if len(without_atonement_and_injured_unit) >= 3:
+            if player.castIcon != "真言术：耀":
+                if ctx.spell_charges_ready("真言术：耀", 1, spell_queue_window):
+                    if ctx.latest_succeeded_cast != "真言术：耀":
+                        return self.cast(f"{without_atonement_and_injured_unit[0].unitToken}耀")
+
         # 灌注爆发逻辑
         # 如果有3个人，血量低于涌动血线，且灌注可用，给自己灌注。
         lower_health_count = len([member for member in party_members if member.health_base < surge_baseline_threshold])
@@ -451,7 +459,7 @@ class PriestDiscipline(BaseRotation):
                 if with_atonement_count > 0:
                     return self.cast(f"{main_enemy.unitToken}苦修")
 
-            # 24. 否则，只要不在移动，就放 惩击。
+            # 只要不在移动，就放 惩击。
             if not player.isMoving:
                 if ctx.spell_cooldown_ready("惩击", spell_queue_window):
                     return self.cast(f"{main_enemy.unitToken}惩击")
