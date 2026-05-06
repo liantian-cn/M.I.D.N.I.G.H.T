@@ -55,6 +55,18 @@ insert(macroList, { title = "focus安抚", key = "SHIFT-F2", text = "/cast [@foc
 insert(macroList, { title = "野性之心", key = "SHIFT-F3", text = "/cast 野性之心" })
 
 
+
+-- "痛击铁鬃": "SHIFT-F5",
+-- "碎甲咆哮": "SHIFT-F6",
+-- # "": "SHIFT-F7",
+-- "target月火铁鬃": "SHIFT-'",
+-- "focus月火铁鬃": "ALT-'",
+
+insert(macroList, { title = "痛击铁鬃", key = "SHIFT-F5", text = "/cast 痛击\n/cast 铁鬃" })
+insert(macroList, { title = "碎甲咆哮", key = "SHIFT-F6", text = "/cast 碎甲咆哮" })
+insert(macroList, { title = "target月火铁鬃", key = "SHIFT-'", text = "/cast [@target] 月火术\n/cast 铁鬃" })
+insert(macroList, { title = "focus月火铁鬃", key = "ALT-'", text = "/cast [@focus] 月火术\n/cast 铁鬃" })
+
 for _, macro in pairs(macroList) do
     local buttonName = addonName .. "Button" .. macro.title
     local frame = CreateFrame("Button", buttonName, UIParent, "SecureActionButtonTemplate")
