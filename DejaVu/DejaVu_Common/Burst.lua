@@ -28,8 +28,8 @@ local function InitFrame()
     -- 依赖定时刷新：0.5 秒。
     local function updateCell()
         local burstElapsed = BurstElapsed()
-        burstElapsed = min(51, burstElapsed) -- 确保已过时间不超过显示上限。
-        cell:setCellRGBA(burstElapsed / 51)
+        burstElapsed = min(60, burstElapsed) -- 确保已过时间不超过显示上限。
+        cell:setCellRGBA(burstElapsed / 60)
     end
 
     -- 定时路由：每 0.5 秒刷新一次爆发剩余时间。
