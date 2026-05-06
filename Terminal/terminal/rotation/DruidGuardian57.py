@@ -1,7 +1,12 @@
 from __future__ import annotations
-from datetime import datetime
-from terminal.context import Context
+from typing import cast
 from .base import BaseRotation
+from terminal.context import Context, Unit
+from datetime import datetime
+
+
+class RestorationPartyMember(Unit):
+    can_dispel: bool
 
 
 class DruidGuardian57(BaseRotation):
@@ -61,6 +66,24 @@ class DruidGuardian57(BaseRotation):
             "target月火铁鬃": "SHIFT-'",
             "focus月火铁鬃": "ALT-'",
         }
+
+    def calculate_party_health_score(self, ctx: Context) -> list[RestorationPartyMember]:
+        party_members: list[RestorationPartyMember] = []
+        for unit in ctx.parties:
+            if unit.exists and unit.isInRangedRange and unit.alive:
+                # if unit.exists and unit.alive:
+                party_members.append(cast(RestorationPartyMember, unit))
+        party_members.append(cast(RestorationPartyMember, ctx.player))
+
+        for member in party_members:
+
+            # 先找出单位身上可驱散的 debuff，再按黑名单过滤。
+            dispel_list = [debuff.title for debuff in member.debuff if (debuff.type in ["CURSE", "POISON"])]
+            can_dispel = len(dispel_list) > 0
+
+            member.can_dispel = can_dispel
+
+        return party_members
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
 
@@ -229,6 +252,12 @@ class DruidGuardian57(BaseRotation):
                 return self.cast("focus迎头痛击")
             elif target_need_interrupt:
                 return self.cast("target迎头痛击")
+
+        # 安抚逻辑
+        if ctx.spell_cooldown_ready("安抚", spell_queue_window, ignore_gcd=True) and (main_target is not None):
+            debuff_list = [debuff.title for debuff in main_target.debuff if (debuff.type in ["ENRAGE",])]
+            if len(debuff_list) > 0:
+                return self.cast(f"{main_target.unitToken}安抚")
 
         # 卡CD打明月普照，目标血量要大于10%。
         if ctx.spell_cooldown_ready("明月普照", spell_queue_window, ignore_usable=True) and (main_target is not None):
