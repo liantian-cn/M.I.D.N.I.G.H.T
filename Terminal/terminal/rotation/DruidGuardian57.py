@@ -253,12 +253,6 @@ class DruidGuardian57(BaseRotation):
             elif target_need_interrupt:
                 return self.cast("target迎头痛击")
 
-        # 安抚逻辑
-        if ctx.spell_cooldown_ready("安抚", spell_queue_window, ignore_gcd=True) and (main_target is not None):
-            debuff_list = [debuff.title for debuff in main_target.debuff if (debuff.type in ["ENRAGE",])]
-            if len(debuff_list) > 0:
-                return self.cast(f"{main_target.unitToken}安抚")
-
         # 卡CD打明月普照，目标血量要大于10%。
         if ctx.spell_cooldown_ready("明月普照", spell_queue_window, ignore_usable=True) and (main_target is not None):
             if main_target.healthPercent > 10:
@@ -280,6 +274,12 @@ class DruidGuardian57(BaseRotation):
         if ctx.spell_cooldown_ready("碎甲咆哮", spell_queue_window, ignore_usable=True) and (main_target is not None):
             if main_target.debuffStack("痛击") >= 4:
                 return self.cast("碎甲咆哮")
+
+        # 安抚逻辑
+        if ctx.spell_cooldown_ready("安抚", spell_queue_window, ignore_gcd=True) and (main_target is not None):
+            debuff_list = [debuff.title for debuff in main_target.debuff if (debuff.type in ["ENRAGE",])]
+            if len(debuff_list) > 0:
+                return self.cast(f"{main_target.unitToken}安抚")
 
         # 痛击CD打月火
         if ctx.spell_cooldown_ready("月火术", spell_queue_window) and (main_target is not None):
