@@ -7,9 +7,6 @@ local print = print
 local tostring = tostring
 local GetPhysicalScreenSize = GetPhysicalScreenSize
 local GetScreenHeight = GetScreenHeight
-local UnitClass = UnitClass
-local GetSpecialization = GetSpecialization
-local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID
 
 _G["DejaVu"] = DejaVu_Core
 DejaVu_Core.DEBUG = true             -- 是否开启调试模式
@@ -19,58 +16,6 @@ DejaVu_Core.RangedRange = 40         -- 默认的远程检测范围
 DejaVu_Core.MeleeRange = 5           -- 默认的近战程检测范围
 DejaVu_Core.BadgeTitleTable = {}     -- 脚标提示表（key格式: icon_r_g_b, value格式: {icon=图标路径或ID, color=脚标颜色, title=提示文本}）
 -- /dump DejaVu.BadgeTitleTable
-
--- 变身自动触发爆发计时
--- 恶魔猎手变身光环 ID: 浩劫 162264, 复仇 187893
-DejaVu_Core.MetamorphosisBurstDuration = 15 -- 默认15秒，可通过 /burstmeta <秒数> 修改
-
-local METAMORPHOSIS_AURA_IDS = {
-    [162264] = true, -- 恶魔变身 (浩劫)
-    [187893] = true, -- 邪能毁灭 (复仇)
-}
-
-local function CheckMetamorphosisBurst()
-    local _, classFilename = UnitClass("player")
-    if classFilename ~= "DEMONHUNTER" then return end
-
-    for auraId in pairs(METAMORPHOSIS_AURA_IDS) do
-        local auraData = GetPlayerAuraBySpellID(auraId)
-        if auraData then
-            -- 检测到变身光环，自动开启爆发计时
-            DejaVu_Core.BurstTime = GetTime() + DejaVu_Core.MetamorphosisBurstDuration
-            return
-        end
-    end
-end
-
--- 注册变身检测回调
-After(0.1, function()
-    local checkInterval = 0.5
-
-    local frame = CreateFrame("Frame")
-    local elapsed = -math.random()
-
-    frame:SetScript("OnUpdate", function(_, dt)
-        elapsed = elapsed + dt
-        if elapsed >= checkInterval then
-            elapsed = elapsed - checkInterval
-            CheckMetamorphosisBurst()
-        end
-    end)
-end)
-
--- 设置变身触发爆发时长的命令
-SLASH_BURSTMETA1 = "/burstmeta"
-SlashCmdList["BURSTMETA"] = function(msg)
-    local duration = tonumber(msg)
-    if duration then
-        DejaVu_Core.MetamorphosisBurstDuration = duration
-        print("|cFFFFBB66[DejaVu]|r 变身触发爆发计时已设置为 " .. duration .. " 秒")
-    else
-        print("|cFFFFBB66[DejaVu]|r 当前变身触发爆发计时: " .. DejaVu_Core.MetamorphosisBurstDuration .. " 秒")
-        print("|cFFFFBB66[DejaVu]|r 使用 /burstmeta <秒数> 修改")
-    end
-end
 
 local function logging(msg)
     print("|cFFFFBB66[" .. addonName .. "]|r" .. tostring(msg))
