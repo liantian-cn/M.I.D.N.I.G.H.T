@@ -8,6 +8,7 @@ local insert                            = table.insert
 local CreateFrame                       = CreateFrame
 local UnitClass                         = UnitClass
 local GetSpecialization                 = GetSpecialization
+local GetTime                           = GetTime
 -- 新增需要的 API 引用
 local GetPlayerAuraBySpellID            = C_UnitAuras.GetPlayerAuraBySpellID
 local IsSpellKnown                      = C_SpellBook.IsSpellKnown
@@ -25,6 +26,11 @@ if currentSpec ~= 3 then return end -- 不是噬灭专精则停止
 local DejaVu = _G["DejaVu"]
 local Cell = DejaVu.Cell
 local MartixInitFuncs = DejaVu.MartixInitFuncs
+
+-- 虚空变形技能 ID
+local VOID_ERUPTION_SPELL_ID = 1217605
+-- 虚空变形爆发持续时间（秒）
+local VOID_ERUPTION_BURST_DURATION = 30
 
 local function InitFrame()
     local eventFrame = CreateFrame("Frame")
@@ -56,6 +62,14 @@ local function InitFrame()
         if fastTimeElapsed > 0.1 then
             fastTimeElapsed = fastTimeElapsed - 0.1
             UpdateSoulFragments()
+        end
+    end)
+
+    -- 爆发计时：监听虚空变形施放成功，自动开启爆发计时
+    eventFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+    eventFrame:SetScript("OnEvent", function(self, event, unit, _, castGUID, spellID)
+        if event == "UNIT_SPELLCAST_SUCCEEDED" and unit == "player" and spellID == VOID_ERUPTION_SPELL_ID then
+            DejaVu.BurstTime = GetTime() + VOID_ERUPTION_BURST_DURATION
         end
     end)
 end
