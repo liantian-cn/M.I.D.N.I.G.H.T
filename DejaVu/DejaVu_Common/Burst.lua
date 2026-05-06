@@ -12,24 +12,24 @@ local DejaVu = _G["DejaVu"]
 -- local ConfigRows = DejaVu.ConfigRows
 -- local COLOR = DejaVu.COLOR
 local Cell = DejaVu.Cell
-local BurstRemaining = DejaVu.BurstRemaining
+local BurstElapsed = DejaVu.BurstElapsed
 local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 local function InitFrame()
     local eventFrame = CreateFrame("Frame")
 
     -- x:82 y:0
-    -- 用途：显示爆发剩余时间强度。
+    -- 用途：显示爆发已过时间强度。
     -- 更新函数：updateCell
     local cell = Cell:New(82, 0)
 
-    -- 说明：按 BurstRemaining 的剩余时间比例刷新爆发显示。
+    -- 说明：按 BurstElapsed 的已过时间比例刷新爆发显示（从0开始正向计时）。
     -- 依赖事件更新：无。
     -- 依赖定时刷新：0.5 秒。
     local function updateCell()
-        local burstRemaining = BurstRemaining()
-        burstRemaining = min(51, burstRemaining) -- 确保剩余时间不超过显示上限。
-        cell:setCellRGBA(burstRemaining / 51)
+        local burstElapsed = BurstElapsed()
+        burstElapsed = min(51, burstElapsed) -- 确保已过时间不超过显示上限。
+        cell:setCellRGBA(burstElapsed / 51)
     end
 
     -- 定时路由：每 0.5 秒刷新一次爆发剩余时间。

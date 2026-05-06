@@ -36,21 +36,38 @@ DejaVu_Core.GetUIScaleFactor = GetUIScaleFactor
 
 
 
-DejaVu_Core.BurstTime = GetTime() + 60
+-- 爆发计时最大时长（秒）
+local BURST_MAX_DURATION = 60
+
+DejaVu_Core.BurstTime = 0
 
 DejaVu_Core.InBurst = function()
-    return DejaVu_Core.BurstTime > GetTime()
+    return DejaVu_Core.BurstTime > 0
 end
 
+-- 返回爆发已过时间（从0开始正向计时）
+DejaVu_Core.BurstElapsed = function()
+    if DejaVu_Core.BurstTime == 0 then
+        return 0
+    end
+    local elapsed = GetTime() - DejaVu_Core.BurstTime
+    return min(BURST_MAX_DURATION, max(0, elapsed))
+end
+
+-- 兼容旧代码，返回已过时间
 DejaVu_Core.BurstRemaining = function()
-    return min(60.0, max(0, DejaVu_Core.BurstTime - GetTime()))
+    if DejaVu_Core.BurstTime == 0 then
+        return 0
+    end
+    local elapsed = GetTime() - DejaVu_Core.BurstTime
+    return min(BURST_MAX_DURATION, max(0, elapsed))
 end
 
 SLASH_BURST1 = "/burst"
 SlashCmdList["BURST"] = function(msg)
     local delaySeconds = tonumber(msg)
     if delaySeconds then
-        DejaVu_Core.BurstTime = GetTime() + delaySeconds
+        DejaVu_Core.BurstTime = GetTime() - (delaySeconds or 0)
     end
 end
 

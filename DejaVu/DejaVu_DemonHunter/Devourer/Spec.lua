@@ -77,7 +77,7 @@ local function InitFrame()
             if voidEruptionStartTime == 0 then
                 voidEruptionStartTime = GetTime()
             end
-            DejaVu.BurstTime = voidEruptionStartTime + VOID_ERUPTION_DURATION
+            DejaVu.BurstTime = voidEruptionStartTime  -- 存储起始时间
         else
             -- buff 消失：关闭爆发计时，重置起始时间
             voidEruptionStartTime = 0
