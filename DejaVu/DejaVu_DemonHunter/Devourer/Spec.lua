@@ -29,6 +29,10 @@ local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 -- 虚空变形 buff ID
 local VOID_ERUPTION_BUFF_ID = 1217607
+-- 虚空变形持续时间（秒）
+local VOID_ERUPTION_DURATION = 30
+
+local voidEruptionStartTime = 0  -- 记录变身开始时间
 
 local function InitFrame()
     local eventFrame = CreateFrame("Frame")
@@ -64,15 +68,19 @@ local function InitFrame()
     end)
 
     -- 爆发计时：监听虚空变形 buff，开启/关闭爆发计时
+    -- buff 没有持续时间，需要自己计时
     eventFrame:RegisterUnitEvent("UNIT_AURA", "player")
     eventFrame:SetScript("OnEvent", function(self, event, unit)
         local auraData = GetPlayerAuraBySpellID(VOID_ERUPTION_BUFF_ID)
         if auraData then
-            -- buff 存在：开启爆发计时，使用 buff 剩余持续时间
-            local remaining = auraData.totalTime - GetTime()
-            DejaVu.BurstTime = GetTime() + remaining
+            -- buff 存在：记录起始时间，开启爆发计时
+            if voidEruptionStartTime == 0 then
+                voidEruptionStartTime = GetTime()
+            end
+            DejaVu.BurstTime = voidEruptionStartTime + VOID_ERUPTION_DURATION
         else
-            -- buff 消失：关闭爆发计时
+            -- buff 消失：关闭爆发计时，重置起始时间
+            voidEruptionStartTime = 0
             DejaVu.BurstTime = 0
         end
     end)
