@@ -47,7 +47,7 @@ class DruidGuardian57(BaseRotation):
             # "低保铁鬃": "SHIFT-NUMPAD2",
             # "泻怒铁鬃": "SHIFT-NUMPAD2",
             # "填充铁鬃": "SHIFT-NUMPAD2",
-            # "狂暴回复": "SHIFT-NUMPAD3",
+            "狂暴回复": "SHIFT-NUMPAD3",
             "树皮术": "SHIFT-NUMPAD4",
             "player生存本能": "SHIFT-NUMPAD5",
             "target迎头痛击": "SHIFT-NUMPAD6",
