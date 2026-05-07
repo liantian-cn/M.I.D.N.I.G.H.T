@@ -271,8 +271,11 @@ class DruidGuardian57(BaseRotation):
                 return self.cast("痛击")
 
         # 碎甲咆哮，4、5层痛击用
-        if ctx.spell_cooldown_ready("碎甲咆哮", spell_queue_window, ignore_usable=True) and (main_target is not None):
-            if main_target.debuffStack("痛击") >= 4:
+        if ctx.spell_cooldown_ready("碎甲咆哮", 1, ignore_usable=True) and (main_target is not None):
+            # print(f"碎甲咆哮 ready {datetime.now().strftime('%H:%M:%S')}")
+            if not ctx.spell_cooldown_ready("化身", 1, ignore_usable=True, ignore_gcd=True):
+                # print("化身未准备好，优先使用碎甲咆哮")
+                # if main_target.debuffStack("痛击") >= 4:
                 return self.cast("碎甲咆哮")
 
         # 安抚逻辑
