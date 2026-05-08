@@ -26,15 +26,13 @@ local MartixInitFuncs = DejaVu.MartixInitFuncs
 do
     local lying_flat_mode = Config("lying_flat_mode")
     insert(ConfigRows, {
-        type = "combo",
+        type = "checkbox",
         key = "lying_flat_mode",
         name = "躺平模式",
-        tooltip = "选择躺平模式",
-        default_value = "blacklist",
-        options = {
-            { k = "turn_off", v = "关" },
-            { k = "turn_on", v = "开" }
-        },
+        tooltip = "开启后停止释放坍缩之星，进入攒魂模式",
+        default_value = false,
+        on_text = "开",
+        off_text = "关",
         bind_config = lying_flat_mode,
     })
 
@@ -44,14 +42,14 @@ do
         -- 更新函数：set_lying_flat_mode
         local lying_flat_mode_cell = Cell:New(55, 12)
 
-        -- 说明：根据打断模式配置更新显示强度。
+        -- 说明：根据躺平模式配置更新显示强度。
         -- 依赖事件更新：无
         -- 依赖定时刷新：无
         local function set_lying_flat_mode(value)
-            if value == "turn_off" then
-                lying_flat_mode_cell:setCellRGBA(255 / 255)
-            else
+            if value then
                 lying_flat_mode_cell:setCellRGBA(127 / 255)
+            else
+                lying_flat_mode_cell:setCellRGBA(255 / 255)
             end
         end
 

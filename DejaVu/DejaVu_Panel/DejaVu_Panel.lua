@@ -511,6 +511,91 @@ local function AddSliderRow(row_info)                                           
     return row                                                                                                                                              -- 返回行
 end                                                                                                                                                         -- AddSliderRow 结束
 
+local function AddCheckboxRow(row_info)                                                                                                                     -- 创建开关行
+    local config = row_info.bind_config                                                                                                                     -- 绑定配置
+    ApplyDefaultValue(config, row_info.default_value)                                                                                                       -- 只设一次默认值
+
+    local row = CreateSettingRow(row_info.name, row_info.tooltip)                                                                                           -- 创建行
+    if not row then                                                                                                                                         -- 创建失败
+        return nil                                                                                                                                          -- 直接返回
+    end                                                                                                                                                     -- 行创建检查结束
+
+    local checkboxSize = SIZE.SETTING_LINE.Height - SIZE.SETTING_LINE.Spacing                                                                              -- 复选框尺寸
+    local widget = CreateFrame("Frame", addonName .. "checkboxWidget" .. row:GetName(), row)                                                                -- 控件容器
+    widget:SetPoint("LEFT", row.title, "RIGHT", SIZE.SETTING_LINE.Spacing, 0)                                                                               -- 位置
+    widget:SetSize(SIZE.SETTING_LINE.WidgetWidth, SIZE.SETTING_LINE.Height)                                                                                 -- 尺寸
+
+    widget.bg = widget:CreateTexture(nil, "BACKGROUND")                                                                                                     -- 外边框
+    widget.bg:SetAllPoints(widget)                                                                                                                          -- 填满
+    widget.bg:SetColorTexture(COLOR.ButtonBorder:GetRGBA())                                                                                                 -- 边框色
+
+    widget.art = widget:CreateTexture(nil, "ARTWORK")                                                                                                       -- 内填充
+    widget.art:SetPoint("TOPLEFT", widget, "TOPLEFT", SIZE.BUTTON.Border, -SIZE.BUTTON.Border)                                                              -- 内缩
+    widget.art:SetPoint("BOTTOMRIGHT", widget, "BOTTOMRIGHT", -SIZE.BUTTON.Border, SIZE.BUTTON.Border)                                                      -- 内缩
+    widget.art:SetColorTexture(COLOR.ButtonMouseUp:GetRGBA())                                                                                               -- 背景色
+
+    local checkBox = CreateFrame("CheckButton", addonName .. "checkBox" .. row:GetName(), widget)                                                           -- 复选框按钮
+    checkBox:SetSize(checkboxSize, checkboxSize)                                                                                                           -- 尺寸
+    checkBox:SetPoint("LEFT", widget, "LEFT", SIZE.MainFrame.Spacing, 0)                                                                                    -- 左对齐
+    checkBox:SetPoint("TOP", widget, "TOP", 0, -SIZE.SETTING_LINE.Spacing / 2)                                                                              -- 垂直居中
+
+    local checkTexture = checkBox:CreateTexture(nil, "ARTWORK")                                                                                             -- 勾选纹理
+    checkTexture:SetAllPoints(checkBox)                                                                                                                      -- 填满
+    checkTexture:SetColorTexture(COLOR.SliderLeft:GetRGBA())                                                                                                -- 勾选色
+    checkBox:SetCheckedTexture(checkTexture)                                                                                                                 -- 勾选纹理
+
+    local uncheckTexture = checkBox:CreateTexture(nil, "BACKGROUND")                                                                                       -- 未勾选纹理
+    uncheckTexture:SetAllPoints(checkBox)                                                                                                                   -- 填满
+    uncheckTexture:SetColorTexture(COLOR.ButtonMouseDown:GetRGBA())                                                                                         -- 未勾选底色
+    checkBox:SetNormalTexture(uncheckTexture)                                                                                                                -- 正常纹理
+
+    local highlightTexture = checkBox:CreateTexture(nil, "HIGHLIGHT")                                                                                      -- 高亮纹理
+    highlightTexture:SetAllPoints(checkBox)                                                                                                                  -- 填满
+    highlightTexture:SetColorTexture(COLOR.ButtonHighlight:GetRGBA())                                                                                      -- 高亮色
+    checkBox:SetHighlightTexture(highlightTexture)                                                                                                           -- 高亮纹理
+
+    local statusText = widget:CreateFontString(nil, "OVERLAY")                                                                                             -- 状态文本
+    statusText:SetPoint("LEFT", checkBox, "RIGHT", SIZE.SETTING_LINE.Spacing, 0)                                                                           -- 复选框右侧
+    statusText:SetPoint("RIGHT", widget, "RIGHT", -SIZE.MainFrame.Spacing, 0)                                                                               -- 控件右边界
+    statusText:SetFont(FontPath, GetUIScaleFactor(20), "")                                                                                                   -- 字体
+    statusText:SetJustifyH("LEFT")                                                                                                                          -- 左对齐
+    statusText:SetJustifyV("MIDDLE")                                                                                                                        -- 垂直居中
+    statusText:SetTextColor(COLOR.Text:GetRGBA())                                                                                                            -- 文字色
+
+    local function UpdateCheckbox(isOn)                                                                                                                      -- 更新复选框显示
+        checkBox:SetChecked(isOn)                                                                                                                            -- 同步勾选状态
+        if isOn then                                                                                                                                        -- 开启状态
+            statusText:SetText(row_info.on_text or "ON")                                                                                                     -- 显示开启文本
+        else                                                                                                                                               -- 关闭状态
+            statusText:SetText(row_info.off_text or "OFF")                                                                                                   -- 显示关闭文本
+        end                                                                                                                                                -- 状态判断结束
+    end                                                                                                                                                     -- UpdateCheckbox 结束
+
+    local function ToggleValue()                                                                                                                            -- 切换值
+        local currentValue = config and config:get_value() or row_info.default_value                                                                        -- 获取当前值
+        local newValue = not currentValue                                                                                                                    -- 取反
+        if config then                                                                                                                                      -- 有配置对象
+            config:set_value(newValue)                                                                                                                      -- 写入配置
+        end                                                                                                                                                -- 配置判断结束
+        UpdateCheckbox(newValue)                                                                                                                            -- 同步显示
+    end                                                                                                                                                     -- ToggleValue 结束
+
+    checkBox:SetScript("OnClick", ToggleValue)                                                                                                              -- 点击切换
+
+    local initialValue = row_info.default_value                                                                                                             -- 默认值
+    if config then                                                                                                                                          -- 有配置对象
+        initialValue = config:get_value()                                                                                                                   -- 从配置取当前值
+    end                                                                                                                                                     -- 配置读取结束
+    UpdateCheckbox(initialValue)                                                                                                                            -- 初始化显示
+
+    if config then                                                                                                                                          -- 绑定外部回调
+        config:register_callback(function(value)                                                                                                            -- 配置变更时
+            UpdateCheckbox(value)                                                                                                                           -- 同步复选框
+        end)                                                                                                                                                -- 回调注册结束
+    end                                                                                                                                                     -- 外部回调结束
+    return row                                                                                                                                              -- 返回行
+end                                                                                                                                                         -- AddCheckboxRow 结束
+
 local function CreateDropdownControl(row, options, defaultValue, config)                                                                                    -- 创建下拉控件
     if not row then                                                                                                                                         -- 行不存在
         return nil                                                                                                                                          -- 直接返回
@@ -1035,6 +1120,8 @@ local function CreatePanelRows()                  -- 构建所有设置行
             AddSliderRow(row_info)                -- 创建滑块行
         elseif row_info.type == "combo" then      -- 下拉
             AddComboRow(row_info)                 -- 创建下拉行
+        elseif row_info.type == "checkbox" then    -- 开关
+            AddCheckboxRow(row_info)              -- 创建开关行
         elseif row_info.type == "spell_list" then -- 技能列表
             AddSpellListRow(row_info)             -- 创建技能列表行
         end                                       -- 分支结束

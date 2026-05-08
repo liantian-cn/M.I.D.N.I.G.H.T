@@ -93,7 +93,7 @@ local function InitFrame()
     eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
     eventFrame:SetScript("OnEvent", function(self, event)
         if event == "PLAYER_REGEN_ENABLED" then
-            lying_flat_mode:set_value("turn_off")
+            lying_flat_mode:set_value(false)
         end
     end)
 end
