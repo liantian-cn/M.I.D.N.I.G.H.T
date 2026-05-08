@@ -25,7 +25,11 @@ if currentSpec ~= 3 then return end -- 不是噬灭专精则停止
 -- DejaVu Core
 local DejaVu = _G["DejaVu"]
 local Cell = DejaVu.Cell
+local Config = DejaVu.Config
 local MartixInitFuncs = DejaVu.MartixInitFuncs
+
+-- 躺平模式配置
+local lying_flat_mode = Config("lying_flat_mode")
 
 -- 虚空变形 buff ID
 local VOID_ERUPTION_BUFF_ID = 1217607
@@ -82,6 +86,14 @@ local function InitFrame()
             -- buff 消失：关闭爆发计时，重置起始时间
             voidEruptionStartTime = 0
             DejaVu.BurstTime = 0
+        end
+    end)
+
+    -- 脱战时自动重置躺平模式为关闭
+    eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+    eventFrame:SetScript("OnEvent", function(self, event)
+        if event == "PLAYER_REGEN_ENABLED" then
+            lying_flat_mode:set_value("turn_off")
         end
     end)
 end
