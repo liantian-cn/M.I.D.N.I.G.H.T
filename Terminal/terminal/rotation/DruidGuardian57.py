@@ -47,7 +47,7 @@ class DruidGuardian57(BaseRotation):
             # "低保铁鬃": "SHIFT-NUMPAD2",
             # "泻怒铁鬃": "SHIFT-NUMPAD2",
             # "填充铁鬃": "SHIFT-NUMPAD2",
-            # "狂暴回复": "SHIFT-NUMPAD3",
+            "狂暴回复": "SHIFT-NUMPAD3",
             "树皮术": "SHIFT-NUMPAD4",
             "player生存本能": "SHIFT-NUMPAD5",
             "target迎头痛击": "SHIFT-NUMPAD6",
@@ -67,7 +67,9 @@ class DruidGuardian57(BaseRotation):
             "focus月火铁鬃": "ALT-'",
         }
 
-    def calculate_party_health_score(self, ctx: Context) -> list[RestorationPartyMember]:
+    def calculate_party_health_score(
+        self, ctx: Context
+    ) -> list[RestorationPartyMember]:
         party_members: list[RestorationPartyMember] = []
         for unit in ctx.parties:
             if unit.exists and unit.isInRangedRange and unit.alive:
@@ -78,7 +80,11 @@ class DruidGuardian57(BaseRotation):
         for member in party_members:
 
             # 先找出单位身上可驱散的 debuff，再按黑名单过滤。
-            dispel_list = [debuff.title for debuff in member.debuff if (debuff.type in ["CURSE", "POISON"])]
+            dispel_list = [
+                debuff.title
+                for debuff in member.debuff
+                if (debuff.type in ["CURSE", "POISON"])
+            ]
             can_dispel = len(dispel_list) > 0
 
             member.can_dispel = can_dispel
@@ -107,7 +113,9 @@ class DruidGuardian57(BaseRotation):
         if guardian_frenzied_regeneration_threshold_cell is None:
             frenzied_regeneration_threshold = 50.0  # 默认值，50%
         else:
-            frenzied_regeneration_threshold = float(guardian_frenzied_regeneration_threshold_cell.mean)
+            frenzied_regeneration_threshold = float(
+                guardian_frenzied_regeneration_threshold_cell.mean
+            )
 
         # 树皮阈值 min: 20 max: 60 default: 40 step: 2
         # 当玩家生命值低于该值时优先使用树皮术
@@ -123,14 +131,18 @@ class DruidGuardian57(BaseRotation):
         if guardian_survival_instincts_threshold_cell is None:
             survival_instincts_threshold = 30.0  # 默认值，30%
         else:
-            survival_instincts_threshold = float(guardian_survival_instincts_threshold_cell.mean)
+            survival_instincts_threshold = float(
+                guardian_survival_instincts_threshold_cell.mean
+            )
 
         # 打断逻辑  blacklist = 使用黑名单 all = 任意打断, default: blacklist
         guardian_interrupt_logic_cell = ctx.setting.cell(7)
         if guardian_interrupt_logic_cell is None:
             interrupt_logic = "blacklist"  # 默认值，使用黑名单
         else:
-            interrupt_logic = "blacklist" if guardian_interrupt_logic_cell.mean >= 200 else "any"
+            interrupt_logic = (
+                "blacklist" if guardian_interrupt_logic_cell.mean >= 200 else "any"
+            )
         interrupt_blacklist = ctx.interrupt_blacklist
 
         # 化身逻辑  manual=手动 burst_mode=爆发模式 combat_mode = 战斗时间模式 default:burst_mode
@@ -202,7 +214,7 @@ class DruidGuardian57(BaseRotation):
 
         # 低于 狂暴回复阈值且有怒气时优先使用狂暴回复
         if (rage > 10) and ctx.spell_charges_ready("狂暴回复", 1, spell_queue_window):
-            if (player.healthPercent < frenzied_regeneration_threshold):
+            if player.healthPercent < frenzied_regeneration_threshold:
                 if not player.hasBuff("狂暴回复"):
                     return self.cast("狂暴回复")
 
@@ -210,14 +222,14 @@ class DruidGuardian57(BaseRotation):
         # 树皮术不受公共CD限制，所以即使在公共CD内也可以使用，除非设置了忽略公共CD。
         # 不和生存本能叠加，所以当生存本能未准备好时才使用树皮术。
         if ctx.spell_cooldown_ready("树皮术", spell_queue_window, ignore_gcd=True):
-            if (player.healthPercent < barkskin_threshold):
+            if player.healthPercent < barkskin_threshold:
                 if not player.hasBuff("树皮术"):
                     if not player.hasBuff("生存本能"):
                         return self.cast("树皮术")
 
         # 低于生存本能阈值时优先使用生存本能
         if ctx.spell_charges_ready("生存本能", 1, spell_queue_window):
-            if (player.healthPercent < survival_instincts_threshold):
+            if player.healthPercent < survival_instincts_threshold:
                 if not player.hasBuff("生存本能"):
                     return self.cast("player生存本能")
 
@@ -254,7 +266,9 @@ class DruidGuardian57(BaseRotation):
                 return self.cast("target迎头痛击")
 
         # 卡CD打明月普照，目标血量要大于10%。
-        if ctx.spell_cooldown_ready("明月普照", spell_queue_window, ignore_usable=True) and (main_target is not None):
+        if ctx.spell_cooldown_ready(
+            "明月普照", spell_queue_window, ignore_usable=True
+        ) and (main_target is not None):
             if main_target.healthPercent > 10:
                 return self.cast(f"{main_target.unitToken}明月普照")
 
@@ -271,18 +285,33 @@ class DruidGuardian57(BaseRotation):
                 return self.cast("痛击")
 
         # 碎甲咆哮，4、5层痛击用
-        if ctx.spell_cooldown_ready("碎甲咆哮", spell_queue_window, ignore_usable=True) and (main_target is not None):
+        if ctx.spell_cooldown_ready(
+            "碎甲咆哮", spell_queue_window, ignore_usable=True
+        ) and (main_target is not None):
             if main_target.debuffStack("痛击") >= 4:
                 return self.cast("碎甲咆哮")
 
         # 安抚逻辑
-        if ctx.spell_cooldown_ready("安抚", spell_queue_window, ignore_gcd=True) and (main_target is not None):
-            debuff_list = [debuff.title for debuff in main_target.debuff if (debuff.type in ["ENRAGE",])]
+        if ctx.spell_cooldown_ready("安抚", spell_queue_window, ignore_gcd=True) and (
+            main_target is not None
+        ):
+            debuff_list = [
+                debuff.title
+                for debuff in main_target.debuff
+                if (
+                    debuff.type
+                    in [
+                        "ENRAGE",
+                    ]
+                )
+            ]
             if len(debuff_list) > 0:
                 return self.cast(f"{main_target.unitToken}安抚")
 
         # 痛击CD打月火
-        if ctx.spell_cooldown_ready("月火术", spell_queue_window) and (main_target is not None):
+        if ctx.spell_cooldown_ready("月火术", spell_queue_window) and (
+            main_target is not None
+        ):
             if rage > 55:
                 return self.cast(f"{main_target.unitToken}月火铁鬃")
             return self.cast(f"{main_target.unitToken}月火术")
