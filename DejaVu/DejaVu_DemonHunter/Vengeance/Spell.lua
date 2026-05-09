@@ -30,6 +30,8 @@ insert(cooldownSpells, { spellID = 183752, name = "瓦解" })
 insert(cooldownSpells, { spellID = 258920, name = "献祭光环" })
 insert(cooldownSpells, { spellID = 1236994, name = "鲁莽药水" })
 insert(cooldownSpells, { spellID = 212084, name = "邪能毁灭" })
+insert(cooldownSpells, { spellID = 6262, name = "治疗石" })
+insert(cooldownSpells, { spellID = 1262857, name = "治疗药水" })
 
 insert(chargeSpells, { spellID = 204157, name = "投掷利刃" })
 insert(chargeSpells, { spellID = 263642, name = "破裂" })

@@ -31,6 +31,8 @@ class DemonHunterDevourer(BaseRotation):
             "灵魂献祭": "SHIFT-NUMPAD2",
             "鲁莽药水": "SHIFT-NUMPAD3",
             "停止施法": "SHIFT-NUMPAD4",
+            "治疗石": "SHIFT-NUMPAD5",
+            "治疗药水": "SHIFT-NUMPAD6",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
