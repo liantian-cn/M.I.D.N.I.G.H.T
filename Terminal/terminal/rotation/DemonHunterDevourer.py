@@ -324,9 +324,9 @@ class DemonHunterDevourer(BaseRotation):
                 if star_ready:
                     return self.cast("target坍缩之星")
 
-                # # 3. 根除（噬欲时刻激活 且 地上>=10魂）根除单体负收益
-                # if eradication_craving_ready:
-                #     return self.cast("target根除")
+                # # 3. 根除（噬欲时刻激活 且 地上>=10魂）根除单体负收益，但低层大米追求尽快打出坍缩
+                if eradication_craving_ready:
+                    return self.cast("target根除")
 
                 # 4. 吞噬
                 if ctx.spell_cooldown_ready("吞噬", spell_queue_window):
