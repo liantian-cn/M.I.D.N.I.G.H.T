@@ -276,7 +276,7 @@ local function InitFrame()
     -- 依赖事件更新：无。
     -- 依赖定时刷新：2秒。
     local function updateHealingItemUsable()
-        cell.healthstoneCooldownUsable:setCellBoolean(itemUsable(224464), COLOR.STATUS_BOOLEAN.HEALTHSTONE_USABLE, COLOR.BLACK)
+        cell.healthstoneCooldownUsable:setCellBoolean(itemUsable(5512), COLOR.STATUS_BOOLEAN.HEALTHSTONE_USABLE, COLOR.BLACK)
         cell.healingPotionCooldownUsable:setCellBoolean(itemUsable(258138), COLOR.STATUS_BOOLEAN.HEALING_POTION_USABLE, COLOR.BLACK)
     end
 
