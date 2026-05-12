@@ -106,11 +106,11 @@ class DemonHunterDevourer(BaseRotation):
         )
 
         # 虚空射线泄能怒气阈值（常态，默认100）
-        fury_overflow_threshold_cell = ctx.setting.cell(3)
-        fury_overflow_threshold = (
+        void_metamorphosis_threshold_cell = ctx.setting.cell(3)
+        void_metamorphosis_threshold = (
             100
-            if fury_overflow_threshold_cell is None
-            else int(fury_overflow_threshold_cell.mean)
+            if void_metamorphosis_threshold_cell is None
+            else int(void_metamorphosis_threshold_cell.mean)
         )
 
         # enemy_count = 4 if player.enemyCount is None else player.enemyCount
@@ -364,6 +364,9 @@ class DemonHunterDevourer(BaseRotation):
                     if star_ready:
                         return self.cast("target坍缩之星")
 
+                    if void_ray_ready:
+                        return self.cast("虚空射线")
+
                     if ctx.spell_cooldown_ready("吞噬", spell_queue_window):
                         if main_target is focus:
                             return self.cast("focus吞噬")
@@ -476,6 +479,8 @@ class DemonHunterDevourer(BaseRotation):
         if (
             moment_of_craving_exists
             and scattered_souls_fragments_count >= 10
+            and fury <= 74
+            and soul_fragments <= (void_metamorphosis_threshold - 10)
             and ctx.spell_cooldown_ready("根除", spell_queue_window)
         ):
             return self.cast("target根除")
@@ -484,7 +489,7 @@ class DemonHunterDevourer(BaseRotation):
         if (
             not player_need_specific_spell_stop
             and not player.isMoving
-            and fury >= fury_overflow_threshold
+            and fury >= 100
             and target.isInRangedRange
             and ctx.spell_cooldown_ready("虚空射线", spell_queue_window)
         ):
@@ -506,13 +511,13 @@ class DemonHunterDevourer(BaseRotation):
             elif player.enemyCount >= 1:
                 return self.cast("就近吞噬")
 
-        # ── 7. 收割：地上>=4魂 且 本次收割可触发虚空变形 ───────────────
-        # （用于为下次爆发蓄势）
-        if (
-            scattered_souls_fragments_count >= 4
-            and soul_fragments >= 31
-            and ctx.spell_cooldown_ready("收割", spell_queue_window)
-        ):
-            return self.cast("target收割")
+        # # ── 7. 收割：地上>=4魂 且 本次收割可触发虚空变形 ───────────────
+        # # （用于为下次爆发蓄势）
+        # if (
+        #     scattered_souls_fragments_count >= 4
+        #     and soul_fragments >= 31
+        #     and ctx.spell_cooldown_ready("收割", spell_queue_window)
+        # ):
+        #     return self.cast("target收割")
 
         return self.idle("当前没有合适动作")

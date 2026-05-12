@@ -131,35 +131,35 @@ do
 end
 
 do
-    local void_Ray_fury_overflow_threshold = Config("void_Ray_fury_overflow_threshold")
+    local void_metamorphosis_threshold = Config("void_metamorphosis_threshold")
     insert(ConfigRows, {
         type = "slider",
-        key = "void_Ray_fury_overflow_threshold",
-        name = "虚空射线泄能阈值",
-        tooltip = "当前恶魔之怒高于该值时, 使用虚空射线避免浪费",
-        min_value = 90,
-        max_value = 120,
-        step = 1,
-        default_value = 100,
-        bind_config = void_Ray_fury_overflow_threshold,
+        key = "void_metamorphosis_threshold",
+        name = "虚空变形所需灵魂碎片",
+        tooltip = "虚空变形所需灵魂碎片有35和50两种",
+        min_value = 35,
+        max_value = 50,
+        step = 15,
+        default_value = 35,
+        bind_config = void_metamorphosis_threshold,
     })
 
     local function InitFrame()
         -- x:58 y:12
-        -- 用途：显示虚空射线泄能阈值配置。
-        -- 更新函数：set_void_Ray_fury_overflow_threshold
-        local void_Ray_fury_overflow_threshold_cell = Cell:New(58, 12)
+        -- 用途：显示虚空变形所需灵魂碎片。
+        -- 更新函数：set_void_metamorphosis_threshold
+        local void_metamorphosis_threshold_cell = Cell:New(58, 12)
 
-        -- 说明：根据虚空射线泄能阈值配置更新显示强度。
+        -- 说明：根据虚空变形所需灵魂碎片配置更新显示强度。
         -- 依赖事件更新：无
         -- 依赖定时刷新：无
-        local function set_void_Ray_fury_overflow_threshold(value)
-            void_Ray_fury_overflow_threshold_cell:setCellRGBA(value / 255)
+        local function set_void_metamorphosis_threshold(value)
+            void_metamorphosis_threshold_cell:setCellRGBA(value / 255)
         end
 
-        void_Ray_fury_overflow_threshold:register_callback(set_void_Ray_fury_overflow_threshold)
+        void_metamorphosis_threshold:register_callback(set_void_metamorphosis_threshold)
 
-        set_void_Ray_fury_overflow_threshold(void_Ray_fury_overflow_threshold:get_value())
+        set_void_metamorphosis_threshold(void_metamorphosis_threshold:get_value())
     end
     insert(MartixInitFuncs, InitFrame)
 end
