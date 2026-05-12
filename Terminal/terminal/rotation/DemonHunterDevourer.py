@@ -106,11 +106,11 @@ class DemonHunterDevourer(BaseRotation):
         )
 
         # 虚空射线泄能怒气阈值（常态，默认100）
-        void_metamorphosis_threshold_cell = ctx.setting.cell(3)
-        void_metamorphosis_threshold = (
+        fury_overflow_threshold_cell = ctx.setting.cell(3)
+        fury_overflow_threshold = (
             100
-            if void_metamorphosis_threshold_cell is None
-            else int(void_metamorphosis_threshold_cell.mean)
+            if fury_overflow_threshold_cell is None
+            else int(fury_overflow_threshold_cell.mean)
         )
 
         # enemy_count = 4 if player.enemyCount is None else player.enemyCount
@@ -253,8 +253,8 @@ class DemonHunterDevourer(BaseRotation):
         # 爆发段逻辑（虚空变形内，collapsing_star_exists == True）
         #
         # 变身前30秒（burst_time < 30）：
-        #   单体：根除（身上>=20魂+地上>=10魂+噬欲时刻，快速打出坍缩之星）> 坍缩之星 > 吞噬
-        #   AOE：坍缩之星 > 根除 > 虚空射线 > 吞噬
+        #   AOE优先级：坍缩之星 > 根除（噬欲时刻激活 且 地上>=10魂）> 虚空射线 > 吞噬
+        #   单体优先级：虚空射线（最高）> 坍缩之星 > 根除（噬欲时刻激活 且 地上>=10魂）> 吞噬
         #
         # 变身后30秒（burst_time >= 30）：
         #   单体：根除（虚空射线好了+噬欲时刻）> 接虚空射线 > 坍缩之星（地上>=10+身上>=36或怒气<50）> 吞噬
@@ -299,51 +299,22 @@ class DemonHunterDevourer(BaseRotation):
             burst_phase_late = burst_time >= 30  # True = 变身30秒后
 
             # 预先计算各技能是否就绪
+            star_ready = (
+                not player_need_specific_spell_stop
+                # and soul_fragments >= 30
+                and ctx.spell_cooldown_ready("坍缩之星", spell_queue_window)
+            )
             void_ray_ready = (
                 not player_need_specific_spell_stop
                 and not player.isMoving
                 and target.isInRangedRange
                 and ctx.spell_cooldown_ready("虚空射线", spell_queue_window)
             )
-
-            # 坍缩之星就绪判断：
-            #   - AOE：无限制
-            #   - 非AOE + 变身后30秒前：无需特殊灵魂条件（由根除逻辑控制快速打出坍缩）
-            #   - 非AOE + 变身30秒后：地上>=10魂 且 身上>=36魂，或恶魔之怒<50时强制使用
-            _star_base = (
-                not player_need_specific_spell_stop
-                and ctx.spell_cooldown_ready("坍缩之星", spell_queue_window)
-            )
-            if is_aoe:
-                star_ready = _star_base
-            elif not burst_phase_late:
-                # 变身前30秒：不在这里单独限制坍缩（靠根除逻辑控制节奏）
-                star_ready = _star_base
-            else:
-                # 变身后30秒：非AOE需满足灵魂条件，或恶魔之怒<50强制
-                star_soul_condition = (
-                    scattered_souls_fragments_count >= 10 and soul_fragments >= 36
-                )
-                star_fury_emergency = fury < 50
-                star_ready = _star_base and (star_soul_condition or star_fury_emergency)
-
-            # 根除就绪判断：
-            #   - 变身前30秒：身上>=20魂 且 地上>=10魂 且 有噬欲时刻（快速打出坍缩之星）
-            #   - 变身后30秒：虚空射线好了 且 有噬欲时刻（先根除再虚空射线）
-            _eradication_base = ctx.spell_cooldown_ready("根除", spell_queue_window)
-            if not burst_phase_late:
-                # 变身前30秒：快速打出坍缩之星的根除触发条件
-                eradication_ready = (
-                    _eradication_base
-                    and moment_of_craving_exists
-                    and soul_fragments >= 20
-                    and scattered_souls_fragments_count >= 10
-                )
-            else:
-                # 变身后30秒：虚空射线好了且有噬欲时刻时先打根除
-                eradication_ready = (
-                    _eradication_base and moment_of_craving_exists and void_ray_ready
-                )
+            eradication_craving_ready = (
+                moment_of_craving_exists
+                and scattered_souls_fragments_count >= 10
+                and ctx.spell_cooldown_ready("根除", spell_queue_window)
+            )  # 坍缩之后秒根除可以强行打断根除的前摇，食欲时刻剩3-2秒的时候打坍缩后秒接根除收益最好
 
             # 虚空变形后紧接着使用"鲁莽药水"
             if (
@@ -354,19 +325,23 @@ class DemonHunterDevourer(BaseRotation):
             ):
                 return self.cast("鲁莽药水")
 
-            # ── 变身前30秒：根除 > 坍缩之星 > 虚空射线 > 吞噬（快速堆坍缩）──
+            # ── 变身前30秒：原版逻辑 ─────────────────────────────────────
             if not burst_phase_late:
+                # 单体：虚空射线（最高优先）> 坍缩之星 > 根除 > 吞噬
                 if not is_aoe:
-                    # 单体：根除（快速打出坍缩） > 坍缩之星 > 吞噬
-                    if eradication_ready:
-                        return self.cast("target根除")
-
-                    if star_ready:
-                        return self.cast("target坍缩之星")
-
+                    # 1. 虚空射线（单体最高优先）
                     if void_ray_ready:
                         return self.cast("虚空射线")
 
+                    # 2. 坍缩之星
+                    if star_ready:
+                        return self.cast("target坍缩之星")
+
+                    # 3. 根除（噬欲时刻激活 且 地上>=10魂）
+                    if eradication_craving_ready:
+                        return self.cast("target根除")
+
+                    # 4. 吞噬
                     if ctx.spell_cooldown_ready("吞噬", spell_queue_window):
                         if main_target is focus:
                             return self.cast("focus吞噬")
@@ -374,17 +349,22 @@ class DemonHunterDevourer(BaseRotation):
                             return self.cast("target吞噬")
                         elif player.enemyCount >= 1:
                             return self.cast("就近吞噬")
+
+                # AOE：坍缩之星 > 根除 > 虚空射线 > 吞噬
                 else:
-                    # AOE：坍缩之星 > 根除 > 虚空射线 > 吞噬
+                    # 1. 坍缩之星
                     if star_ready:
                         return self.cast("target坍缩之星")
 
-                    if eradication_ready:
+                    # 2. 根除（噬欲时刻激活 且 地上>=10魂）
+                    if eradication_craving_ready:
                         return self.cast("target根除")
 
+                    # 3. 虚空射线
                     if void_ray_ready:
                         return self.cast("虚空射线")
 
+                    # 4. 吞噬
                     if ctx.spell_cooldown_ready("吞噬", spell_queue_window):
                         if main_target is focus:
                             return self.cast("focus吞噬")
@@ -395,16 +375,41 @@ class DemonHunterDevourer(BaseRotation):
 
             # ── 变身后30秒：根除（触发虚空射线连打） > 坍缩之星 > 虚空射线 > 吞噬
             else:
+                # 变身后30秒坍缩之星就绪判断：
+                #   非AOE：地上>=10魂 且 身上>=36魂，或恶魔之怒<50时强制使用
+                #   AOE：无限制
+                _star_base_late = (
+                    not player_need_specific_spell_stop
+                    and ctx.spell_cooldown_ready("坍缩之星", spell_queue_window)
+                )
+                if is_aoe:
+                    star_ready_late = _star_base_late
+                else:
+                    star_soul_condition = (
+                        scattered_souls_fragments_count >= 10 and soul_fragments >= 36
+                    )
+                    star_fury_emergency = fury < 50
+                    star_ready_late = _star_base_late and (
+                        star_soul_condition or star_fury_emergency
+                    )
+
+                # 变身后30秒根除就绪判断：虚空射线好了 且 有噬欲时刻
+                eradication_ready_late = (
+                    ctx.spell_cooldown_ready("根除", spell_queue_window)
+                    and moment_of_craving_exists
+                    and void_ray_ready
+                )
+
                 if not is_aoe:
-                    # 单体：先根除再虚空射线 > 坍缩之星（满足灵魂条件或怒气<50）> 吞噬
-                    if eradication_ready:
+                    # 单体：先根除再虚空射线 > 坍缩之星 > 吞噬
+                    if eradication_ready_late:
                         return self.cast("target根除")
 
-                    # 根除后立即接虚空射线（上一个技能是根除且虚空射线好了）
+                    # 根除后立即接虚空射线
                     if latest_succeeded_cast == "根除" and void_ray_ready:
                         return self.cast("虚空射线")
 
-                    if star_ready:
+                    if star_ready_late:
                         return self.cast("target坍缩之星")
 
                     if ctx.spell_cooldown_ready("吞噬", spell_queue_window):
@@ -416,10 +421,10 @@ class DemonHunterDevourer(BaseRotation):
                             return self.cast("就近吞噬")
                 else:
                     # AOE：坍缩之星 > 根除 > 虚空射线 > 吞噬
-                    if star_ready:
+                    if star_ready_late:
                         return self.cast("target坍缩之星")
 
-                    if eradication_ready:
+                    if eradication_ready_late:
                         return self.cast("target根除")
 
                     if void_ray_ready:
@@ -462,16 +467,11 @@ class DemonHunterDevourer(BaseRotation):
                 return self.cast("target收割")
 
         # ── 2. 虚空变形：怪物血量充足且可用时立即触发（躺平模式下跳过）────
-        # 非AOE时需要：地上>=10魂 且 有噬欲时刻buff；AOE时无此限制
-        _metamorphosis_soul_condition = is_aoe or (
-            scattered_souls_fragments_count >= 10 and moment_of_craving_exists
-        )
         if (
             lying_flat_mode == "turn_off"
             and ctx.spell_cooldown_ready("虚空变形", spell_queue_window)
             and main_target.healthPercent > reaper_health_threshold
             and not player.isMoving
-            and _metamorphosis_soul_condition
         ):
             return self.cast("虚空变形")
 
@@ -479,8 +479,6 @@ class DemonHunterDevourer(BaseRotation):
         if (
             moment_of_craving_exists
             and scattered_souls_fragments_count >= 10
-            and fury <= 74
-            and soul_fragments <= (void_metamorphosis_threshold - 10)
             and ctx.spell_cooldown_ready("根除", spell_queue_window)
         ):
             return self.cast("target根除")
@@ -489,7 +487,7 @@ class DemonHunterDevourer(BaseRotation):
         if (
             not player_need_specific_spell_stop
             and not player.isMoving
-            and fury >= 100
+            and fury >= fury_overflow_threshold
             and target.isInRangedRange
             and ctx.spell_cooldown_ready("虚空射线", spell_queue_window)
         ):
