@@ -69,7 +69,7 @@ SetCVar("doNotFlashLowHealthWarning", 1);
 SetCVar("lossOfControl", 0);
 SetCVar("cameraIndirectVisibility", 1);
 SetCVar("cameraIndirectOffset", 10);
-SetCVar("SpellQueueWindow", 150);
+SetCVar("SpellQueueWindow", 400);
 SetCVar("targetNearestDistance", 5)
 SetCVar("cameraDistanceMaxZoomFactor", 2.6)
 SetCVar("CameraReduceUnexpectedMovement", 1)

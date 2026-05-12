@@ -253,8 +253,10 @@ class DruidGuardian57(BaseRotation):
             elif target_need_interrupt:
                 return self.cast("target迎头痛击")
 
+        if ctx.assisted_combat == "明月普照" and (main_target is not None):
+            return self.cast(f"{main_target.unitToken}明月普照")
         # 卡CD打明月普照，目标血量要大于10%。
-        if ctx.spell_cooldown_ready("明月普照", spell_queue_window, ignore_usable=True) and (main_target is not None):
+        if ctx.spell_cooldown_ready("明月普照", 1.5, ignore_usable=True) and (main_target is not None):
             if main_target.healthPercent > 10:
                 return self.cast(f"{main_target.unitToken}明月普照")
 
