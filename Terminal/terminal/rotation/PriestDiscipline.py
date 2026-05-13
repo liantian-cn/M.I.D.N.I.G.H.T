@@ -308,9 +308,6 @@ class PriestDiscipline(BaseRotation):
             use_cale, 40, 50, powerpercent
         )
         # 技能队列窗口，施法中剩余时间小于这个值就算技能快要好了，可以提前衔接施放下一个技能，单位是秒
-        flash_heal_hp_threshold = self.threshold_calculator(
-            use_cale, 40, 50, powerpercent
-        )
         # 施法保护阈值，剩余施法时间低于此值时不打断当前施法，单位百分比。设为 90 意味着始终等待施法完成（任何技能施法时间都远小于此值）
         cast_queue_window_threshold = 90
         # 引导保护阈值，剩余引导时间低于此值时不打断当前引导，单位是百分比。设为 90 意味着始终等待引导完成

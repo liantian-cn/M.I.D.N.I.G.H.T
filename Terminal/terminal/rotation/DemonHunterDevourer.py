@@ -105,15 +105,19 @@ class DemonHunterDevourer(BaseRotation):
             else int(dh_health_threshold_cell.mean)
         )
 
-        # 虚空射线泄能怒气阈值（常态，默认100）
-        fury_overflow_threshold_cell = ctx.setting.cell(3)
-        fury_overflow_threshold = (
-            100
-            if fury_overflow_threshold_cell is None
-            else int(fury_overflow_threshold_cell.mean)
+        # 虚空变形阈值（常态，默认35）
+        void_metamorphosis_threshold_cell = ctx.setting.cell(3)
+        void_metamorphosis_threshold = (
+            35
+            if void_metamorphosis_threshold_cell is None
+            else int(void_metamorphosis_threshold_cell.mean)
         )
 
-        # enemy_count = 4 if player.enemyCount is None else player.enemyCount
+        # 技能队列窗口，施法中剩余时间小于这个值就算技能快要好了，可以提前衔接施放下一个技能，单位是秒
+        # 施法保护阈值，剩余施法时间低于此值时不打断当前施法，单位百分比。设为 90 意味着始终等待施法完成（任何技能施法时间都远小于此值）
+        cast_queue_window_threshold = 90
+        # 引导保护阈值，剩余引导时间低于此值时不打断当前引导，单位是百分比。设为 90 意味着始终等待引导完成
+        channel_queue_window_threshold = 90
 
         # ── 基础状态检查 ────────────────────────────────────────────
 
@@ -127,14 +131,18 @@ class DemonHunterDevourer(BaseRotation):
             return self.idle("骑乘中")
 
         if player.castIcon is not None:
-            return self.idle("正在施法")
+            if (
+                player.castDuration is None
+                or player.castDuration < cast_queue_window_threshold
+            ):
+                return self.idle("正在施法")
 
         if player.channelIcon is not None:
-            # 引导中断：虚空射线目标丢失时停止引导
-            # if player.channelIcon == "虚空射线" and enemy_count == 0:
-            #     # 目标已全部死亡，停止引导虚空射线
-            #     return self.cast("停止施法")  # 或使用对应的取消宏
-            return self.idle("正在引导")
+            if (
+                player.channelDuration is None
+                or player.channelDuration < channel_queue_window_threshold
+            ):
+                return self.idle("正在引导")
 
         if player.isEmpowering:
             return self.idle("正在蓄力")
@@ -301,6 +309,7 @@ class DemonHunterDevourer(BaseRotation):
             # 预先计算各技能是否就绪
             star_ready = (
                 not player_need_specific_spell_stop
+                and not player.isMoving
                 # and soul_fragments >= 30
                 and ctx.spell_cooldown_ready("坍缩之星", spell_queue_window)
             )
@@ -313,6 +322,10 @@ class DemonHunterDevourer(BaseRotation):
             eradication_craving_ready = (
                 moment_of_craving_exists
                 and scattered_souls_fragments_count >= 10
+                and (
+                    (latest_succeeded_cast == "坍缩之星")
+                    or (20 <= soul_fragments and fury <= 50)
+                )
                 and ctx.spell_cooldown_ready("根除", spell_queue_window)
             )  # 坍缩之后秒根除可以强行打断根除的前摇，食欲时刻剩3-2秒的时候打坍缩后秒接根除收益最好
 
@@ -380,6 +393,7 @@ class DemonHunterDevourer(BaseRotation):
                 #   AOE：无限制
                 _star_base_late = (
                     not player_need_specific_spell_stop
+                    and not player.isMoving
                     and ctx.spell_cooldown_ready("坍缩之星", spell_queue_window)
                 )
                 if is_aoe:
@@ -487,7 +501,7 @@ class DemonHunterDevourer(BaseRotation):
         if (
             not player_need_specific_spell_stop
             and not player.isMoving
-            and fury >= fury_overflow_threshold
+            and fury >= 100
             and target.isInRangedRange
             and ctx.spell_cooldown_ready("虚空射线", spell_queue_window)
         ):
