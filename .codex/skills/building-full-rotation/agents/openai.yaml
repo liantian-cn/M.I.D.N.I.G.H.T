@@ -1,0 +1,5 @@
+interface:
+  display_name: "Building Full Rotation"
+  short_description: "Build complete mirrored MIDNIGHT rotations."
+  default_prompt: "Use $building-full-rotation to build a complete MIDNIGHT DejaVu plugin and Terminal rotation from a full spec."
+

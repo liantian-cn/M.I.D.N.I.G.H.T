@@ -1,0 +1,5 @@
+interface:
+  display_name: "DejaVu Coder"
+  short_description: "Work safely in the MIDNIGHT DejaVu Lua project."
+  default_prompt: "Use $dejavu-coder to implement a scoped MIDNIGHT DejaVu Lua change with the repo workflow."
+

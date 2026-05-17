@@ -1,0 +1,5 @@
+interface:
+  display_name: "Terminal Coder"
+  short_description: "Work safely in the MIDNIGHT Terminal Python project."
+  default_prompt: "Use $terminal-coder to implement a scoped MIDNIGHT Terminal Python change with the repo workflow."
+

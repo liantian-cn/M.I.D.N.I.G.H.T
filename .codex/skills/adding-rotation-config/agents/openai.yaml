@@ -1,0 +1,5 @@
+interface:
+  display_name: "Adding Rotation Config"
+  short_description: "Mirror DejaVu and Terminal rotation config safely."
+  default_prompt: "Use $adding-rotation-config to add mirrored MIDNIGHT rotation settings across DejaVu and Terminal."
+
