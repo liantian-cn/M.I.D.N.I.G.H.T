@@ -2,6 +2,18 @@
 
 ## 2026-05-17
 
+### Route item cooldowns through spell output
+
+- Added `item` and `inventory` cooldown entry support to DejaVu spell cooldown output, so Terminal can keep using `ctx.spell_cooldown_ready()` for registered items.
+- Changed Devourer Demon Hunter 鲁莽药水, 治疗石, 强效治疗药水, and 虚无之眼 registrations to use item/equipment cooldown sources instead of spell IDs.
+
+Verification:
+
+- `luacheck DejaVu_Spell DejaVu_DemonHunter` -> 0 errors; 6 pre-existing whitespace warnings in Devourer/Vengeance `Spec.lua`
+- `git diff --check` -> no whitespace errors
+
+## 2026-05-17
+
 ### Reset Devourer burst potion toggle out of combat
 
 - Reset Devourer Demon Hunter `use_burst_potion` to off on `PLAYER_REGEN_ENABLED`, matching the existing lying-flat mode reset behavior.
