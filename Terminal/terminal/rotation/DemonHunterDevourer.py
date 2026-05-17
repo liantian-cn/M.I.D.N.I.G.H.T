@@ -10,7 +10,7 @@ from .base import BaseRotation
 
 
 class DemonHunterDevourer(BaseRotation):
-    name = "35魂噬灭歼灭者DH"
+    name = "噬灭歼灭者DH"
     desc = "目前只适配歼灭者"
 
     def __init__(self) -> None:
