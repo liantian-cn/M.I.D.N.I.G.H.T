@@ -33,6 +33,7 @@ class DemonHunterDevourer(BaseRotation):
             "停止施法": "SHIFT-NUMPAD4",
             "治疗石": "SHIFT-NUMPAD5",
             "强效治疗药水": "SHIFT-NUMPAD6",
+            "虚无之眼": "SHIFT-NUMPAD7",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
@@ -101,7 +102,7 @@ class DemonHunterDevourer(BaseRotation):
         use_burst_potion_cell = ctx.setting.cell(6)
         use_burst_potion = (
             "turn_off"
-            if use_burst_potion_cell is None or use_burst_potion_cell.mean < 200
+            if use_burst_potion_cell is None or use_burst_potion_cell.mean >= 200
             else "turn_on"
         )
 
@@ -338,13 +339,20 @@ class DemonHunterDevourer(BaseRotation):
 
             # 虚空变形后紧接着使用"鲁莽药水"
             if (
-                latest_succeeded_cast == "虚空变形"
+                lying_flat_mode == "turn_off"
+                and latest_succeeded_cast == "虚空变形"
                 and use_burst_potion == "turn_on"
                 and player.burstPotionCooldownUsable
                 and ctx.gcd_ready(spell_queue_window)
-                and player.enemyCount >= 6
             ):
                 return self.cast("鲁莽药水")
+
+            if (
+                lying_flat_mode == "turn_off"
+                and ctx.spell_cooldown_ready("虚无之眼", spell_queue_window)
+                and soul_fragments >= 30
+            ):
+                return self.cast("虚无之眼")
 
             # ── 变身前30秒：原版逻辑 ─────────────────────────────────────
             if not burst_phase_late:
@@ -410,7 +418,7 @@ class DemonHunterDevourer(BaseRotation):
                     star_soul_condition = (
                         scattered_souls_fragments_count >= 10 and soul_fragments >= 36
                     )
-                    star_fury_emergency = fury < 50
+                    star_fury_emergency = fury < 60 and soul_fragments >= 30
                     star_ready_late = _star_base_late and (
                         star_soul_condition or star_fury_emergency
                     )

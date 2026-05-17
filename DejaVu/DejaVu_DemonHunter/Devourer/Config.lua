@@ -60,7 +60,6 @@ do
     insert(MartixInitFuncs, InitFrame)
 end
 
--- 2. 打断模式配置
 do
     local use_burst_potion = Config("use_burst_potion")
     insert(ConfigRows, {
@@ -85,9 +84,9 @@ do
         -- 依赖定时刷新：无
         local function set_use_burst_potion(value)
             if value then
-                use_burst_potion_cell:setCellRGBA(255 / 255)
-            else
                 use_burst_potion_cell:setCellRGBA(127 / 255)
+            else
+                use_burst_potion_cell:setCellRGBA(255 / 255)
             end
         end
 
@@ -98,6 +97,7 @@ do
     insert(MartixInitFuncs, InitFrame)
 end
 
+-- 3. 打断模式配置
 do
     local dh_interrupt_mode = Config("dh_interrupt_mode")
     insert(ConfigRows, {
