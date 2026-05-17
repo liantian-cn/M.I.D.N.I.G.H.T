@@ -6,6 +6,7 @@ from .DruidGuardianElune import DruidGuardianElune
 from .DemonHunterDevourer import DemonHunterDevourer
 from .DemonHunterVengeance import DemonHunterVengeance
 from .DruidGuardian57 import DruidGuardian57
+from .HunterBeastMastery import HunterBeastMastery
 
 ALL_ROTATIONS = [
     DemonHunterDevourer,
@@ -16,4 +17,5 @@ ALL_ROTATIONS = [
     DruidGuardianElune,
     DruidGuardian57,
     DemonHunterVengeance,
+    HunterBeastMastery,
 ]

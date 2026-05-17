@@ -1,4 +1,4 @@
-local addonName, addonTable             = ... -- luacheck: ignore addonTable
+﻿local addonName, addonTable             = ... -- luacheck: ignore addonTable
 
 local insert                            = table.insert
 local pairs                             = pairs
@@ -18,16 +18,18 @@ if currentSpec ~= 1 then return end
 
 local macroList = {}
 insert(macroList, { title = "reloadUI", key = "CTRL-F12", text = "/reload" })
-insert(macroList, { title = "误导", key = "ALT-NUMPAD1", text = "/cast [target=focus,help,nodead][target=pet,exists,nodead][] 误导" })
-insert(macroList, { title = "召唤宠物", key = "ALT-NUMPAD2", text = "/cast 召唤宠物" })
-insert(macroList, { title = "复活宠物", key = "ALT-NUMPAD3", text = "/cast 复活宠物" })
-insert(macroList, { title = "target杀戮命令", key = "ALT-NUMPAD4", text = "/cast [@target] 杀戮命令" })
-insert(macroList, { title = "target狂野怒火", key = "ALT-NUMPAD4", text = "/cast [@target] 狂野怒火" })
-insert(macroList, { title = "target狂野鞭笞", key = "ALT-NUMPAD5", text = "/cast [@target] 狂野鞭笞" })
-insert(macroList, { title = "target眼镜蛇射击", key = "ALT-NUMPAD6", text = "/cast [@target] 眼镜蛇射击" })
-insert(macroList, { title = "target猎人印记", key = "ALT-NUMPAD7", text = "/cast [@target] 猎人印记" })
-insert(macroList, { title = "target宁神射击", key = "ALT-NUMPAD7", text = "/cast [@target] 宁神射击" })
-insert(macroList, { title = "target反制射击", key = "ALT-NUMPAD7", text = "/cast [@target] 反制射击" })
+insert(macroList, { title = "璇", key = "ALT-NUMPAD1", text = "/cast [target=focus,help,nodead][target=pet,exists,nodead][] 璇" })
+insert(macroList, { title = "鍙敜瀹犵墿", key = "ALT-NUMPAD2", text = "/cast 鍙敜瀹犵墿" })
+insert(macroList, { title = "澶嶆椿瀹犵墿", key = "ALT-NUMPAD3", text = "/cast 澶嶆椿瀹犵墿" })
+insert(macroList, { title = "target鏉€鎴懡浠?", key = "ALT-NUMPAD4", text = "/cast [@target] 鏉€鎴懡浠?" })
+insert(macroList, { title = "target鐙傞噹鎬掔伀", key = "ALT-NUMPAD5", text = "/cast [@target] 鐙傞噹鎬掔伀" })
+insert(macroList, { title = "target鐙傞噹闉瑸", key = "ALT-NUMPAD6", text = "/cast [@target] 鐙傞噹闉瑸" })
+insert(macroList, { title = "target鐚庝汉鍗拌", key = "ALT-NUMPAD7", text = "/cast [@target] 鐚庝汉鍗拌" })
+insert(macroList, { title = "target瀹佺灏勫嚮", key = "ALT-NUMPAD8", text = "/cast [@target] 瀹佺灏勫嚮" })
+insert(macroList, { title = "target鍙嶅埗灏勫嚮", key = "ALT-NUMPAD9", text = "/cast [@target] 鍙嶅埗灏勫嚮" })
+insert(macroList, { title = "focus鍙嶅埗灏勫嚮", key = "ALT-NUMPAD0", text = "/cast [@focus] 鍙嶅埗灏勫嚮" })
+insert(macroList, { title = "target鐪奸暅铔囧皠鍑?", key = "SHIFT-NUMPAD1", text = "/cast [@target] 鐪奸暅铔囧皠鍑?" })
+insert(macroList, { title = "focus瀹佺灏勫嚮", key = "SHIFT-NUMPAD2", text = "/cast [@focus] 瀹佺灏勫嚮" })
 
 for macroIndex, macro in pairs(macroList) do -- luacheck: ignore macroIndex
     local buttonName = addonName .. "Button" .. macro.title

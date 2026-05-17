@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-05-17
+
+### Add Beast Mastery Hunter Terminal rotation
+
+- Added a Terminal Beast Mastery Hunter rotation that handles Counter Shot interrupts, Tranquilizing Shot enemy dispels, and target output through the in-game assisted-combat recommendation.
+- Registered the rotation in the Terminal rotation list.
+- Repaired and expanded Beast Mastery Hunter macro bindings for target output, focus/target Counter Shot, and focus/target Tranquilizing Shot.
+
+Verification:
+
+- `uv run python -m py_compile terminal\rotation\HunterBeastMastery.py` -> passed with escalated cache access
+- `git diff --check` -> no whitespace errors
+- `luacheck DejaVu_Hunter` -> not run: `luacheck` is not installed or not in PATH in this environment
+
 ## 2026-04-27
 
 ### Refresh DejaVu context and agent docs
