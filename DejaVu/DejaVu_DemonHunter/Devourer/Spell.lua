@@ -32,6 +32,6 @@ insert(cooldownSpells, { spellID = 198589, name = "疾影" }) --  [疾影]
 insert(cooldownSpells, { type = "item", itemID = DejaVu.BurstPotionID, name = "鲁莽药水" }) --  [鲁莽药水]
 insert(cooldownSpells, { type = "item", itemID = 5512, name = "治疗石" })
 insert(cooldownSpells, { type = "item", itemID = 258138, name = "强效治疗药水" })
-insert(cooldownSpells, { type = "inventory", slots = { 13, 14 }, name = "虚无之眼" })
+insert(cooldownSpells, { type = "inventory", slots = 14, name = "威厄高尔的最终凝视" })
 
 insert(chargeSpells, { spellID = 1241937, name = "灵魂献祭" }) --  [灵魂献祭]

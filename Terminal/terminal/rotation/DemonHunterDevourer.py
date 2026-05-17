@@ -33,7 +33,7 @@ class DemonHunterDevourer(BaseRotation):
             "停止施法": "SHIFT-NUMPAD4",
             "治疗石": "SHIFT-NUMPAD5",
             "强效治疗药水": "SHIFT-NUMPAD6",
-            "虚无之眼": "SHIFT-NUMPAD7",
+            "威厄高尔的最终凝视": "SHIFT-NUMPAD7",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
@@ -347,12 +347,15 @@ class DemonHunterDevourer(BaseRotation):
             ):
                 return self.cast("鲁莽药水")
 
+            print(
+                f"威厄高尔的最终凝视: {ctx.spell_cooldown_ready("威厄高尔的最终凝视", spell_queue_window)}"
+            )
             if (
                 lying_flat_mode == "turn_off"
-                and ctx.spell_cooldown_ready("虚无之眼", spell_queue_window)
+                and ctx.spell_cooldown_ready("威厄高尔的最终凝视", spell_queue_window)
                 and soul_fragments >= 30
             ):
-                return self.cast("虚无之眼")
+                return self.cast("威厄高尔的最终凝视")
 
             # ── 变身前30秒：原版逻辑 ─────────────────────────────────────
             if not burst_phase_late:
