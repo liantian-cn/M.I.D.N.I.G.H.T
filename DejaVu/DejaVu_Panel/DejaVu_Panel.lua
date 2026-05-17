@@ -524,6 +524,7 @@ local function AddCheckboxRow(row_info)                                         
     local widget = CreateFrame("Frame", addonName .. "checkboxWidget" .. row:GetName(), row)                                                                -- 控件容器
     widget:SetPoint("LEFT", row.title, "RIGHT", SIZE.SETTING_LINE.Spacing, 0)                                                                               -- 位置
     widget:SetSize(SIZE.SETTING_LINE.WidgetWidth, SIZE.SETTING_LINE.Height)                                                                                 -- 尺寸
+    widget:EnableMouse(true)                                                                                                                                -- 整个控件区域可点击
 
     widget.bg = widget:CreateTexture(nil, "BACKGROUND")                                                                                                     -- 外边框
     widget.bg:SetAllPoints(widget)                                                                                                                          -- 填满
@@ -538,6 +539,7 @@ local function AddCheckboxRow(row_info)                                         
     checkBox:SetSize(checkboxSize, checkboxSize)                                                                                                           -- 尺寸
     checkBox:SetPoint("LEFT", widget, "LEFT", SIZE.MainFrame.Spacing, 0)                                                                                    -- 左对齐
     checkBox:SetPoint("TOP", widget, "TOP", 0, -SIZE.SETTING_LINE.Spacing / 2)                                                                              -- 垂直居中
+    checkBox:EnableMouse(false)                                                                                                                            -- 只显示状态, 点击交给外层长方形区域
 
     local checkTexture = checkBox:CreateTexture(nil, "ARTWORK")                                                                                             -- 勾选纹理
     checkTexture:SetAllPoints(checkBox)                                                                                                                      -- 填满
@@ -580,7 +582,7 @@ local function AddCheckboxRow(row_info)                                         
         UpdateCheckbox(newValue)                                                                                                                            -- 同步显示
     end                                                                                                                                                     -- ToggleValue 结束
 
-    checkBox:SetScript("OnClick", ToggleValue)                                                                                                              -- 点击切换
+    widget:SetScript("OnMouseUp", ToggleValue)                                                                                                             -- 点击长方形区域切换
 
     local initialValue = row_info.default_value                                                                                                             -- 默认值
     if config then                                                                                                                                          -- 有配置对象

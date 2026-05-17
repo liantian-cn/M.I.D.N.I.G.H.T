@@ -2,6 +2,18 @@
 
 ## 2026-05-17
 
+### Expand DejaVu checkbox click area
+
+- Updated DejaVu panel checkbox rows so the whole rectangular control, including the on/off status text, toggles the bound setting.
+- Kept the inner checkbox as a visual state indicator to avoid double toggles.
+
+Verification:
+
+- `git diff --check` -> no whitespace errors
+- `luacheck DejaVu_DemonHunter DejaVu_Panel` -> not run: `luacheck` is not installed or not in PATH in this environment
+
+## 2026-05-17
+
 ### Fix Beast Mastery Hunter Chinese spell names
 
 - Replaced mojibake spell names in Beast Mastery Hunter `Macro.lua`, `Spell.lua`, and Terminal `HunterBeastMastery.py` with real Chinese spell names.
