@@ -1,0 +1,12 @@
+## Interface: 110000, 110002, 110005, 110007, 110100, 110105, 110107, 110200, 110205, 110207, 120000, 120001
+## Title: LibEQOL
+## Notes: Lightweight Edit Mode helper for Blizzard Edit Mode.
+## Author: R41Z0R
+## Version: 23
+## X-Category: Library
+## X-Curse-Project-ID: 1395337
+## LoadOnDemand: 0
+## OptionalDeps: LibStub
+
+libs/LibStub/LibStub.lua
+LibEQOL.xml

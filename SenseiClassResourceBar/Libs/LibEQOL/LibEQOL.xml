@@ -1,0 +1,11 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="LibEQOLSettingsMode.lua" />
+	<Script file="LibEQOLSettingsMultiDropdown.lua" />
+	<Script file="LibEQOLSettingsScrollDropdown.lua" />
+	<Script file="LibEQOLSettingsInput.lua" />
+	<Script file="LibEQOLSettingsColorOverrides.lua" />
+	<Script file="LibEQOLSettingsSoundDropdown.lua" />
+	<Include file="LibEQOLSettingsTemplates.xml" />
+	<Script file="LibEQOLEditMode.lua" />
+	<Script file="LibEQOL.lua" />
+</Ui>
