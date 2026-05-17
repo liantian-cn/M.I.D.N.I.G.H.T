@@ -66,7 +66,6 @@ class DemonHunterDevourer(BaseRotation):
         )
 
         # 获取恶魔之怒最大值，默认120，恶魔之怒是根据这个值来计算的。因为不同版本恶魔之怒的最大值可能不同，所以让用户自己设置这个值。
-        fury_max_cell = ctx.setting.cell(0)
         fury_max = 120
         fury = int(ctx.player.powerPercent * fury_max / 100)
 
