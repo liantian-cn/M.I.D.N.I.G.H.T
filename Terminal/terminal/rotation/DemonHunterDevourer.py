@@ -34,6 +34,7 @@ class DemonHunterDevourer(BaseRotation):
             "治疗石": "SHIFT-NUMPAD5",
             "强效治疗药水": "SHIFT-NUMPAD6",
             "威厄高尔的最终凝视": "SHIFT-NUMPAD7",
+            "飞逝鲁莽药水": "SHIFT-NUMPAD8",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:

@@ -39,6 +39,7 @@ insert(macroList, { title = "停止施法", key = "SHIFT-NUMPAD4", text = "/stop
 insert(macroList, { title = "治疗石", key = "SHIFT-NUMPAD5", text = "/cast 治疗石" })
 insert(macroList, { title = "强效治疗药水", key = "SHIFT-NUMPAD6", text = "/cast 强效治疗药水" })
 insert(macroList, { title = "威厄高尔的最终凝视", key = "SHIFT-NUMPAD7", text = "/cast 威厄高尔的最终凝视" })
+insert(macroList, { title = "飞逝鲁莽药水", key = "SHIFT-NUMPAD8", text = "/cast 飞逝鲁莽药水" })
 
 
 for _, macro in pairs(macroList) do
