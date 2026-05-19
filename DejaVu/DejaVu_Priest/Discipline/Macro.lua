@@ -61,6 +61,8 @@ insert(macroList, { title = "party4恳求", key = "SHIFT-F7", text = "/focus par
 insert(macroList, { title = "绝望祷言", key = "SHIFT-F8", text = "/cast 绝望祷言" })
 insert(macroList, { title = "福音", key = "SHIFT-F9", text = "/cast 福音" })
 insert(macroList, { title = "target痛", key = "SHIFT-,", text = "/cast [@target] 暗言术：痛" })
+insert(macroList, { title = "治疗石", key = "SHIFT-F10", text = "/cast 治疗石" })
+insert(macroList, { title = "强效治疗药水", key = "SHIFT-F11", text = "/cast 强效治疗药水" })
 insert(macroList, { title = "focus痛", key = "ALT-,", text = "/cast [@focus] 暗言术：痛" })
 insert(macroList, { title = "target灭", key = "SHIFT-.", text = "/cast [@target] 暗言术：灭" })
 insert(macroList, { title = "focus灭", key = "ALT-.", text = "/cast [@focus] 暗言术：灭" })

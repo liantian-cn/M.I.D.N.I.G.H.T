@@ -121,6 +121,8 @@ class PriestDiscipline(BaseRotation):
             "绝望祷言": "SHIFT-F8",
             "福音": "SHIFT-F9",
             # 暗言术：痛
+            "治疗石": "SHIFT-F10",
+            "强效治疗药水": "SHIFT-F11",
             "target痛": "SHIFT-,",
             "focus痛": "ALT-,",
             # 暗言术：灭
@@ -362,6 +364,15 @@ class PriestDiscipline(BaseRotation):
             )
         ):
             return self.cast("绝望祷言")
+
+        if player.health_base < desperate_prayer_hp_threshold:
+            if ctx.spell_cooldown_ready("治疗石", spell_queue_window, ignore_gcd=True):
+                return self.cast("治疗石")
+
+            if ctx.spell_cooldown_ready(
+                "强效治疗药水", spell_queue_window, ignore_gcd=True
+            ):
+                return self.cast("强效治疗药水")
 
         # 6. 纯净术 冷却好且存在 驱散单位，对该单位放 纯净术。
         # 优先自己

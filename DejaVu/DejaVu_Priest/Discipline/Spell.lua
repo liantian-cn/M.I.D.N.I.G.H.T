@@ -28,6 +28,8 @@ insert(cooldownSpells, { spellID = 589, name = "暗言术：痛" })
 insert(cooldownSpells, { spellID = 586, name = "渐隐术" })
 insert(cooldownSpells, { spellID = 19236, name = "绝望祷言" })
 insert(cooldownSpells, { spellID = 200829, name = "恳求" })
+insert(cooldownSpells, { type = "item", itemID = 5512, name = "治疗石" })
+insert(cooldownSpells, { type = "item", itemID = 258138, name = "强效治疗药水" })
 insert(cooldownSpells, { spellID = 2061, name = "快速治疗" })
 insert(cooldownSpells, { spellID = 585, name = "惩击" })
 
