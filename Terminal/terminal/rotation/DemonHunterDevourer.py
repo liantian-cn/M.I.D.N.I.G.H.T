@@ -15,6 +15,8 @@ class DemonHunterDevourer(BaseRotation):
 
     def __init__(self) -> None:
         super().__init__()
+        self._burst_star_count = 0
+        self._last_seen_succeeded_cast = ""
 
         self.macroTable = {
             "target吞噬": "ALT-NUMPAD1",
@@ -193,6 +195,14 @@ class DemonHunterDevourer(BaseRotation):
 
         # 坍缩之星（爆发变身标志）
         collapsing_star_exists = player.hasBuff("坍缩之星")
+
+        if not collapsing_star_exists:
+            self._burst_star_count = 0
+            self._last_seen_succeeded_cast = ""
+        elif latest_succeeded_cast != self._last_seen_succeeded_cast:
+            if latest_succeeded_cast == "坍缩之星":
+                self._burst_star_count += 1
+            self._last_seen_succeeded_cast = latest_succeeded_cast
 
         # 灵魂献祭
         soul_immolation_exists = player.hasBuff("灵魂献祭")
@@ -434,6 +444,22 @@ class DemonHunterDevourer(BaseRotation):
                     and moment_of_craving_exists
                     and ctx.spell_cooldown_ready("根除", spell_queue_window)
                 )
+                fourth_star_immolation_ready = (
+                    self._burst_star_count >= 4
+                    and latest_succeeded_cast == "坍缩之星"
+                    and not soul_immolation_exists
+                    and (
+                        fury < 50
+                        or (
+                            soul_fragments >= 36
+                            and scattered_souls_fragments_count >= 10
+                        )
+                    )
+                    and ctx.spell_cooldown_ready("灵魂献祭", spell_queue_window)
+                )
+
+                if fourth_star_immolation_ready:
+                    return self.cast("灵魂献祭")
 
                 if not is_aoe:
                     # 单体：先根除再虚空射线 > 坍缩之星 > 吞噬
