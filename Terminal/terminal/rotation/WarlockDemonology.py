@@ -55,6 +55,7 @@ class WarlockDemonology(BaseRotation):
         player = ctx.player
         target = ctx.target
         latest_succeeded_cast = ctx.latest_succeeded_cast
+        combat_time = float(ctx.combat_time or 0.0)
 
         if not player.alive:
             return self.idle("玩家已死亡")
@@ -113,6 +114,7 @@ class WarlockDemonology(BaseRotation):
         portal_window = player.hasBuff(ARGUS_PORTAL)
         tyrant_window = player.hasBuff(DEMONIC_TYRANT_BUFF)
         burst_window = portal_window or tyrant_window
+        enemy_count = player.enemyCount
 
         # 爆发模式预铺：暴君就绪后暂停古手，铺关键召唤物，并把碎片补到暴君后可满 5 片。
         if burst_mode_enabled and tyrant_ready and not burst_window:
@@ -149,9 +151,13 @@ class WarlockDemonology(BaseRotation):
 
             return self.idle("传送门期间：等待古手循环资源")
 
-        # 传送门前：确保资源和关键召唤物尽量铺好，然后开暴君进传送门。
-        if doomguard_ready and tyrant_ready:
+        # 平稳期：末日守卫用于 4 目标以上，或每次战斗开场直接使用。
+        if doomguard_ready and (enemy_count >= 4 or combat_time <= 5):
             return self.cast(f"target{DOOMGUARD}")
+
+        # 平稳期：魔典尽可能留给单体场景使用。
+        if grimoire_felguard_ready and enemy_count <= 1:
+            return self.cast(f"target{GRIMOIRE_FELGUARD}")
 
         if dreadstalkers_ready and soul_shards >= 2:
             return self.cast(f"target{DREADSTALKERS}")

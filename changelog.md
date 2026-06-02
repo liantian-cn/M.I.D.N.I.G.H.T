@@ -2,6 +2,17 @@
 
 ## 2026-06-02
 
+### Tune Demonology Warlock steady cooldowns
+
+- Updated `WarlockDemonology.py` steady-state logic so Doomguard is used on 4+ targets or at combat start, while Grimoire: Felguard is favored for single-target situations.
+
+Verification:
+
+- `uv run python -m py_compile terminal\rotation\WarlockDemonology.py` -> passed
+- `git diff --check` -> no whitespace errors
+
+## 2026-06-02
+
 ### Add Demonology Warlock burst mode
 
 - Added a Demonology Warlock `爆发模式` setting cell at `setting.cell(0)` / `x=55,y=12`.
