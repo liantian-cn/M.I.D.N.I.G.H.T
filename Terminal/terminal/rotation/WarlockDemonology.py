@@ -40,6 +40,7 @@ class WarlockDemonology(BaseRotation):
             IMPLOSION: "ALT-NUMPAD8",
             f"target{DOOMGUARD}": "ALT-NUMPAD9",
             f"target{DEMONIC_TYRANT}": "ALT-NUMPAD0",
+            f"target魔典：邪能破坏者": "ALT-NUMPAD1",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
