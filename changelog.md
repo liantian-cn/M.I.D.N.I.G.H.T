@@ -2,6 +2,17 @@
 
 ## 2026-06-02
 
+### Reset Warlock burst mode from Argus Dominion
+
+- Changed Demonology Warlock burst-mode auto-reset to watch `阿古斯的支配` aura ID `1276166`; the toggle now turns off when that buff disappears.
+
+Verification:
+
+- `luacheck DejaVu_Warlock` -> 0 warnings / 0 errors
+- `git diff --check` -> no whitespace errors
+
+## 2026-06-02
+
 ### Tune Demonology Warlock steady cooldowns
 
 - Updated `WarlockDemonology.py` steady-state logic so Doomguard is used on 4+ targets or at combat start, while Grimoire: Felguard is favored for single-target situations.

@@ -25,10 +25,10 @@ local Config = DejaVu.Config
 local MartixInitFuncs = DejaVu.MartixInitFuncs
 
 local SOUL_SHARDS_POWER_TYPE = Enum.PowerType.SoulShards
-local DEMONIC_TYRANT_BUFF_ID = 265187
+local ARGUS_DOMINION_BUFF_ID = 1276166
 
 local warlock_burst_mode = Config("warlock_burst_mode")
-local wasDemonicTyrantActive = false
+local wasArgusDominionActive = false
 
 local function InitFrame()
     local eventFrame = CreateFrame("Frame")
@@ -50,14 +50,14 @@ local function InitFrame()
     end
 
     local function UpdateBurstModeReset()
-        local auraData = GetPlayerAuraBySpellID(DEMONIC_TYRANT_BUFF_ID)
-        local isDemonicTyrantActive = auraData ~= nil
+        local auraData = GetPlayerAuraBySpellID(ARGUS_DOMINION_BUFF_ID)
+        local isArgusDominionActive = auraData ~= nil
 
-        if wasDemonicTyrantActive and not isDemonicTyrantActive then
+        if wasArgusDominionActive and not isArgusDominionActive then
             warlock_burst_mode:set_value(false)
         end
 
-        wasDemonicTyrantActive = isDemonicTyrantActive
+        wasArgusDominionActive = isArgusDominionActive
     end
 
     local fastTimeElapsed = -random()
@@ -72,7 +72,7 @@ local function InitFrame()
 
     -- Purpose: refresh Demonology soul shards when player power changes.
     eventFrame:RegisterUnitEvent("UNIT_POWER_FREQUENT", "player")
-    -- Purpose: reset burst mode when Demonic Tyrant disappears.
+    -- Purpose: reset burst mode when Argus's Dominion disappears.
     eventFrame:RegisterUnitEvent("UNIT_AURA", "player")
     -- Purpose: refresh the soul shard cell after login/loading transitions.
     eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
