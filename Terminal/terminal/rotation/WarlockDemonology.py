@@ -13,6 +13,7 @@ SHADOW_BOLT = "暗影箭"
 IMPLOSION = "内爆"
 DOOMGUARD = "召唤末日守卫"
 DEMONIC_TYRANT = "召唤恶魔暴君"
+GRIMOIRE_FELGUARD = "魔典：邪能破坏者"
 
 
 DEMON_CORE = "恶魔之核"
@@ -40,7 +41,7 @@ class WarlockDemonology(BaseRotation):
             IMPLOSION: "ALT-NUMPAD8",
             f"target{DOOMGUARD}": "ALT-NUMPAD9",
             f"target{DEMONIC_TYRANT}": "ALT-NUMPAD0",
-            f"target魔典：邪能破坏者": "ALT-NUMPAD1",
+            f"target{GRIMOIRE_FELGUARD}": "SHIFT-NUMPAD1",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
@@ -88,6 +89,11 @@ class WarlockDemonology(BaseRotation):
         )
         soul_shards = round(soul_shards_ratio * 5)
 
+        burst_mode_cell = ctx.setting.cell(0)
+        burst_mode_enabled = (
+            False if burst_mode_cell is None else burst_mode_cell.mean < 200
+        )
+
         demon_core_stacks = player.buffStack(DEMON_CORE)
         wild_imp_stacks = player.buffStack(WILD_IMP)
 
@@ -100,10 +106,29 @@ class WarlockDemonology(BaseRotation):
         shadow_bolt_ready = ctx.spell_cooldown_ready(SHADOW_BOLT, spell_queue_window)
         tyrant_ready = ctx.spell_cooldown_ready(DEMONIC_TYRANT, spell_queue_window)
         doomguard_ready = ctx.spell_cooldown_ready(DOOMGUARD, spell_queue_window)
+        grimoire_felguard_ready = ctx.spell_cooldown_ready(
+            GRIMOIRE_FELGUARD, spell_queue_window
+        )
 
         portal_window = player.hasBuff(ARGUS_PORTAL)
         tyrant_window = player.hasBuff(DEMONIC_TYRANT_BUFF)
         burst_window = portal_window or tyrant_window
+
+        # 爆发模式预铺：暴君就绪后暂停古手，铺关键召唤物，并把碎片补到暴君后可满 5 片。
+        if burst_mode_enabled and tyrant_ready and not burst_window:
+            if doomguard_ready:
+                return self.cast(f"target{DOOMGUARD}")
+
+            if grimoire_felguard_ready:
+                return self.cast(f"target{GRIMOIRE_FELGUARD}")
+
+            if soul_shards < 2 and shadow_bolt_ready:
+                return self.cast(f"target{SHADOW_BOLT}")
+
+            if soul_shards >= 2:
+                return self.cast(f"target{DEMONIC_TYRANT}")
+
+            return self.idle("爆发模式预铺：等待暴君前置资源")
 
         # 传送门期间：围绕古手循环，优先把传送门返片转化成更多古手。
         if burst_window:

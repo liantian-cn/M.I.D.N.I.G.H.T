@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-06-02
+
+### Add Demonology Warlock burst mode
+
+- Added a Demonology Warlock `爆发模式` setting cell at `setting.cell(0)` / `x=55,y=12`.
+- Updated `WarlockDemonology.py` so burst mode enters a pre-Tyrant setup when Tyrant is ready, pauses Hand of Gul'dan, casts Doomguard and Grimoire: Felguard when ready, builds to at least 2 shards, then casts Tyrant.
+- Reset the DejaVu burst mode toggle when the Demonic Tyrant aura disappears.
+
+Verification:
+
+- `luacheck DejaVu_Warlock` -> 0 warnings / 0 errors
+- `uv run python -m py_compile terminal\rotation\WarlockDemonology.py` -> passed
+- `git diff --check` -> no whitespace errors
+
 ## 2026-06-01
 
 ### Add Demonology Warlock burst cycle
