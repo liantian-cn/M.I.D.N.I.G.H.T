@@ -8,6 +8,7 @@ local UnitClass                         = UnitClass
 local UnitPower                         = UnitPower
 local UnitPowerMax                      = UnitPowerMax
 local GetSpecialization                 = GetSpecialization
+local GetTime                           = GetTime
 local GetPlayerAuraBySpellID            = C_UnitAuras.GetPlayerAuraBySpellID
 local IsSpellKnown                      = C_SpellBook.IsSpellKnown
 
@@ -28,6 +29,7 @@ local SOUL_SHARDS_POWER_TYPE = Enum.PowerType.SoulShards
 local ARGUS_DOMINION_BUFF_ID = 1276166
 
 local warlock_burst_mode = Config("warlock_burst_mode")
+local warlockBurstStartTime = 0
 
 local function InitFrame()
     local eventFrame = CreateFrame("Frame")
@@ -51,6 +53,16 @@ local function InitFrame()
     local function UpdateBurstModeReset()
         local auraData = GetPlayerAuraBySpellID(ARGUS_DOMINION_BUFF_ID)
         local isArgusDominionActive = auraData ~= nil
+
+        if isArgusDominionActive then
+            if warlockBurstStartTime == 0 then
+                warlockBurstStartTime = GetTime()
+            end
+            DejaVu.BurstTime = warlockBurstStartTime
+        else
+            warlockBurstStartTime = 0
+            DejaVu.BurstTime = 0
+        end
 
         if warlock_burst_mode:get_value() and not isArgusDominionActive then
             warlock_burst_mode:set_value(false)

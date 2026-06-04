@@ -2,6 +2,14 @@
 
 ## 2026-06-04
 
+### Track Warlock burst timer from Argus Dominion
+
+- Added Demonology Warlock burst timer tracking so `DejaVu.BurstTime` starts when the Argus Dominion aura appears and resets when the aura disappears, matching the Devourer Demon Hunter timing behavior.
+
+Verification:
+
+- `luacheck DejaVu_Warlock` -> 0 warnings / 0 errors
+
 ### Reset Warlock burst mode when Argus Dominion is absent
 
 - Changed Demonology Warlock burst-mode reset to turn the toggle off whenever burst mode is enabled and the Argus Dominion aura is no longer present, without requiring a prior observed active aura state.
