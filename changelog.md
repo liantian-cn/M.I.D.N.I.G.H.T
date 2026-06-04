@@ -2,6 +2,14 @@
 
 ## 2026-06-04
 
+### Add Warlock healing item macros
+
+- Added Demonology Warlock override macros for `恶魔治疗石` on `SHIFT-NUMPAD5` and `强效治疗药水` on `SHIFT-NUMPAD6`, matching the Devourer Demon Hunter healing item bindings while using the Warlock-specific healthstone.
+
+Verification:
+
+- `luacheck DejaVu_Warlock` -> 0 warnings / 0 errors
+
 ### Remove Warlock burst permission auto-reset
 
 - Removed the Demonology Warlock burst permission auto-reset from the Argus Dominion aura watcher; the aura watcher now only maintains `DejaVu.BurstTime`.
