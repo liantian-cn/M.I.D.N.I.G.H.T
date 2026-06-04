@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-06-04
+
+### Reset Warlock burst mode when Argus Dominion is absent
+
+- Changed Demonology Warlock burst-mode reset to turn the toggle off whenever burst mode is enabled and the Argus Dominion aura is no longer present, without requiring a prior observed active aura state.
+
+Verification:
+
+- `luacheck DejaVu_Warlock` -> 0 warnings / 0 errors
+
 ## 2026-06-02
 
 ### Reset Warlock burst mode from Argus Dominion

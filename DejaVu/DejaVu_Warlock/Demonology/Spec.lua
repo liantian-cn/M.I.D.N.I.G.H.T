@@ -28,7 +28,6 @@ local SOUL_SHARDS_POWER_TYPE = Enum.PowerType.SoulShards
 local ARGUS_DOMINION_BUFF_ID = 1276166
 
 local warlock_burst_mode = Config("warlock_burst_mode")
-local wasArgusDominionActive = false
 
 local function InitFrame()
     local eventFrame = CreateFrame("Frame")
@@ -53,11 +52,9 @@ local function InitFrame()
         local auraData = GetPlayerAuraBySpellID(ARGUS_DOMINION_BUFF_ID)
         local isArgusDominionActive = auraData ~= nil
 
-        if wasArgusDominionActive and not isArgusDominionActive then
+        if warlock_burst_mode:get_value() and not isArgusDominionActive then
             warlock_burst_mode:set_value(false)
         end
-
-        wasArgusDominionActive = isArgusDominionActive
     end
 
     local fastTimeElapsed = -random()
