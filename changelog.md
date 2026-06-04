@@ -2,6 +2,14 @@
 
 ## 2026-06-04
 
+### Add Terminal Warlock healing item logic
+
+- Added Demonology Warlock rotation handling for `恶魔治疗石` and `强效治疗药水` below 60% player health, using the matching `SHIFT-NUMPAD5` and `SHIFT-NUMPAD6` macro bindings.
+
+Verification:
+
+- `uv run python -m py_compile terminal\rotation\WarlockDemonology.py` -> passed
+
 ### Add Warlock healing item macros
 
 - Added Demonology Warlock override macros for `恶魔治疗石` on `SHIFT-NUMPAD5` and `强效治疗药水` on `SHIFT-NUMPAD6`, matching the Devourer Demon Hunter healing item bindings while using the Warlock-specific healthstone.

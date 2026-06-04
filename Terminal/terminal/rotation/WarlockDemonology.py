@@ -14,6 +14,8 @@ IMPLOSION = "内爆"
 DOOMGUARD = "召唤末日守卫"
 DEMONIC_TYRANT = "召唤恶魔暴君"
 GRIMOIRE_FELGUARD = "魔典：邪能破坏者"
+DEMON_HEALTHSTONE = "恶魔治疗石"
+GREATER_HEALING_POTION = "强效治疗药水"
 
 
 DEMON_CORE = "恶魔之核"
@@ -42,6 +44,8 @@ class WarlockDemonology(BaseRotation):
             f"target{DOOMGUARD}": "ALT-NUMPAD9",
             f"target{DEMONIC_TYRANT}": "ALT-NUMPAD0",
             f"target{GRIMOIRE_FELGUARD}": "SHIFT-NUMPAD1",
+            DEMON_HEALTHSTONE: "SHIFT-NUMPAD5",
+            GREATER_HEALING_POTION: "SHIFT-NUMPAD6",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
@@ -115,6 +119,14 @@ class WarlockDemonology(BaseRotation):
         tyrant_window = player.hasBuff(DEMONIC_TYRANT_BUFF)
         burst_window = portal_window or tyrant_window
         enemy_count = player.enemyCount
+        warlock_health_threshold = 60
+
+        if player.healthPercent < warlock_health_threshold:
+            if ctx.spell_cooldown_ready(DEMON_HEALTHSTONE, spell_queue_window):
+                return self.cast(DEMON_HEALTHSTONE)
+
+            if ctx.spell_cooldown_ready(GREATER_HEALING_POTION, spell_queue_window):
+                return self.cast(GREATER_HEALING_POTION)
 
         # 爆发模式预铺：暴君就绪后暂停古手，铺关键召唤物，并把碎片补到暴君后可满 5 片。
         if burst_mode_enabled and tyrant_ready and not burst_window:
