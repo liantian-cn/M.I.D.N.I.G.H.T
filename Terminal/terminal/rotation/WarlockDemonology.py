@@ -121,8 +121,8 @@ class WarlockDemonology(BaseRotation):
             if doomguard_ready:
                 return self.cast(f"target{DOOMGUARD}")
 
-            if grimoire_felguard_ready:
-                return self.cast(f"target{GRIMOIRE_FELGUARD}")
+            # if grimoire_felguard_ready:
+            #     return self.cast(f"target{GRIMOIRE_FELGUARD}")
 
             if soul_shards < 2 and shadow_bolt_ready:
                 return self.cast(f"target{SHADOW_BOLT}")
@@ -156,8 +156,8 @@ class WarlockDemonology(BaseRotation):
             return self.cast(f"target{DOOMGUARD}")
 
         # 平稳期：魔典尽可能留给单体场景使用。
-        if grimoire_felguard_ready and enemy_count <= 1:
-            return self.cast(f"target{GRIMOIRE_FELGUARD}")
+        # if grimoire_felguard_ready and enemy_count <= 1:
+        #     return self.cast(f"target{GRIMOIRE_FELGUARD}")
 
         if dreadstalkers_ready and soul_shards >= 2:
             return self.cast(f"target{DREADSTALKERS}")
