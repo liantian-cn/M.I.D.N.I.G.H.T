@@ -2,14 +2,6 @@
 
 ## 2026-06-04
 
-### Gate Warlock burst reset after aura start
-
-- Updated Demonology Warlock burst permission reset so it waits until the Argus Dominion aura has actually appeared once, then turns the permission off when that aura disappears.
-
-Verification:
-
-- `luacheck DejaVu_Warlock` -> 0 warnings / 0 errors
-
 ### Rename Warlock burst toggle label
 
 - Renamed the Demonology Warlock panel checkbox from `爆发模式` to `爆发许可` while keeping the existing `warlock_burst_mode` config key unchanged.

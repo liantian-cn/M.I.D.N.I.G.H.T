@@ -30,7 +30,6 @@ local ARGUS_DOMINION_BUFF_ID = 1276166
 
 local warlock_burst_mode = Config("warlock_burst_mode")
 local warlockBurstStartTime = 0
-local hasWarlockBurstAuraStarted = false
 
 local function InitFrame()
     local eventFrame = CreateFrame("Frame")
@@ -56,7 +55,6 @@ local function InitFrame()
         local isArgusDominionActive = auraData ~= nil
 
         if isArgusDominionActive then
-            hasWarlockBurstAuraStarted = true
             if warlockBurstStartTime == 0 then
                 warlockBurstStartTime = GetTime()
             end
@@ -66,9 +64,8 @@ local function InitFrame()
             DejaVu.BurstTime = 0
         end
 
-        if hasWarlockBurstAuraStarted and not isArgusDominionActive then
+        if warlock_burst_mode:get_value() and not isArgusDominionActive then
             warlock_burst_mode:set_value(false)
-            hasWarlockBurstAuraStarted = false
         end
     end
 
