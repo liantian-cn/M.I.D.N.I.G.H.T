@@ -2,6 +2,14 @@
 
 ## 2026-06-04
 
+### Remove Warlock burst permission auto-reset
+
+- Removed the Demonology Warlock burst permission auto-reset from the Argus Dominion aura watcher; the aura watcher now only maintains `DejaVu.BurstTime`.
+
+Verification:
+
+- `luacheck DejaVu_Warlock` -> 0 warnings / 0 errors
+
 ### Rename Warlock burst toggle label
 
 - Renamed the Demonology Warlock panel checkbox from `爆发模式` to `爆发许可` while keeping the existing `warlock_burst_mode` config key unchanged.
