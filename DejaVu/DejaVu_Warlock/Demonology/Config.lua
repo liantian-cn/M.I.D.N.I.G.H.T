@@ -24,7 +24,7 @@ do
     insert(ConfigRows, {
         type = "checkbox",
         key = "warlock_burst_mode",
-        name = "爆发模式",
+        name = "爆发许可",
         tooltip = "开启后在恶魔暴君冷却就绪时进入预铺阶段",
         default_value = false,
         on_text = "开",
@@ -34,7 +34,7 @@ do
 
     local function InitFrame()
         -- x:55 y:12
-        -- Purpose: display Demonology Warlock burst mode config.
+        -- Purpose: display Demonology Warlock burst permission config.
         local warlock_burst_mode_cell = Cell:New(55, 12)
 
         local function set_warlock_burst_mode(value)

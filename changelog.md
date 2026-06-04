@@ -2,6 +2,14 @@
 
 ## 2026-06-04
 
+### Rename Warlock burst toggle label
+
+- Renamed the Demonology Warlock panel checkbox from `爆发模式` to `爆发许可` while keeping the existing `warlock_burst_mode` config key unchanged.
+
+Verification:
+
+- `luacheck DejaVu_Warlock` -> 0 warnings / 0 errors
+
 ### Track Warlock burst timer from Argus Dominion
 
 - Added Demonology Warlock burst timer tracking so `DejaVu.BurstTime` starts when the Argus Dominion aura appears and resets when the aura disappears, matching the Devourer Demon Hunter timing behavior.
