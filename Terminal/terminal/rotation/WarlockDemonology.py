@@ -128,7 +128,7 @@ class WarlockDemonology(BaseRotation):
             if ctx.spell_cooldown_ready(GREATER_HEALING_POTION, spell_queue_window):
                 return self.cast(GREATER_HEALING_POTION)
 
-        # 爆发模式预铺：暴君就绪后暂停古手，铺关键召唤物，并把碎片补到暴君后可满 5 片。
+        # 爆发模式预铺：暴君就绪后暂停古手，铺关键召唤物，并把碎片补到暴君后可满 5 片。/cast 119898
         if burst_mode_enabled and tyrant_ready and not burst_window:
             if doomguard_ready:
                 return self.cast(f"target{DOOMGUARD}")
