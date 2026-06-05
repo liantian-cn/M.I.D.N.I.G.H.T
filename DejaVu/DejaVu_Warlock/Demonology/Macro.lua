@@ -19,7 +19,7 @@ if currentSpec ~= 2 then return end
 local macroList = {}
 insert(macroList, { title = "reloadUI", key = "CTRL-F12", text = "/reload" })
 insert(macroList, { title = "target古尔丹之手", key = "ALT-NUMPAD1", text = "/cast [@target] 古尔丹之手" })
-insert(macroList, { title = "召唤地狱猎犬", key = "ALT-NUMPAD2", text = "/cast 召唤地狱猎犬" })
+insert(macroList, { title = "focus宠物打断", key = "ALT-NUMPAD2", text = "/cast [@focus,exists,harm] [@target,exists,harm] 法术封锁(恶魔掌控技能) \n/cast [@focus,exists,harm] [@target,exists,harm] 巨斧投掷(特殊技能)" })
 insert(macroList, { title = "召唤小鬼", key = "ALT-NUMPAD3", text = "/cast 召唤小鬼" })
 insert(macroList, { title = "target召唤恐惧猎犬", key = "ALT-NUMPAD4", text = "/cast [@target] 召唤恐惧猎犬" })
 insert(macroList, { title = "召唤恶魔卫士", key = "ALT-NUMPAD5", text = "/cast 召唤恶魔卫士" })
@@ -31,6 +31,7 @@ insert(macroList, { title = "target召唤恶魔暴君", key = "ALT-NUMPAD0", tex
 insert(macroList, { title = "target魔典：邪能破坏者", key = "SHIFT-NUMPAD1", text = "/cast [@target] 魔典：邪能破坏者" })
 insert(macroList, { title = "恶魔治疗石", key = "SHIFT-NUMPAD5", text = "/cast 灵魂燃烧 \n/cast 恶魔治疗石" })
 insert(macroList, { title = "强效治疗药水", key = "SHIFT-NUMPAD6", text = "/cast 强效治疗药水" })
+insert(macroList, { title = "target宠物打断", key = "SHIFT-NUMPAD7", text = "/cast [@target,exists,harm] 法术封锁(恶魔掌控技能) \n/cast [@target,exists,harm] 巨斧投掷(特殊技能)" })
 
 for macroIndex, macro in pairs(macroList) do -- luacheck: ignore macroIndex
     local buttonName = addonName .. "Button" .. macro.title

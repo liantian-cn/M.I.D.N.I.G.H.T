@@ -4,7 +4,6 @@ from terminal.context import Context
 from .base import BaseRotation
 
 HAND_OF_GULDAN = "古尔丹之手"
-FELHUNTER = "召唤地狱猎犬"
 IMP = "召唤小鬼"
 DREADSTALKERS = "召唤恐惧猎犬"
 FELGUARD = "召唤恶魔卫士"
@@ -34,7 +33,6 @@ class WarlockDemonology(BaseRotation):
 
         self.macroTable = {
             f"target{HAND_OF_GULDAN}": "ALT-NUMPAD1",
-            FELHUNTER: "ALT-NUMPAD2",
             IMP: "ALT-NUMPAD3",
             f"target{DREADSTALKERS}": "ALT-NUMPAD4",
             FELGUARD: "ALT-NUMPAD5",
@@ -168,8 +166,8 @@ class WarlockDemonology(BaseRotation):
             return self.cast(f"target{DOOMGUARD}")
 
         # 平稳期：魔典尽可能留给单体场景使用。
-        # if grimoire_felguard_ready and enemy_count <= 1:
-        #     return self.cast(f"target{GRIMOIRE_FELGUARD}")
+        if grimoire_felguard_ready and enemy_count <= 1:
+            return self.cast(f"target{GRIMOIRE_FELGUARD}")
 
         if dreadstalkers_ready and soul_shards >= 2:
             return self.cast(f"target{DREADSTALKERS}")

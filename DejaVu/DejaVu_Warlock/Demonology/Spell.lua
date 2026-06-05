@@ -33,7 +33,6 @@ local function GetPetInterruptSpellID()
 end
 
 insert(cooldownSpells, { spellID = 105174, name = "古尔丹之手" })
-insert(cooldownSpells, { spellID = 691, name = "召唤地狱猎犬" })
 insert(cooldownSpells, { spellID = 688, name = "召唤小鬼" })
 insert(cooldownSpells, { spellID = 104316, name = "召唤恐惧猎犬" })
 insert(cooldownSpells, { spellID = 30146, name = "召唤恶魔卫士" })
