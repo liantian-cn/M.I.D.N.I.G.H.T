@@ -2,7 +2,9 @@ local addonName, addonTable             = ... -- luacheck: ignore addonTable
 
 local insert                            = table.insert
 
+-- luacheck: globals UnitCreatureFamily
 local UnitClass                         = UnitClass
+local UnitCreatureFamily                = UnitCreatureFamily
 local GetSpecialization                 = GetSpecialization
 
 local className, classFilename, classId = UnitClass("player") -- luacheck: ignore className classId
@@ -17,6 +19,19 @@ local DejaVu = _G["DejaVu"]
 local cooldownSpells = DejaVu.cooldownSpells
 local chargeSpells = DejaVu.chargeSpells
 
+local FELGUARD_INTERRUPT_SPELL_ID = 119914
+local FELHUNTER_INTERRUPT_SPELL_ID = 119910
+
+local function GetPetInterruptSpellID()
+    local family = UnitCreatureFamily("pet")
+    if family == "恶魔卫士" or family == "Felguard" then
+        return FELGUARD_INTERRUPT_SPELL_ID
+    elseif family == "地狱猎犬" or family == "Felhunter" then
+        return FELHUNTER_INTERRUPT_SPELL_ID
+    end
+    return nil
+end
+
 insert(cooldownSpells, { spellID = 105174, name = "古尔丹之手" })
 insert(cooldownSpells, { spellID = 691, name = "召唤地狱猎犬" })
 insert(cooldownSpells, { spellID = 688, name = "召唤小鬼" })
@@ -30,5 +45,8 @@ insert(cooldownSpells, { spellID = 265187, name = "召唤恶魔暴君" })
 insert(cooldownSpells, { spellID = 1276467, name = "魔典：邪能破坏者" })
 insert(cooldownSpells, { type = "item", itemID = 224464, name = "恶魔治疗石" })
 insert(cooldownSpells, { type = "item", itemID = 258138, name = "强效治疗药水" })
-insert(cooldownSpells, { spellID =  119914, name = "巨斧投掷" })
-insert(cooldownSpells, { spellID =  119910, name = "法术封锁" })
+insert(cooldownSpells, {
+    spellIDGetter = GetPetInterruptSpellID,
+    spellIDs = { FELGUARD_INTERRUPT_SPELL_ID, FELHUNTER_INTERRUPT_SPELL_ID },
+    name = "宠物打断"
+})

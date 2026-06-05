@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-06-05
+
+### Add dynamic Warlock pet interrupt cooldown
+
+- Added dynamic cooldown spell entry support so a slot can resolve its spell ID at refresh time.
+- Changed Demonology Warlock pet interrupt output to use Axe Toss for Felguard and Spell Lock for Felhunter in one shared cooldown slot.
+
+Verification:
+
+- `luacheck DejaVu_Spell\Cooldown.lua DejaVu_Warlock\Demonology\Spell.lua` -> 0 warnings / 0 errors
+- Full DejaVu `luacheck ... DejaVu_Warlock` -> 0 errors; existing warnings remain in unrelated modules and bundled libs
+
 ## 2026-06-04
 
 ### Add Terminal Warlock healing item logic

@@ -100,6 +100,13 @@ local function getEntryItemID(entry)
     return nil
 end
 
+local function getEntrySpellID(entry)
+    if entry.spellIDGetter then
+        return entry.spellIDGetter()
+    end
+    return entry.spellID
+end
+
 local function getEntryIcon(entry)
     local entryType = getEntryType(entry)
     if entryType == "inventory" then
@@ -111,14 +118,22 @@ local function getEntryIcon(entry)
     elseif entryType == "item" then
         return GetItemIconByID(entry.itemID)
     end
-    return GetSpellTexture(entry.spellID)
+    local spellID = getEntrySpellID(entry)
+    if not spellID then
+        return nil
+    end
+    return GetSpellTexture(spellID)
 end
 
 local function getEntryName(entry)
     if entry.name then
         return entry.name
     end
-    return GetSpellName(entry.spellID)
+    local spellID = getEntrySpellID(entry)
+    if not spellID then
+        return nil
+    end
+    return GetSpellName(spellID)
 end
 
 local function getItemRemaining(startTime, duration, enable)
@@ -139,7 +154,11 @@ local function getEntryRemaining(entry)
     elseif entryType == "item" then
         return getItemRemaining(GetItemCooldown(entry.itemID))
     end
-    return GetSpellCooldownDuration(entry.spellID)
+    local spellID = getEntrySpellID(entry)
+    if not spellID then
+        return 0
+    end
+    return GetSpellCooldownDuration(spellID)
 end
 
 local function isEntryUsable(entry)
@@ -155,7 +174,11 @@ local function isEntryUsable(entry)
         local usable, noMana = IsUsableItem(itemID)
         return usable and not noMana
     end
-    return IsSpellUsable(entry.spellID)
+    local spellID = getEntrySpellID(entry)
+    if not spellID then
+        return false
+    end
+    return IsSpellUsable(spellID)
 end
 
 local function isEntryKnown(entry)
@@ -164,14 +187,22 @@ local function isEntryKnown(entry)
         local itemID = getEntryItemID(entry)
         return itemID ~= nil and (not entry.itemID or itemID == entry.itemID)
     end
-    return IsSpellInSpellBook(entry.spellID)
+    local spellID = getEntrySpellID(entry)
+    if not spellID then
+        return false
+    end
+    return IsSpellInSpellBook(spellID)
 end
 
 local function isEntryOverlayed(entry)
     if getEntryType(entry) ~= "spell" then
         return false
     end
-    return IsSpellOverlayed(entry.spellID)
+    local spellID = getEntrySpellID(entry)
+    if not spellID then
+        return false
+    end
+    return IsSpellOverlayed(spellID)
 end
 
 
@@ -208,7 +239,7 @@ local function InitFrame()
     local function InitCellMap()
         for i = 1, #cooldownSpells do
             local entry = cooldownSpells[i]
-            local spellID = entry.spellID
+            local spellID = getEntrySpellID(entry)
             local x = 2 * i
             local y = 0
             local baseID = spellID and FindBaseSpellByID(spellID)
@@ -237,7 +268,15 @@ local function InitFrame()
             local spellName = getEntryName(entry)
 
 
-            if spellID then
+            if entry.spellIDs then
+                for _, currentSpellID in ipairs(entry.spellIDs) do
+                    validSpellID[currentSpellID] = i
+                    local currentBaseID = FindBaseSpellByID(currentSpellID)
+                    if currentBaseID then
+                        baseIDToIndex[currentBaseID] = i
+                    end
+                end
+            elseif spellID then
                 validSpellID[spellID] = i
             end
             if baseID then
