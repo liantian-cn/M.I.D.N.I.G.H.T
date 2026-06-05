@@ -2,6 +2,15 @@
 
 ## 2026-06-05
 
+### Add Terminal Warlock pet interrupt logic
+
+- Added Demonology Warlock focus/target pet interrupt macro bindings to Terminal.
+- Added blacklist-based interrupt handling that uses the shared `宠物打断` cooldown slot and prefers focus before target.
+
+Verification:
+
+- `uv run python -m py_compile terminal\rotation\WarlockDemonology.py` -> passed
+
 ### Add dynamic Warlock pet interrupt cooldown
 
 - Added dynamic cooldown spell entry support so a slot can resolve its spell ID at refresh time.

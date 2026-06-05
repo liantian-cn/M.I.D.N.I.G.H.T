@@ -15,6 +15,9 @@ DEMONIC_TYRANT = "召唤恶魔暴君"
 GRIMOIRE_FELGUARD = "魔典：邪能破坏者"
 DEMON_HEALTHSTONE = "恶魔治疗石"
 GREATER_HEALING_POTION = "强效治疗药水"
+PET_INTERRUPT = "宠物打断"
+FOCUS_PET_INTERRUPT = "focus宠物打断"
+TARGET_PET_INTERRUPT = "target宠物打断"
 
 
 DEMON_CORE = "恶魔之核"
@@ -33,6 +36,7 @@ class WarlockDemonology(BaseRotation):
 
         self.macroTable = {
             f"target{HAND_OF_GULDAN}": "ALT-NUMPAD1",
+            FOCUS_PET_INTERRUPT: "ALT-NUMPAD2",
             IMP: "ALT-NUMPAD3",
             f"target{DREADSTALKERS}": "ALT-NUMPAD4",
             FELGUARD: "ALT-NUMPAD5",
@@ -44,6 +48,7 @@ class WarlockDemonology(BaseRotation):
             f"target{GRIMOIRE_FELGUARD}": "SHIFT-NUMPAD1",
             DEMON_HEALTHSTONE: "SHIFT-NUMPAD5",
             GREATER_HEALING_POTION: "SHIFT-NUMPAD6",
+            TARGET_PET_INTERRUPT: "SHIFT-NUMPAD7",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
@@ -56,8 +61,10 @@ class WarlockDemonology(BaseRotation):
         spell_queue_window = float(ctx.spell_queue_window or 0.3)
         player = ctx.player
         target = ctx.target
+        focus = ctx.focus
         latest_succeeded_cast = ctx.latest_succeeded_cast
         combat_time = float(ctx.combat_time or 0.0)
+        interrupt_blacklist = ctx.interrupt_blacklist
 
         if not player.alive:
             return self.idle("玩家已死亡")
@@ -125,6 +132,25 @@ class WarlockDemonology(BaseRotation):
 
             if ctx.spell_cooldown_ready(GREATER_HEALING_POTION, spell_queue_window):
                 return self.cast(GREATER_HEALING_POTION)
+
+        focus_need_interrupt = False
+        target_need_interrupt = False
+
+        if focus.exists and focus.canAttack and focus.isInRangedRange:
+            if focus.anyCastIcon is not None and focus.anyCastIsInterruptible:
+                if focus.anyCastIcon not in interrupt_blacklist:
+                    focus_need_interrupt = True
+
+        if target.exists and target.canAttack and target.isInRangedRange:
+            if target.anyCastIcon is not None and target.anyCastIsInterruptible:
+                if target.anyCastIcon not in interrupt_blacklist:
+                    target_need_interrupt = True
+
+        if ctx.spell_cooldown_ready(PET_INTERRUPT, spell_queue_window, ignore_gcd=True):
+            if focus_need_interrupt:
+                return self.cast(FOCUS_PET_INTERRUPT)
+            if target_need_interrupt:
+                return self.cast(TARGET_PET_INTERRUPT)
 
         # 爆发模式预铺：暴君就绪后暂停古手，铺关键召唤物，并把碎片补到暴君后可满 5 片。/cast 119898
         if burst_mode_enabled and tyrant_ready and not burst_window:
