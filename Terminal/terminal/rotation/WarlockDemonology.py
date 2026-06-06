@@ -16,8 +16,6 @@ GRIMOIRE_FELGUARD = "魔典：邪能破坏者"
 DEMON_HEALTHSTONE = "恶魔治疗石"
 GREATER_HEALING_POTION = "强效治疗药水"
 PET_INTERRUPT = "宠物打断"
-FOCUS_PET_INTERRUPT = "focus宠物打断"
-TARGET_PET_INTERRUPT = "target宠物打断"
 
 
 DEMON_CORE = "恶魔之核"
@@ -36,7 +34,7 @@ class WarlockDemonology(BaseRotation):
 
         self.macroTable = {
             f"target{HAND_OF_GULDAN}": "ALT-NUMPAD1",
-            FOCUS_PET_INTERRUPT: "ALT-NUMPAD2",
+            f"focus{PET_INTERRUPT}": "ALT-NUMPAD2",
             IMP: "ALT-NUMPAD3",
             f"target{DREADSTALKERS}": "ALT-NUMPAD4",
             FELGUARD: "ALT-NUMPAD5",
@@ -48,7 +46,7 @@ class WarlockDemonology(BaseRotation):
             f"target{GRIMOIRE_FELGUARD}": "SHIFT-NUMPAD1",
             DEMON_HEALTHSTONE: "SHIFT-NUMPAD5",
             GREATER_HEALING_POTION: "SHIFT-NUMPAD6",
-            TARGET_PET_INTERRUPT: "SHIFT-NUMPAD7",
+            f"target{PET_INTERRUPT}": "SHIFT-NUMPAD7",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
@@ -148,17 +146,17 @@ class WarlockDemonology(BaseRotation):
 
         if ctx.spell_cooldown_ready(PET_INTERRUPT, spell_queue_window, ignore_gcd=True):
             if focus_need_interrupt:
-                return self.cast(FOCUS_PET_INTERRUPT)
+                return self.cast(f"focus{PET_INTERRUPT}")
             if target_need_interrupt:
-                return self.cast(TARGET_PET_INTERRUPT)
+                return self.cast(f"target{PET_INTERRUPT}")
 
         # 爆发模式预铺：暴君就绪后暂停古手，铺关键召唤物，并把碎片补到暴君后可满 5 片。/cast 119898
         if burst_mode_enabled and tyrant_ready and not burst_window:
             if doomguard_ready:
                 return self.cast(f"target{DOOMGUARD}")
 
-            # if grimoire_felguard_ready:
-            #     return self.cast(f"target{GRIMOIRE_FELGUARD}")
+            if grimoire_felguard_ready:
+                return self.cast(f"target{GRIMOIRE_FELGUARD}")
 
             if soul_shards < 2 and shadow_bolt_ready:
                 return self.cast(f"target{SHADOW_BOLT}")
