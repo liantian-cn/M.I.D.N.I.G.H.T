@@ -15,7 +15,8 @@ DEMONIC_TYRANT = "召唤恶魔暴君"
 GRIMOIRE_FELGUARD = "魔典：邪能破坏者"
 DEMON_HEALTHSTONE = "恶魔治疗石"
 GREATER_HEALING_POTION = "强效治疗药水"
-PET_INTERRUPT = "宠物打断"
+AXE_TOSS = "巨斧投掷"
+SPELL_LOCK = "法术封锁"
 
 
 DEMON_CORE = "恶魔之核"
@@ -34,7 +35,7 @@ class WarlockDemonology(BaseRotation):
 
         self.macroTable = {
             f"target{HAND_OF_GULDAN}": "ALT-NUMPAD1",
-            f"focus{PET_INTERRUPT}": "ALT-NUMPAD2",
+            f"focus{SPELL_LOCK}": "ALT-NUMPAD2",
             IMP: "ALT-NUMPAD3",
             f"target{DREADSTALKERS}": "ALT-NUMPAD4",
             FELGUARD: "ALT-NUMPAD5",
@@ -44,9 +45,11 @@ class WarlockDemonology(BaseRotation):
             f"target{DOOMGUARD}": "ALT-NUMPAD9",
             f"target{DEMONIC_TYRANT}": "ALT-NUMPAD0",
             f"target{GRIMOIRE_FELGUARD}": "SHIFT-NUMPAD1",
+            f"focus{AXE_TOSS}": "SHIFT-NUMPAD2",
             DEMON_HEALTHSTONE: "SHIFT-NUMPAD5",
             GREATER_HEALING_POTION: "SHIFT-NUMPAD6",
-            f"target{PET_INTERRUPT}": "SHIFT-NUMPAD7",
+            f"target{SPELL_LOCK}": "SHIFT-NUMPAD7",
+            f"target{AXE_TOSS}": "SHIFT-NUMPAD8",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
@@ -96,6 +99,13 @@ class WarlockDemonology(BaseRotation):
             0.0 if soul_shards_cell is None else soul_shards_cell.decimal
         )
         soul_shards = round(soul_shards_ratio * 5)
+        pet_interrupt_family_cell = ctx.spec.cell(1)
+        pet_interrupt_family = "unknown"
+        if pet_interrupt_family_cell is not None:
+            if pet_interrupt_family_cell.mean >= 200:
+                pet_interrupt_family = "felguard"
+            elif pet_interrupt_family_cell.mean >= 80:
+                pet_interrupt_family = "felhunter"
 
         burst_mode_cell = ctx.setting.cell(0)
         burst_mode_enabled = (
@@ -144,11 +154,19 @@ class WarlockDemonology(BaseRotation):
                 if target.anyCastIcon not in interrupt_blacklist:
                     target_need_interrupt = True
 
-        if ctx.spell_cooldown_ready(PET_INTERRUPT, spell_queue_window, ignore_gcd=True):
+        pet_interrupt_spell = None
+        if pet_interrupt_family == "felguard":
+            pet_interrupt_spell = AXE_TOSS
+        elif pet_interrupt_family == "felhunter":
+            pet_interrupt_spell = SPELL_LOCK
+
+        if pet_interrupt_spell and ctx.spell_cooldown_ready(
+            pet_interrupt_spell, spell_queue_window, ignore_gcd=True
+        ):
             if focus_need_interrupt:
-                return self.cast(f"focus{PET_INTERRUPT}")
+                return self.cast(f"focus{pet_interrupt_spell}")
             if target_need_interrupt:
-                return self.cast(f"target{PET_INTERRUPT}")
+                return self.cast(f"target{pet_interrupt_spell}")
 
         # 爆发模式预铺：暴君就绪后暂停古手，铺关键召唤物，并把碎片补到暴君后可满 5 片。/cast 119898
         if burst_mode_enabled and tyrant_ready and not burst_window:

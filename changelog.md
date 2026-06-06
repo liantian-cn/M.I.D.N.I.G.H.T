@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-06-06
+
+### Route Warlock interrupts by pet family
+
+- Removed the merged dynamic pet interrupt cooldown path and restored separate cooldown entries for `巨斧投掷` and `法术封锁`.
+- Added a Demonology Warlock spec cell at `spec.cell(1)` / `x=56,y=13` to expose current pet interrupt family: unknown, Felhunter, or Felguard.
+- Updated Terminal Warlock interrupt logic to decode the pet family cell and cast the matching focus/target spell-specific macro.
+
+Verification:
+
+- `luacheck DejaVu_Spell\Cooldown.lua DejaVu_Warlock\Demonology\Spell.lua DejaVu_Warlock\Demonology\Spec.lua DejaVu_Warlock\Demonology\Macro.lua` -> 0 warnings / 0 errors
+- `uv run python -m py_compile terminal\rotation\WarlockDemonology.py` -> passed
+
 ## 2026-06-05
 
 ### Add Terminal Warlock pet interrupt logic
