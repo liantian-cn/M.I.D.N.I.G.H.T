@@ -32,6 +32,8 @@ insert(macroList, { title = "target魔典：邪能破坏者", key = "SHIFT-NUMPA
 insert(macroList, { title = "恶魔治疗石", key = "SHIFT-NUMPAD5", text = "/cast 灵魂燃烧 \n/cast 恶魔治疗石" })
 insert(macroList, { title = "强效治疗药水", key = "SHIFT-NUMPAD6", text = "/cast 强效治疗药水" })
 insert(macroList, { title = "focus巨斧投掷", key = "SHIFT-NUMPAD2", text = "/cast [@focus,exists,harm] [@target,exists,harm] 巨斧投掷(特殊技能)" })
+insert(macroList, { title = "focus语言灾厄", key = "SHIFT-NUMPAD3", text = "/cast [@focus,exists,harm] [@target,exists,harm] 语言灾厄" })
+insert(macroList, { title = "target语言灾厄", key = "SHIFT-NUMPAD4", text = "/cast [@target,exists,harm] 语言灾厄" })
 insert(macroList, { title = "target法术封锁", key = "SHIFT-NUMPAD7", text = "/cast [@target,exists,harm] 法术封锁(恶魔掌控技能)" })
 insert(macroList, { title = "target巨斧投掷", key = "SHIFT-NUMPAD8", text = "/cast [@target,exists,harm] 巨斧投掷(特殊技能)" })
 

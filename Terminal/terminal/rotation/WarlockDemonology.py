@@ -17,6 +17,7 @@ DEMON_HEALTHSTONE = "恶魔治疗石"
 GREATER_HEALING_POTION = "强效治疗药水"
 AXE_TOSS = "巨斧投掷"
 SPELL_LOCK = "法术封锁"
+LANGUAGE_CURSE = "语言灾厄"
 
 
 DEMON_CORE = "恶魔之核"
@@ -46,6 +47,8 @@ class WarlockDemonology(BaseRotation):
             f"target{DEMONIC_TYRANT}": "ALT-NUMPAD0",
             f"target{GRIMOIRE_FELGUARD}": "SHIFT-NUMPAD1",
             f"focus{AXE_TOSS}": "SHIFT-NUMPAD2",
+            f"focus{LANGUAGE_CURSE}": "SHIFT-NUMPAD3",
+            f"target{LANGUAGE_CURSE}": "SHIFT-NUMPAD4",
             DEMON_HEALTHSTONE: "SHIFT-NUMPAD5",
             GREATER_HEALING_POTION: "SHIFT-NUMPAD6",
             f"target{SPELL_LOCK}": "SHIFT-NUMPAD7",
@@ -167,6 +170,14 @@ class WarlockDemonology(BaseRotation):
                 return self.cast(f"focus{pet_interrupt_spell}")
             if target_need_interrupt:
                 return self.cast(f"target{pet_interrupt_spell}")
+
+        if ctx.spell_cooldown_ready(
+            LANGUAGE_CURSE, spell_queue_window, ignore_gcd=True
+        ):
+            if focus_need_interrupt:
+                return self.cast(f"focus{LANGUAGE_CURSE}")
+            if target_need_interrupt:
+                return self.cast(f"target{LANGUAGE_CURSE}")
 
         # 爆发模式预铺：暴君就绪后暂停古手，铺关键召唤物，并把碎片补到暴君后可满 5 片。/cast 119898
         if burst_mode_enabled and tyrant_ready and not burst_window:
