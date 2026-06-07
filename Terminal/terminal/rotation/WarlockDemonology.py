@@ -170,6 +170,9 @@ class WarlockDemonology(BaseRotation):
 
         # 爆发模式预铺：暴君就绪后暂停古手，铺关键召唤物，并把碎片补到暴君后可满 5 片。/cast 119898
         if burst_mode_enabled and tyrant_ready and not burst_window:
+            if dreadstalkers_ready:
+                return self.cast(f"target{DREADSTALKERS}")
+
             if doomguard_ready:
                 return self.cast(f"target{DOOMGUARD}")
 
