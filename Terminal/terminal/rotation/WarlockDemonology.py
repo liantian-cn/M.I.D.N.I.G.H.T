@@ -136,6 +136,7 @@ class WarlockDemonology(BaseRotation):
         burst_window = portal_window or tyrant_window
         enemy_count = player.enemyCount
         warlock_health_threshold = 60
+        tyrant_target_health_threshold = 10
 
         if player.healthPercent < warlock_health_threshold:
             if ctx.spell_cooldown_ready(DEMON_HEALTHSTONE, spell_queue_window):
@@ -193,7 +194,7 @@ class WarlockDemonology(BaseRotation):
             if soul_shards < 2 and shadow_bolt_ready:
                 return self.cast(f"target{SHADOW_BOLT}")
 
-            if soul_shards >= 2:
+            if soul_shards >= 2 and target.healthPercent > tyrant_target_health_threshold:
                 return self.cast(f"target{DEMONIC_TYRANT}")
 
             return self.idle("爆发模式预铺：等待暴君前置资源")
@@ -228,7 +229,11 @@ class WarlockDemonology(BaseRotation):
         if dreadstalkers_ready and soul_shards >= 2:
             return self.cast(f"target{DREADSTALKERS}")
 
-        if tyrant_ready and soul_shards >= 5:
+        if (
+            tyrant_ready
+            and soul_shards >= 5
+            and target.healthPercent > tyrant_target_health_threshold
+        ):
             return self.cast(f"target{DEMONIC_TYRANT}")
 
         # 平稳期：小狗卡 CD，内爆 6 鬼打，避免碎片和恶魔之核溢出。
