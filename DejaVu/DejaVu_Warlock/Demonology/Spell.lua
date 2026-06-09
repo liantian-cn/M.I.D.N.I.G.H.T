@@ -32,3 +32,4 @@ insert(cooldownSpells, { type = "item", itemID = 258138, name = "强效治疗药
 insert(cooldownSpells, { spellID = 119914, name = "巨斧投掷" })
 insert(cooldownSpells, { spellID = 119910, name = "法术封锁" })
 insert(cooldownSpells, { spellID = 1271802, name = "语言灾厄" })
+insert(cooldownSpells, { spellID = 6789, name = "死亡缠绕" })

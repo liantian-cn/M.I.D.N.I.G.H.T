@@ -36,6 +36,7 @@ insert(macroList, { title = "focus语言灾厄", key = "SHIFT-NUMPAD3", text = "
 insert(macroList, { title = "target语言灾厄", key = "SHIFT-NUMPAD4", text = "/cast [@target,exists,harm] 语言灾厄" })
 insert(macroList, { title = "target法术封锁", key = "SHIFT-NUMPAD7", text = "/cast [@target,exists,harm] 法术封锁(恶魔掌控技能)" })
 insert(macroList, { title = "target巨斧投掷", key = "SHIFT-NUMPAD8", text = "/cast [@target,exists,harm] 巨斧投掷(特殊技能)" })
+insert(macroList, { title = "target死亡缠绕", key = "SHIFT-NUMPAD9", text = "/cast [@target,exists,harm] 死亡缠绕" })
 
 for macroIndex, macro in pairs(macroList) do -- luacheck: ignore macroIndex
     local buttonName = addonName .. "Button" .. macro.title
