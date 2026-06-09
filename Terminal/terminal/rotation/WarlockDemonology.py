@@ -15,6 +15,7 @@ DEMONIC_TYRANT = "召唤恶魔暴君"
 GRIMOIRE_FELGUARD = "魔典：邪能破坏者"
 DEMON_HEALTHSTONE = "恶魔治疗石"
 GREATER_HEALING_POTION = "强效治疗药水"
+MORTAL_COIL = "死亡缠绕"
 AXE_TOSS = "巨斧投掷"
 SPELL_LOCK = "法术封锁"
 LANGUAGE_CURSE = "语言灾厄"
@@ -53,6 +54,7 @@ class WarlockDemonology(BaseRotation):
             GREATER_HEALING_POTION: "SHIFT-NUMPAD6",
             f"target{SPELL_LOCK}": "SHIFT-NUMPAD7",
             f"target{AXE_TOSS}": "SHIFT-NUMPAD8",
+            f"target{MORTAL_COIL}": "SHIFT-NUMPAD9",
         }
 
     def main_rotation(self, ctx: Context) -> tuple[str, float, str]:
@@ -141,6 +143,9 @@ class WarlockDemonology(BaseRotation):
         if player.healthPercent < warlock_health_threshold:
             if ctx.spell_cooldown_ready(DEMON_HEALTHSTONE, spell_queue_window):
                 return self.cast(DEMON_HEALTHSTONE)
+
+            if ctx.spell_cooldown_ready(MORTAL_COIL, spell_queue_window):
+                return self.cast(f"target{MORTAL_COIL}")
 
             if ctx.spell_cooldown_ready(GREATER_HEALING_POTION, spell_queue_window):
                 return self.cast(GREATER_HEALING_POTION)
