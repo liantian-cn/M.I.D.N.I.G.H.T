@@ -141,11 +141,11 @@ class WarlockDemonology(BaseRotation):
         tyrant_target_health_threshold = 30
 
         if player.healthPercent < warlock_health_threshold:
-            if ctx.spell_cooldown_ready(DEMON_HEALTHSTONE, spell_queue_window):
-                return self.cast(DEMON_HEALTHSTONE)
-
             if ctx.spell_cooldown_ready(MORTAL_COIL, spell_queue_window):
                 return self.cast(f"target{MORTAL_COIL}")
+
+            if ctx.spell_cooldown_ready(DEMON_HEALTHSTONE, spell_queue_window):
+                return self.cast(DEMON_HEALTHSTONE)
 
             if ctx.spell_cooldown_ready(GREATER_HEALING_POTION, spell_queue_window):
                 return self.cast(GREATER_HEALING_POTION)
@@ -214,17 +214,17 @@ class WarlockDemonology(BaseRotation):
             if hand_ready and soul_shards >= 3:
                 return self.cast(f"target{HAND_OF_GULDAN}")
 
-            if dreadstalkers_ready and soul_shards >= 2:
-                return self.cast(f"target{DREADSTALKERS}")
-
-            if demon_core_stacks >= 1 and demonbolt_ready:
+            if demonbolt_ready:
                 return self.cast(f"target{DEMONBOLT}")
-
-            if implosion_ready and wild_imp_stacks >= 6:
-                return self.cast(IMPLOSION)
 
             if shadow_bolt_ready:
                 return self.cast(f"target{SHADOW_BOLT}")
+
+            if dreadstalkers_ready and soul_shards >= 2:
+                return self.cast(f"target{DREADSTALKERS}")
+
+            if implosion_ready and wild_imp_stacks >= 6:
+                return self.cast(IMPLOSION)
 
             return self.idle("传送门期间：等待古手循环资源")
 
