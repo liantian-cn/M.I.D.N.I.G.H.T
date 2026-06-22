@@ -1,20 +1,23 @@
-﻿# MIDNIGHT 工作指引
+# MIDNIGHT 工作指引
 
-## 生效范围
+## 当前状态
 
-- 根目录这个 `AGENTS.md` 是仓库内唯一自动生效的工作指引。
-- `.context/DejaVu/AGENTS.md` 和 `.context/Terminal/AGENTS.md` 只作为项目参考文档保存，不再作为独立入口。
+- 仓库进入 WoW 12.1 `Curse of Ula'tek` 转型期。
+- `DejaVu/` 和 `Terminal/` 是 12.0 冻结项目；除非用户明确要求维护冻结版本，不修改这两个目录。
+- `Phantom/` 接替 `DejaVu/`，负责未来游戏内插件侧。
+- `Copilot/` 接替 `Terminal/`，负责未来 Python 外部程序侧。
+- 未来实现可能大幅调整旧代码解构；不要把 DejaVu/Terminal 的模块、颜色、协议、线程结构照搬到新项目。
 
 ## 任务路由
 
-- 每次任务开始前，先选定唯一工作子目录：`DejaVu/` 或 `Terminal/`。
-- 允许同时读取根 `.context/Common/` 和对应项目目录 `.context/DejaVu/` 或 `.context/Terminal/`。
-- 除非用户明确要求跨项目任务，不要顺手修改另一个子项目目录。
-- 公共协议、颜色、共享规则统一维护在根 `.context/`；修改这些公共文档不算跨项目越界。
+- 每次任务开始前，先选定唯一工作目录：`Phantom/`、`Copilot/`、根文档，或明确的冻结维护目录。
+- 处理 12.1 游戏 API、secret values、Aura、FrameXML 变化时，先读 `.context/README.md`。
+- 处理 `Phantom/` 或 `Copilot/` 时，再读对应目录内的 `AGENTS.md` 和 `.context/README.md`。
+- `wow-ui-source-12.1.0/` 是本地游戏框架源码参考，只有用户要求或 API 事实必须核实时才深入读取。
 
 ## 开发规则
 
-- Git 永远工作在小写的 `draft` 分支；如果不在 `draft`, 先切过去。
+- 9 月新版本前，Git 工作在小写 `dev` 分支；如果不在 `dev`，先切过去。
 - 动手前先看 `git status --short`。
 - 任何修改文件前，先提交一次 `backup`。
 - 修改完成后，再提交一次这次任务的简要信息。
@@ -27,6 +30,6 @@
 
 ## 文档入口
 
-- 处理共享协议、颜色、跨项目约束：先读 `.context/README.md`、`.context/Common/01_shared_protocol.md`、`.context/Common/03_color_conventions.md`。
-- 处理 DejaVu：再读 `.context/DejaVu/README.md`。
-- 处理 Terminal：再读 `.context/Terminal/README.md`。
+- 根 `.context/` 只保留和 WoW 游戏 API / 12.1 迁移风险有关的内容。
+- 除了“未来仍会开始一个矩阵”这个最低前提，不继承旧矩阵尺寸、颜色定义、Cell 语义和解码协议。
+- `Patch-12-1-0-API-changes.md` 是当前 12.1 API 变动的本地参考；如果存在，先读它。
