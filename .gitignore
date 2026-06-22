@@ -3,3 +3,4 @@
 database.sqlite
 *.sqlite
 /wow-ui-source-12.1.0
+/.vscode
