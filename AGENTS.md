@@ -11,9 +11,9 @@
 ## 任务路由
 
 - 每次任务开始前，先选定唯一工作目录：`Phantom/`、`Copilot/`、根文档，或明确的冻结维护目录。
-- 处理 12.1 游戏 API、secret values、Aura、FrameXML 变化时，先读 `.context/README.md`。
-- 官方 API 变化记录保存在 `.context/WoW/api-changes/`；冲突时新版本优先，12.1.0 仍是 beta / PTR，依赖细节前提醒用户刷新。
-- 处理 `Phantom/` 或 `Copilot/` 时，再读对应目录内的 `AGENTS.md` 和 `.context/README.md`。
+- 处理 12.1 游戏 API、secret values、Aura、FrameXML 变化时，先读 `Phantom/.context/README.md`。
+- 官方 API 变化记录保存在 `Phantom/.context/api-changes/`；冲突时新版本优先，12.1.0 仍是 beta / PTR，依赖细节前提醒用户刷新。
+- 处理 `Phantom/` 或 `Copilot/` 时，读对应目录内的 `AGENTS.md` 和 `.context/README.md`。
 - `wow-ui-source-12.1.0/` 是本地游戏框架源码参考，只有用户要求或 API 事实必须核实时才深入读取。
 
 ## 开发规则
@@ -31,5 +31,7 @@
 
 ## 文档入口
 
-- 根 `.context/` 只保留和 WoW 游戏 API / 12.1 迁移风险有关的内容。
+- 根目录不再保留 `.context/` 事实入口；未来 `Phantom/` 和 `Copilot/` 会作为独立仓库根。
+- WoW 游戏 API / 12.1 迁移风险放在 `Phantom/.context/`。
+- Python 外部程序侧资料放在 `Copilot/.context/`。
 - 除了“未来仍会开始一个矩阵”这个最低前提，不继承旧矩阵尺寸、颜色定义、Cell 语义和解码协议。

@@ -7,7 +7,7 @@ Copilot 是 12.1+ Python 外部程序侧新项目，接替 Terminal。
 ## 当前规则
 
 - 不照搬 Terminal 的包结构、解码结构、线程链路或 UI 组织。
-- 先读根 `.context/README.md`，再读 `Copilot/.context/README.md`。
+- 先读 `Copilot/.context/README.md`；Copilot 独立成仓库后就是 `.context/README.md`。
 - 当前只允许放骨架和文档；实现代码等后续明确任务。
 - Python 技术方向保留，但依赖、包名、入口和测试结构以后再定。
 

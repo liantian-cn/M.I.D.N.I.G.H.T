@@ -36,7 +36,7 @@ end
 
 ## 查询顺序
 
-1. 查 `.context/WoW/api-changes/`，新版本优先；12.1.0 仍是 PTR / beta 时先考虑刷新。
+1. 查 `.context/api-changes/`，新版本优先；12.1.0 仍是 PTR / beta 时先考虑刷新。
 2. 用 `wow-api-mcp` 查 API 签名和废弃状态
 3. 查 `warcraft.wiki.gg` 的具体 API 页
 4. 必要时才查 `wow-ui-source-12.1.0/`
