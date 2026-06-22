@@ -12,7 +12,7 @@ Private Matrix of Infinite Death Nightfall Iteration Generation Host Terminal
 - `Copilot/`: 新 Python 外部程序侧，接替 Terminal。
 - `wow-ui-source-12.1.0/`: 本地 12.1 游戏框架源码参考。
 
-12.1 的重点变化来自官方 API 和安全模型，尤其是 Aura、secret values、Forbidden Aspects 和相关 FrameXML 变化。当前事实入口见 `.context/README.md` 和本地 `Patch-12-1-0-API-changes.md`。
+12.1 的重点变化来自官方 API 和安全模型，尤其是 Aura、secret values、Forbidden Aspects 和相关 FrameXML 变化。当前事实入口见 `.context/README.md` 和 `.context/WoW/api-changes/`。
 
 ## 新项目原则
 

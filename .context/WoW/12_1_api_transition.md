@@ -2,7 +2,7 @@
 
 ## 事实源
 
-- 本地摘要：`Patch-12-1-0-API-changes.md`
+- 本地官方 API 变化记录：`.context/WoW/api-changes/`（新版本优先；12.1.0 仍是 PTR / beta 时先考虑刷新）
 - 本地框架源码：`wow-ui-source-12.1.0/`
 - 官方/社区查询：`wow-api-mcp`、`warcraft.wiki.gg`
 

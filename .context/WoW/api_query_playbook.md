@@ -10,7 +10,7 @@
 
 ## 推荐流程
 
-1. 先查本地 `Patch-12-1-0-API-changes.md`。
+1. 先查本地 `.context/WoW/api-changes/`，新版本优先；12.1.0 仍是 PTR / beta 时先考虑刷新。
 2. 用 `wow-api-mcp` 查 API 名称、参数、返回结构和废弃信息。
 3. 查 `warcraft.wiki.gg` 的 API 页面确认限制说明。
 4. 只有 patch 和 API 文档不足时，再读 `wow-ui-source-12.1.0/` 的对应文件。

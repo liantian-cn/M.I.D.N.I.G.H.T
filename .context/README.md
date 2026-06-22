@@ -4,14 +4,18 @@
 
 ## 必读顺序
 
-1. `Patch-12-1-0-API-changes.md`
-2. `.context/WoW/12_1_api_transition.md`
-3. `.context/WoW/secret_values.md`
-4. `.context/WoW/api_query_playbook.md`
+1. `.context/WoW/api-changes/README.md`
+2. `.context/WoW/api-changes/INDEX.md`
+3. `.context/WoW/api-changes/12.1.0.md`
+4. `.context/WoW/12_1_api_transition.md`
+5. `.context/WoW/secret_values.md`
+6. `.context/WoW/api_query_playbook.md`
 
 ## 当前转型判断
 
 - WoW 12.1 TOC 是 `120100`。
+- 12.1.0 仍是 beta / PTR；依赖 API 细节前，先提醒用户官方记录可能需要刷新。
+- API 记录冲突时，按 `.context/WoW/api-changes/` 的新版本优先。
 - Aura 相关 API 是本轮重构最高风险点。
 - `UnitAura` / `C_UnitAuras` 在战斗、地下城、PvP 等场景可能返回 secret 或 nil。
 - 新方向应优先研究 AuraContainer、AuraButton、Private Script Objects、Forbidden Aspects。
