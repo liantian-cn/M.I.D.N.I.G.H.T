@@ -1,8 +1,0 @@
-{
-  "servers": {
-    "wow-api": {
-      "command": "cmd",
-      "args": ["/c", "npx", "wow-api-mcp"]
-    }
-  }
-}
