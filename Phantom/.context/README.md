@@ -8,7 +8,7 @@ Phantom 是未来独立仓库根；不要依赖上级根目录的 `.context/`。
 2. `.context/api-changes/INDEX.md`
 3. `.context/api-changes/12.1.0.md`
 4. `.context/12_1_api_transition.md`
-5. `.context/secret_values.md`
+5. `.context/secret_values/README.md`
 6. `.context/api_query_playbook.md`
 
 ## 当前转型判断
