@@ -1,1 +1,0 @@
-"""Terminal package scaffold."""
