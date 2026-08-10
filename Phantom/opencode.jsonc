@@ -1,0 +1,36 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "references": {
+        "DejaVu": {
+            "path": "../DejaVu",
+            "description": "该项目的竞争对手，未经指示，无需阅读"
+        },
+        "Fuyutsui": {
+            "repository": "waynebian01/Fuyutsui",
+            "branch": "main",
+            "description": "该项目的竞争对手，未经指示，无需阅读"
+        },
+        "FuyutsuiCopilot": {
+            "repository": "liantian-cn/FuyutsuiCopilot",
+            "branch": "main",
+            "description": "对Fuyutsui的分析，仅当指示查看Fuyutsui时阅读"
+        },
+        "wow-ui-source": {
+            "repository": "Gethe/wow-ui-source",
+            "branch": "ptr",
+            "description": "wow-ui的源代码，极具参考意义"
+        },
+    },
+    "mcp": {
+        "wow-api-mcp": {
+            "type": "local",
+            "command": [
+                "npx",
+                "-y",
+                "wow-api-mcp"
+            ],
+            "enabled": true,
+            "timeout": 30000
+        },
+    },
+}

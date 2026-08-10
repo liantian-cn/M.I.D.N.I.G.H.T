@@ -1,0 +1,7 @@
+{
+  "logging": {
+    "enabled": true,
+    "level": "INFO",
+    "output_path": null
+  }
+}
