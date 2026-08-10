@@ -1,0 +1,53 @@
+"""Phantom Cell 分类编号的当前反向定义。
+
+UPSTREAM COMMIT: 643fbc525f2173e80d571af7f43f739e6eaeb229
+人工或 AI 同步时必须重新核对 PhantomProject/src/0006_cell_variable_define.lua。
+"""
+
+from __future__ import annotations
+
+UPSTREAM_COMMIT = "643fbc525f2173e80d571af7f43f739e6eaeb229"
+
+CELL_CLASSIFICATION = {
+    "PLAYER_STATUS": 5,
+    "TARGET_STATUS": 10,
+    "FOCUS_TARGET": 15,
+    "PLAYER_BUFF_DURATION": 20,
+    "PLAYER_BUFF_COUNT": 25,
+    "TARGET_DEBUFF_DURATION": 30,
+    "TARGET_DEBUFF_COUNT": 35,
+    "PLAYER_DEBUFF_DURATION": 40,
+    "PLAYER_DEBUFF_COUNT": 45,
+    "ENVIRONMENT": 50,
+    "SPEC": 55,
+    "SETTING": 60,
+    "SPELL_COOLDOWN": 65,
+    "SPELL_USABLE": 70,
+    "SPELL_OVERLAYED": 75,
+    "SPELL_KNOWN": 80,
+    "SPELL_CHARGE": 85,
+    "PARTY_EXIST": 100,
+    "PARTY_TARGET": 105,
+    "PARTY_ROLE": 110,
+    "PARTY_RANGE": 115,
+    "PARTY_HEALTH": 120,
+    "PARTY_DAMAGE_ABSORB": 125,
+    "PARTY_HEAL_ABSORB": 130,
+    "PARTY_BUFF": 135,
+    "PARTY_DISPELLABLE": 140,
+    "PARTY_BIG_DEFENSIVE": 145,
+    "PARTY_HOT1": 150,
+    "PARTY_HOT2": 155,
+    "PARTY_HOT3": 160,
+    "PARTY_HOT4": 165,
+    "PARTY_HOT5": 170,
+    "MARKER": 255,
+}
+
+CLASSIFICATION_BY_CODE = {code: name for name, code in CELL_CLASSIFICATION.items()}
+
+__all__ = [
+    "CELL_CLASSIFICATION",
+    "CLASSIFICATION_BY_CODE",
+    "UPSTREAM_COMMIT",
+]

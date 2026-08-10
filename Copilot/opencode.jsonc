@@ -1,0 +1,16 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "references": {
+    "PhantomProject": {
+      "repository": "liantian-cn/PhantomProject",
+      "branch": "develop",
+      "description": "当前项目的插件端、编码端、前端。",
+    },
+    "Terminal": {
+      "repository": "liantian-cn/Terminal",
+      "branch": "main",
+      "description": "当前项目的上代产品",
+    },
+  },
+  "mcp": {},
+}
